@@ -167,7 +167,7 @@
       width: 100%;
       height: 100%;
       height: 100dvh;
-      padding-top: calc(8px + var(--safe-top));
+      padding-top: calc(22px + var(--safe-top));
       padding-bottom: calc(8px + var(--safe-bottom));
       padding-left: calc(10px + var(--safe-left));
       padding-right: calc(10px + var(--safe-right));
@@ -178,9 +178,9 @@
 
     @media (min-width: 740px) {
       #app {
-        padding-top: calc(44px + var(--safe-top));
-        padding-left: calc(16px + var(--safe-left));
-        padding-right: calc(16px + var(--safe-right));
+        padding-top: calc(26px + var(--safe-top));
+        padding-left: calc(18px + var(--safe-left));
+        padding-right: calc(18px + var(--safe-right));
       }
     }
 
@@ -1591,7 +1591,7 @@
 
       <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border-thin); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="font-size:13px; color:var(--ink-secondary);">
-          <span id="lbl-version">Phiên bản</span> <strong id="app-version-label">1.6.0</strong>
+          <span id="lbl-version">Phiên bản</span> <strong id="app-version-label">1.6.1</strong>
           <div id="update-status-text">Đã cập nhật mới nhất</div>
         </div>
         <button class="btn-sm" id="btn-check-update">Kiểm tra cập nhật</button>
@@ -1621,7 +1621,7 @@
       /* ========================================================================
          1. APP VERSION & BOOKMARK-SAFE AUTO-UPDATE
          ======================================================================== */
-      const APP_VERSION = "1.6.0";
+      const APP_VERSION = "1.6.1";
       const STORAGE_KEY = "SUDOZEN_STATE_V1";
 
       function compareSemver(a, b) {
@@ -1647,7 +1647,7 @@
 
       async function checkForAppUpdate(manual = false) {
         const statusEl = document.getElementById("update-status-text");
-        if (manual && statusEl) statusEl.textContent = t("checking");
+        if (manual && statusEl) statusEl.textContent = t("checkingUpdate");
         try {
           const checkUrl = new URL(window.location.href);
           checkUrl.searchParams.set("_ts", Date.now().toString());
@@ -1656,11 +1656,10 @@
           const html = await res.text();
           const match = html.match(/const\s+APP_VERSION\s*=\s*["']([^"']+)["']/);
           if (match && match[1] && compareSemver(match[1], APP_VERSION) > 0) {
-            const remoteVer = match[1];
             document.getElementById("update-dot").style.display = "block";
-            if (statusEl) statusEl.textContent = `v${remoteVer}`;
-            showToast(`${t("updating")} v${remoteVer}...`);
-            setTimeout(() => triggerCacheBustingReload(remoteVer), 800);
+            if (statusEl) statusEl.textContent = `Updating to v${match[1]}...`;
+            showToast(`Updating to v${match[1]}...`);
+            setTimeout(() => triggerCacheBustingReload(match[1]), 900);
             return;
           }
           if (statusEl) statusEl.textContent = `${t("upToDate")} (v${APP_VERSION})`;
@@ -1668,51 +1667,119 @@
         } catch (_) {
           if (statusEl) statusEl.textContent = `${t("upToDate")} (v${APP_VERSION})`;
           if (manual) {
-            showToast(t("refreshing"));
-            setTimeout(() => triggerCacheBustingReload(Date.now().toString()), 500);
+            showToast(t("refreshingCache"));
+            setTimeout(() => triggerCacheBustingReload(Date.now().toString()), 600);
           }
         }
       }
 
       /* ========================================================================
-         2. BILINGUAL DICTIONARY (VIETNAMESE DEFAULT + ENGLISH)
+         2. DYNAMIC PWA HOME SCREEN ICON GENERATOR (Minimalist Ensō & 禅 Emblem)
+         ======================================================================== */
+      function generateDynamicAppIcon() {
+        try {
+          const size = 512;
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+
+          // Rich Kyoto moss gradient background
+          const grad = ctx.createLinearGradient(0, 0, size, size);
+          grad.addColorStop(0, "#466B4B");
+          grad.addColorStop(1, "#223825");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, size, size);
+
+          // Subtle 3x3 Sudoku grid lines in background
+          ctx.strokeStyle = "rgba(250, 247, 240, 0.11)";
+          ctx.lineWidth = 5;
+          const third = size / 3;
+          for (let i = 1; i <= 2; i++) {
+            ctx.beginPath();
+            ctx.moveTo(third * i, 44);
+            ctx.lineTo(third * i, size - 44);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(44, third * i);
+            ctx.lineTo(size - 44, third * i);
+            ctx.stroke();
+          }
+
+          // Outer Kintsugi gold frame
+          ctx.strokeStyle = "rgba(214, 173, 96, 0.55)";
+          ctx.lineWidth = 8;
+          ctx.strokeRect(26, 26, size - 52, size - 52);
+
+          // Central Ensō gold circle
+          const cx = size / 2;
+          const cy = size / 2;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, 152, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(20, 34, 22, 0.34)";
+          ctx.fill();
+          ctx.lineWidth = 11;
+          ctx.strokeStyle = "#D6AD60";
+          ctx.stroke();
+          ctx.restore();
+
+          // Crisp Zen Kanji character "禅"
+          ctx.fillStyle = "#FAF7F0";
+          ctx.font = "bold 210px Georgia, 'Hiragino Mincho ProN', serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("禅", cx, cy + 10);
+
+          const dataUrl = canvas.toDataURL("image/png");
+          document.getElementById("dynamic-apple-icon").href = dataUrl;
+          document.getElementById("dynamic-favicon").href = dataUrl;
+        } catch (_) {}
+      }
+
+      /* ========================================================================
+         3. BILINGUAL DICTIONARY (VIETNAMESE DEFAULT + INSTANT ENGLISH SWITCH)
          ======================================================================== */
       const I18N = {
         vi: {
           solvedSummary: (n) => `${n} ván đã giải`,
           records: "Thành tích",
           newGame: "Ván mới",
-          timerOffLabel: "Tính giờ: TẮT",
-          timerOnLabel: "Tính giờ",
+          timerOff: "Tính giờ: TẮT",
+          timerOnPrefix: "Tính giờ:",
           mistakes: "Lỗi",
           undo: "Hoàn tác",
           redo: "Làm lại",
           erase: "Xóa",
           notes: "Ghi chú",
           hint: "Gợi ý",
+          place: "Điền số",
           on: "BẬT",
           off: "TẮT",
-          applyHint: "Điền số",
-          promptDefault: "Chạm vào một ô trống rồi chọn số từ 1 đến 9.",
-          promptNotes: "Chế độ Ghi chú đang BẬT: chạm số 1–9 để đánh dấu nháp trong ô.",
-          modalNewTitle: "Chọn mức độ chơi",
-          modalNewSub: "Mỗi ván đều được tạo mới và đảm bảo chỉ có một lời giải duy nhất.",
-          modalSavesTitle: "Ván chơi đã lưu",
+          guideDefault: "Chạm vào một ô trống rồi chọn số từ 1 đến 9.",
+          guideNotes: "<strong>Chế độ Ghi chú đang BẬT:</strong> Chạm số để đánh dấu các số có thể điền vào ô.",
+          chooseLevelTitle: "Chọn mức độ chơi",
+          chooseLevelSub: "Mỗi ván đều được tạo mới và đảm bảo chỉ có một lời giải duy nhất.",
+          currentBadge: "Đang chơi",
+          savedGamesTitle: "Ván chơi đã lưu",
           savePlaceholder: "Tên gợi nhớ (ví dụ: Buổi sáng)",
-          saveCurrent: "Lưu ván này",
-          noSaves: "Chưa có ván nào được lưu.",
-          load: "Mở",
-          modalRecordsTitle: "Thành tích & Lịch sử",
-          statWins: "Tổng ván thắng",
-          statTimed: "Ván tính giờ",
-          statFav: "Mức cao nhất",
+          saveBtn: "Lưu ván này",
+          noSaves: "Chưa có ván nào được lưu. Bạn có thể lưu ván đang chơi ở trên.",
+          loadBtn: "Mở",
+          recordsTitle: "Thành tích & Lịch sử",
+          totalWins: "Tổng ván thắng",
+          timedWins: "Ván tính giờ",
+          highestLevel: "Mức cao nhất",
           thLevel: "Mức độ",
           thSolved: "Đã giải",
           thBest: "Kỷ lục thời gian",
           recentHistory: "Nhật ký hoàn thành gần đây",
-          noHistory: "Chưa có ván nào hoàn thành. Hãy thử sức ngay!",
+          noHistory: "Chưa có ván nào hoàn thành.",
           palettes: "Màu nền thư giãn",
-          modalSettingsTitle: "Cài đặt",
+          activeTheme: "Đang dùng",
+          tapToApply: "Chạm để đổi màu",
+          settingsTitle: "Cài đặt",
           setTimedTitle: "Chế độ tính giờ",
           setTimedDesc: "Tắt mặc định để chơi thư giãn, bật nếu muốn ghi kỷ lục thời gian",
           setCheckTitle: "Báo lỗi ngay khi điền sai",
@@ -1725,214 +1792,133 @@
           setSoundDesc: "Âm thanh êm dịu, không gây căng thẳng",
           version: "Phiên bản",
           upToDate: "Đã cập nhật mới nhất",
-          checking: "Đang kiểm tra...",
-          updating: "Đang cập nhật lên",
-          refreshing: "Đang làm mới ứng dụng...",
+          checkingUpdate: "Đang kiểm tra...",
+          refreshingCache: "Đang làm mới ứng dụng...",
           checkUpdateBtn: "Kiểm tra cập nhật",
-          victoryTitle: "Chúc mừng hoàn thành!",
-          victoryView: "Xem lại bàn cờ",
+          victoryTitle: "Tuyệt vời!",
+          victoryViewBoard: "Xem lại bàn cờ",
           victoryNext: "Chơi ván mới",
-          toastNew: (lvl) => `Đã tạo ván mới — Mức ${lvl}`,
-          toastLocked: "Ô số gốc không thể xóa",
-          toastNoHints: "Bạn đã dùng hết 3 gợi ý cho ván này",
-          toastSaved: "Đã lưu ván chơi",
-          toastLoaded: (name) => `Đã mở "${name}"`,
-          toastTimerOn: "Đã BẬT tính giờ",
-          toastTimerOff: "Đã TẮT tính giờ (chơi thư giãn)",
-          toastBoardNotQuite: "Bàn cờ đã điền kín nhưng vẫn còn chỗ chưa khớp, hãy kiểm tra lại nhé!",
-          currentBadge: "Đang chơi",
-          solvedCountBadge: (n) => `Đã giải: ${n}`,
-          activeTheme: "Đang dùng",
-          tapTheme: "Chạm để chọn",
-          nakedSingle: (r, c, d) => `Suy luận duy nhất: Hàng ${r}, Cột ${c} chỉ có thể là số ${d}.`,
-          hiddenSingle: (b, r, c, d) => `Vị trí duy nhất: Số ${d} chỉ có thể nằm ở ô Hàng ${r}, Cột ${c} trong khối ${b}.`,
-          zenInsight: (r, c, d) => `Gợi ý logic: Ô Hàng ${r}, Cột ${c} có giá trị đúng là ${d}.`
+          toastNewPuzzle: (lvl) => `Đã tạo ván mới mức ${lvl}`,
+          toastLockedCell: "Đây là số cố định ban đầu, không thể xóa",
+          toastNoHints: "Bạn đã dùng hết 3 lượt gợi ý cho ván này",
+          toastSaved: "Đã lưu ván chơi thành công",
+          toastLoaded: (name) => `Đã mở lại "${name}"`,
+          toastBoardNotSolvedYet: "Bàn cờ đã điền kín nhưng vẫn còn chỗ chưa khớp — hãy kiểm tra lại nhé!",
+          toastTimerEnabled: "Đã BẬT chế độ tính giờ",
+          toastTimerDisabled: "Đã TẮT chế độ tính giờ (Chơi thư giãn)",
+          hintNaked: (r, c, d) => `Suy luận: Ô hàng ${r}, cột ${c} chỉ có thể điền số ${d}.`,
+          hintHidden: (box, r, c, d) => `Suy luận: Trong vùng ${box}, số ${d} chỉ đặt được ở hàng ${r}, cột ${c}.`,
+          hintInsight: (r, c, d) => `Gợi ý: Ô hàng ${r}, cột ${c} là số ${d}.`,
+          relaxedTag: "Thư giãn",
+          diffs: {
+            easy:   { name: "Dễ", desc: "Nhẹ nhàng khởi động • 44 số có sẵn" },
+            medium: { name: "Trung bình", desc: "Cân bằng thư giãn • 36 số có sẵn" },
+            hard:   { name: "Khó", desc: "Suy luận chuyên sâu • 30 số có sẵn" },
+            expert: { name: "Rất khó", desc: "Thử thách cao cấp • 26 số có sẵn" },
+            master: { name: "Bậc thầy", desc: "Đỉnh cao trí tuệ • 23 số có sẵn" },
+            daily:  { name: "Thử thách hôm nay", desc: "Bàn cờ đặc biệt của ngày hôm nay" }
+          },
+          themes: {
+            moss:   { name: "Xanh rêu dịu mắt", desc: "Giấy Washi & xanh rêu Kyoto" },
+            hinoki: { name: "Gỗ bách ấm áp", desc: "Tông gỗ Hinoki tự nhiên" },
+            mist:   { name: "Sương sớm Kyoto", desc: "Xanh lam nhạt thanh tĩnh" },
+            maple:  { name: "Lá phong mùa thu", desc: "Sắc đỏ trầm ấm áp" }
+          }
         },
         en: {
           solvedSummary: (n) => `${n} solved`,
           records: "Records",
           newGame: "New",
-          timerOffLabel: "Timer: OFF",
-          timerOnLabel: "Timer",
+          timerOff: "Timer: OFF",
+          timerOnPrefix: "Timer:",
           mistakes: "Mistakes",
           undo: "Undo",
           redo: "Redo",
           erase: "Erase",
           notes: "Notes",
           hint: "Hint",
+          place: "Place",
           on: "ON",
           off: "OFF",
-          applyHint: "Place",
-          promptDefault: "Tap any empty cell and choose a number from 1 to 9.",
-          promptNotes: "Notes Mode is ON: tap 1–9 to toggle candidate notes inside the cell.",
-          modalNewTitle: "Choose Difficulty",
-          modalNewSub: "Every board is freshly generated with a single unique logical solution.",
-          modalSavesTitle: "Saved Games",
-          savePlaceholder: "Optional label (e.g. Morning Tea)",
-          saveCurrent: "Save Current",
-          noSaves: "No saved games yet.",
-          load: "Load",
-          modalRecordsTitle: "Records & History",
-          statWins: "Total Solved",
-          statTimed: "Timed Wins",
-          statFav: "Highest Tier",
+          guideDefault: "Tap any empty cell and choose a number from 1 to 9.",
+          guideNotes: "<strong>Notes Mode ON:</strong> Tap numbers to mark possible candidates.",
+          chooseLevelTitle: "Choose Difficulty",
+          chooseLevelSub: "Every puzzle is freshly generated with a single guaranteed unique solution.",
+          currentBadge: "Current",
+          savedGamesTitle: "Saved Games",
+          savePlaceholder: "Label (e.g. Morning Tea)",
+          saveBtn: "Save Current",
+          noSaves: "No saved games yet. Save your active puzzle above.",
+          loadBtn: "Load",
+          recordsTitle: "Solved Records & History",
+          totalWins: "Total Solved",
+          timedWins: "Timed Wins",
+          highestLevel: "Highest Tier",
           thLevel: "Difficulty",
           thSolved: "Solved",
           thBest: "Best Time",
-          recentHistory: "Recent Completions",
-          noHistory: "No completed puzzles yet.",
-          palettes: "Zen Color Palettes",
-          modalSettingsTitle: "Settings",
+          recentHistory: "Recent Completion Log",
+          noHistory: "No completed puzzles logged yet.",
+          palettes: "Soothing Palettes",
+          activeTheme: "Active",
+          tapToApply: "Tap to apply",
+          settingsTitle: "Settings",
           setTimedTitle: "Timed Mode",
-          setTimedDesc: "Off by default for relaxed play; turn on to record solve times",
+          setTimedDesc: "Off by default for relaxed play; enable to record completion times",
           setCheckTitle: "Instant Error Check",
-          setCheckDesc: "Off by default so wrong entries aren't spoiled immediately",
-          setNotesTitle: "Auto-Clear Notes",
-          setNotesDesc: "Remove matching pencil notes when placing a digit",
+          setCheckDesc: "Off by default so you can deduce naturally like on paper",
+          setNotesTitle: "Auto-Clear Matching Notes",
+          setNotesDesc: "Automatically remove pencil notes when placing a digit",
           setSameTitle: "Highlight Matching Numbers",
-          setSameDesc: "Illuminate all cells sharing the selected number",
-          setSoundTitle: "Gentle Bamboo Audio",
-          setSoundDesc: "Soft pentatonic chimes with no jarring sounds",
+          setSameDesc: "Highlight all cells sharing the selected digit",
+          setSoundTitle: "Gentle Bamboo Chimes",
+          setSoundDesc: "Soft, non-intrusive pentatonic feedback",
           version: "Version",
           upToDate: "Up to date",
-          checking: "Checking...",
-          updating: "Updating to",
-          refreshing: "Refreshing app...",
-          checkUpdateBtn: "Check Update",
-          victoryTitle: "Puzzle Complete!",
-          victoryView: "View Board",
-          victoryNext: "New Puzzle",
-          toastNew: (lvl) => `New ${lvl} puzzle ready`,
-          toastLocked: "Starting numbers cannot be erased",
-          toastNoHints: "No hints remaining for this board",
-          toastSaved: "Game saved",
+          checkingUpdate: "Checking...",
+          refreshingCache: "Refreshing application...",
+          checkUpdateBtn: "Check for Update",
+          victoryTitle: "Wonderful!",
+          victoryViewBoard: "View Board",
+          victoryNext: "Play Another",
+          toastNewPuzzle: (lvl) => `Started new ${lvl} puzzle`,
+          toastLockedCell: "Starting digits cannot be erased",
+          toastNoHints: "No hints remaining for this puzzle",
+          toastSaved: "Puzzle saved",
           toastLoaded: (name) => `Loaded "${name}"`,
-          toastTimerOn: "Timer ON",
-          toastTimerOff: "Timer OFF (Relaxed mode)",
-          toastBoardNotQuite: "All cells are filled, though at least one number doesn't match yet.",
-          currentBadge: "Current",
-          solvedCountBadge: (n) => `Solved: ${n}`,
-          activeTheme: "Active",
-          tapTheme: "Tap to apply",
-          nakedSingle: (r, c, d) => `Naked Single: Row ${r}, Col ${c} can only hold ${d}.`,
-          hiddenSingle: (b, r, c, d) => `Hidden Single: ${d} fits only at Row ${r}, Col ${c} in Box ${b}.`,
-          zenInsight: (r, c, d) => `Logic Hint: Row ${r}, Col ${c} resolves to ${d}.`
+          toastBoardNotSolvedYet: "All cells are filled, but some digits conflict — double-check your rows and boxes!",
+          toastTimerEnabled: "Timed mode ON",
+          toastTimerDisabled: "Timed mode OFF (Relaxed)",
+          hintNaked: (r, c, d) => `Naked Single: Row ${r}, Col ${c} can only hold ${d}.`,
+          hintHidden: (box, r, c, d) => `Hidden Single: In Box ${box}, ${d} only fits at Row ${r}, Col ${c}.`,
+          hintInsight: (r, c, d) => `Insight: Row ${r}, Col ${c} resolves to ${d}.`,
+          relaxedTag: "Relaxed",
+          diffs: {
+            easy:   { name: "Easy", desc: "Gentle warm-up • 44 givens" },
+            medium: { name: "Medium", desc: "Balanced flow • 36 givens" },
+            hard:   { name: "Hard", desc: "Deep deduction • 30 givens" },
+            expert: { name: "Very Hard", desc: "Advanced logic • 26 givens" },
+            master: { name: "Master", desc: "Supreme challenge • 23 givens" },
+            daily:  { name: "Daily Zen", desc: "Today's daily puzzle" }
+          },
+          themes: {
+            moss:   { name: "Moss Garden", desc: "Classic Washi & Kyoto moss" },
+            hinoki: { name: "Hinoki Wood", desc: "Warm natural cypress tones" },
+            mist:   { name: "Kyoto Mist", desc: "Cool morning slate" },
+            maple:  { name: "Autumn Maple", desc: "Warm terracotta tones" }
+          }
         }
       };
 
       function t(key, ...args) {
-        const lang = state.settings.lang || "vi";
+        const lang = (state && state.settings && state.settings.lang) || "vi";
         const dict = I18N[lang] || I18N.vi;
         const val = dict[key];
         return typeof val === "function" ? val(...args) : val;
       }
 
       /* ========================================================================
-         3. DIFFICULTY LEVELS (ALL TIERS INCLUDED)
-         ======================================================================== */
-      const DIFFICULTIES = [
-        { key: "easy", rank: 1, givens: 45, vi: "Dễ", en: "Easy", descVi: "Nhẹ nhàng khởi động • 45 số cho sẵn", descEn: "Gentle warm-up • 45 given digits" },
-        { key: "medium", rank: 2, givens: 38, vi: "Trung bình", en: "Medium", descVi: "Cân bằng thư thái • 38 số cho sẵn", descEn: "Balanced focus • 38 given digits" },
-        { key: "hard", rank: 3, givens: 32, vi: "Khó", en: "Hard", descVi: "Suy luận sâu sắc • 32 số cho sẵn", descEn: "Deep deduction • 32 given digits" },
-        { key: "very_hard", rank: 4, givens: 27, vi: "Rất khó", en: "Very Hard", descVi: "Thử thách cao thủ • 27 số cho sẵn", descEn: "Expert challenge • 27 given digits" },
-        { key: "master", rank: 5, givens: 23, vi: "Bậc thầy", en: "Master", descVi: "Đỉnh cao trí tuệ • 23 số cho sẵn", descEn: "Grandmaster logic • 23 given digits" },
-        { key: "daily", rank: 3, givens: 31, vi: "Thử thách hôm nay", en: "Daily Zen", descVi: "Đề bài đặc biệt của ngày hôm nay", descEn: "Today's shared daily puzzle" }
-      ];
-
-      function getDiffCfg(key) {
-        return DIFFICULTIES.find(d => d.key === key) || DIFFICULTIES[2];
-      }
-
-      function getDiffLabel(key) {
-        const cfg = getDiffCfg(key);
-        return (state.settings.lang || "vi") === "vi" ? cfg.vi : cfg.en;
-      }
-
-      /* ========================================================================
-         4. DYNAMIC PWA HOME SCREEN ICON GENERATOR (Canvas -> PNG Data URL)
-         ======================================================================== */
-      function generateDynamicAppIcon() {
-        try {
-          const size = 512;
-          const canvas = document.createElement("canvas");
-          canvas.width = size;
-          canvas.height = size;
-          const ctx = canvas.getContext("2d");
-
-          const grad = ctx.createLinearGradient(0, 0, size, size);
-          grad.addColorStop(0, "#476E4C");
-          grad.addColorStop(0.55, "#355439");
-          grad.addColorStop(1, "#213724");
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, size, size);
-
-          const glow = ctx.createRadialGradient(size * 0.3, size * 0.25, 20, size * 0.3, size * 0.25, size * 0.75);
-          glow.addColorStop(0, "rgba(255, 250, 240, 0.12)");
-          glow.addColorStop(1, "rgba(255, 250, 240, 0)");
-          ctx.fillStyle = glow;
-          ctx.fillRect(0, 0, size, size);
-
-          ctx.strokeStyle = "rgba(250, 247, 240, 0.11)";
-          ctx.lineWidth = 3;
-          const step = size / 3;
-          for (let i = 1; i <= 2; i++) {
-            ctx.beginPath();
-            ctx.moveTo(step * i, 44);
-            ctx.lineTo(step * i, size - 44);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.moveTo(44, step * i);
-            ctx.lineTo(size - 44, step * i);
-            ctx.stroke();
-          }
-
-          const framePad = 36;
-          ctx.strokeStyle = "rgba(212, 171, 94, 0.65)";
-          ctx.lineWidth = 5;
-          ctx.beginPath();
-          if (ctx.roundRect) ctx.roundRect(framePad, framePad, size - framePad * 2, size - framePad * 2, 76);
-          else ctx.rect(framePad, framePad, size - framePad * 2, size - framePad * 2);
-          ctx.stroke();
-
-          const cx = size / 2;
-          const cy = size / 2;
-          const radius = 152;
-
-          ctx.save();
-          ctx.strokeStyle = "#D8B168";
-          ctx.lineWidth = 11;
-          ctx.lineCap = "round";
-          ctx.beginPath();
-          ctx.arc(cx, cy, radius, -Math.PI * 0.42, Math.PI * 1.48);
-          ctx.stroke();
-
-          ctx.strokeStyle = "rgba(216, 177, 104, 0.28)";
-          ctx.lineWidth = 3;
-          ctx.beginPath();
-          ctx.arc(cx, cy, radius + 16, 0, Math.PI * 2);
-          ctx.stroke();
-          ctx.restore();
-
-          ctx.save();
-          ctx.shadowColor = "rgba(18, 28, 19, 0.45)";
-          ctx.shadowBlur = 18;
-          ctx.shadowOffsetY = 6;
-          ctx.fillStyle = "#FAF7F0";
-          ctx.font = '700 206px "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif';
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("禅", cx, cy + 8);
-          ctx.restore();
-
-          const dataUrl = canvas.toDataURL("image/png");
-          document.getElementById("dynamic-apple-icon").href = dataUrl;
-          document.getElementById("dynamic-favicon").href = dataUrl;
-        } catch (_) {}
-      }
-
-      /* ========================================================================
-         5. GENTLE WEB AUDIO SOUNDSCAPE (iOS Unlock + Pentatonic Kalimba)
+         4. GENTLE WEB AUDIO ENGINE (iOS Unlock + Soft Pentatonic Kalimba)
          ======================================================================== */
       class ZenAudioEngine {
         constructor() {
@@ -1963,7 +1949,7 @@
 
           osc.type = "sine";
           osc.frequency.setValueAtTime(freq, now);
-          osc.frequency.exponentialRampToValueAtTime(freq * 0.996, now + 0.32);
+          osc.frequency.exponentialRampToValueAtTime(freq * 0.996, now + 0.35);
 
           gain.gain.setValueAtTime(0.0001, now);
           gain.gain.linearRampToValueAtTime(isNote ? 0.03 : 0.065, now + 0.012);
@@ -1985,7 +1971,7 @@
           osc.type = "triangle";
           osc.frequency.setValueAtTime(220, now);
           gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.linearRampToValueAtTime(0.018, now + 0.006);
+          gain.gain.linearRampToValueAtTime(0.016, now + 0.006);
           gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -2002,10 +1988,10 @@
           const gain = this.ctx.createGain();
           osc.type = "sine";
           osc.frequency.setValueAtTime(165, now);
-          osc.frequency.linearRampToValueAtTime(140, now + 0.22);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.24);
           gain.gain.setValueAtTime(0.0001, now);
           gain.gain.linearRampToValueAtTime(0.045, now + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
           osc.start(now);
@@ -2018,18 +2004,18 @@
           if (!this.ctx) return;
           const notes = isVictory ? [293.66, 369.99, 440.00, 587.33, 739.99] : [440.00, 587.33, 659.25];
           notes.forEach((freq, idx) => {
-            const now = this.ctx.currentTime + idx * 0.07;
+            const now = this.ctx.currentTime + idx * 0.075;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = "sine";
             osc.frequency.setValueAtTime(freq, now);
             gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.linearRampToValueAtTime(0.048, now + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + (isVictory ? 1.3 : 0.7));
+            gain.gain.linearRampToValueAtTime(0.045, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + (isVictory ? 1.35 : 0.7));
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + (isVictory ? 1.35 : 0.75));
+            osc.stop(now + (isVictory ? 1.4 : 0.75));
           });
         }
       }
@@ -2037,8 +2023,23 @@
       const audio = new ZenAudioEngine();
 
       /* ========================================================================
-         6. SUDOKU GENERATOR, UNIQUE SOLVER & LOGICAL HINT ENGINE
+         5. SUDOKU GENERATOR (All 5 Difficulty Levels + Daily) & INTUITION ENGINE
          ======================================================================== */
+      const DIFFICULTY_CONFIGS = {
+        easy:   { key: "easy",   givens: 44, rank: 1 },
+        medium: { key: "medium", givens: 36, rank: 2 },
+        hard:   { key: "hard",   givens: 30, rank: 3 },
+        expert: { key: "expert", givens: 26, rank: 4 },
+        master: { key: "master", givens: 23, rank: 5 },
+        daily:  { key: "daily",  givens: 32, rank: 3 }
+      };
+
+      function getDiffLabel(diffKey) {
+        const lang = (state && state.settings && state.settings.lang) || "vi";
+        const entry = (I18N[lang] || I18N.vi).diffs[diffKey] || (I18N[lang] || I18N.vi).diffs.hard;
+        return entry.name;
+      }
+
       function createSeededRng(seedStr) {
         let h = 2166136261 >>> 0;
         for (let i = 0; i < seedStr.length; i++) {
@@ -2148,7 +2149,7 @@
       }
 
       function generatePuzzle(diffKey) {
-        const cfg = getDiffCfg(diffKey);
+        const cfg = DIFFICULTY_CONFIGS[diffKey] || DIFFICULTY_CONFIGS.hard;
         const todayStr = new Date().toISOString().slice(0, 10);
         const rng = diffKey === "daily" ? createSeededRng("sudozen-" + todayStr) : Math.random;
 
@@ -2172,7 +2173,7 @@
       }
 
       function findLogicalHint(currentBoard, solution) {
-        const cleanBoard = currentBoard.map((v, i) => (v === solution[i] ? v : 0));
+        const cleanBoard = currentBoard.map((v, idx) => (v === solution[idx] ? v : 0));
 
         for (let i = 0; i < 81; i++) {
           if (cleanBoard[i] !== 0) continue;
@@ -2208,20 +2209,25 @@
           }
         }
 
-        const targetIdx = (selectedIdx >= 0 && currentBoard[selectedIdx] !== solution[selectedIdx])
-          ? selectedIdx
-          : currentBoard.findIndex((v, i) => v !== solution[i]);
-
-        if (targetIdx >= 0) {
-          const r = Math.floor(targetIdx / 9);
-          const c = targetIdx % 9;
-          return { idx: targetIdx, digit: solution[targetIdx], type: "insight", r: r + 1, c: c + 1 };
+        for (let i = 0; i < 81; i++) {
+          if (cleanBoard[i] === 0) {
+            const r = Math.floor(i / 9);
+            const c = i % 9;
+            return { idx: i, digit: solution[i], type: "insight", r: r + 1, c: c + 1 };
+          }
         }
         return null;
       }
 
+      function formatHintReason(hint) {
+        if (!hint) return "";
+        if (hint.type === "naked") return t("hintNaked", hint.r, hint.c, hint.digit);
+        if (hint.type === "hidden") return t("hintHidden", hint.box, hint.r, hint.c, hint.digit);
+        return t("hintInsight", hint.r, hint.c, hint.digit);
+      }
+
       /* ========================================================================
-         7. PARTICLE SYSTEM
+         6. PARTICLE EFFECT ENGINE
          ======================================================================== */
       const fxCanvas = document.getElementById("fx-canvas");
       const fxCtx = fxCanvas.getContext("2d");
@@ -2239,10 +2245,10 @@
             x: cx,
             y: cy,
             vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed - 0.3,
+            vy: Math.sin(angle) * speed - 0.35,
             life: 1,
             decay: 0.018 + Math.random() * 0.014,
-            size: 2.2 + Math.random() * 2.6,
+            size: 2.2 + Math.random() * 2.5,
             gold: Math.random() > 0.35
           });
         }
@@ -2272,14 +2278,9 @@
       }
 
       /* ========================================================================
-         8. APPLICATION STATE & VERSIONED LOCALSTORAGE
+         7. STATE & VERSIONED LOCALSTORAGE (With Detailed Solved & Time Logs)
          ======================================================================== */
-      const THEMES = [
-        { id: "moss", vi: "Giấy Washi & Rêu", en: "Washi & Moss" },
-        { id: "hinoki", vi: "Gỗ Hinoki ấm", en: "Hinoki Wood" },
-        { id: "mist", vi: "Sương sớm Kyoto", en: "Kyoto Mist" },
-        { id: "maple", vi: "Lá phong mùa thu", en: "Autumn Maple" }
-      ];
+      const THEME_IDS = ["moss", "hinoki", "mist", "maple"];
 
       const defaultState = () => ({
         version: APP_VERSION,
@@ -2296,7 +2297,7 @@
         profile: {
           wins: 0,
           timedWins: 0,
-          solvedByDiff: { easy: 0, medium: 0, hard: 0, very_hard: 0, master: 0, daily: 0 },
+          solvedByDiff: { easy: 0, medium: 0, hard: 0, expert: 0, master: 0, daily: 0 },
           bestTimes: {},
           history: []
         },
@@ -2308,20 +2309,23 @@
       let selectedIdx = 40;
       let notesMode = false;
       let activeHint = null;
+      let timerInterval = null;
 
       function loadState() {
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           if (raw) {
             const parsed = JSON.parse(raw);
+            const def = defaultState();
             state = {
-              ...defaultState(),
+              ...def,
               ...parsed,
-              settings: { ...defaultState().settings, ...(parsed.settings || {}) },
+              settings: { ...def.settings, ...(parsed.settings || {}) },
               profile: {
-                ...defaultState().profile,
+                ...def.profile,
                 ...(parsed.profile || {}),
-                solvedByDiff: { ...defaultState().profile.solvedByDiff, ...((parsed.profile && parsed.profile.solvedByDiff) || {}) },
+                solvedByDiff: { ...def.profile.solvedByDiff, ...((parsed.profile && parsed.profile.solvedByDiff) || {}) },
+                bestTimes: { ...((parsed.profile && parsed.profile.bestTimes) || {}) },
                 history: Array.isArray(parsed.profile && parsed.profile.history) ? parsed.profile.history : []
               },
               saveSlots: Array.isArray(parsed.saveSlots) ? parsed.saveSlots : []
@@ -2332,8 +2336,6 @@
         document.documentElement.lang = state.settings.lang || "vi";
         document.documentElement.setAttribute("data-theme", state.settings.theme || "moss");
         document.documentElement.setAttribute("data-text-size", state.settings.textSize || "large");
-        const metaTheme = document.querySelector('meta[name="theme-color"]');
-        if (metaTheme) metaTheme.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--bg-base").trim());
       }
 
       function saveState() {
@@ -2344,7 +2346,7 @@
       }
 
       /* ========================================================================
-         9. GAME LIFECYCLE & MOVES
+         8. GAMEPLAY LOGIC
          ======================================================================== */
       function startNewGame(diffKey = "hard") {
         const generated = generatePuzzle(diffKey);
@@ -2358,7 +2360,6 @@
           mistakes: 0,
           hintsLeft: 3,
           elapsedSeconds: 0,
-          wasTimed: state.settings.timedMode,
           completed: false,
           undoStack: [],
           redoStack: []
@@ -2369,7 +2370,7 @@
         selectedIdx = firstEmpty >= 0 ? firstEmpty : 40;
         saveState();
         renderAll();
-        showToast(t("toastNew", getDiffLabel(diffKey)));
+        showToast(t("toastNewPuzzle", getDiffLabel(diffKey)));
       }
 
       function snapshotForUndo() {
@@ -2421,7 +2422,7 @@
         const g = state.game;
         if (!g || g.completed || selectedIdx < 0) return;
         if (g.initial[selectedIdx] !== 0) {
-          showToast(t("toastLocked"));
+          showToast(t("toastLockedCell"));
           return;
         }
         if (g.board[selectedIdx] === 0 && g.notes[selectedIdx].length === 0) return;
@@ -2506,6 +2507,7 @@
           return;
         }
 
+        // Pencil Notes Mode
         if (notesMode) {
           if (g.board[selectedIdx] !== 0) return;
           snapshotForUndo();
@@ -2523,6 +2525,7 @@
           return;
         }
 
+        // Replace or place digit
         if (g.board[selectedIdx] === digit) return;
 
         snapshotForUndo();
@@ -2531,14 +2534,14 @@
         activeHint = null;
 
         const isCorrect = g.solution[selectedIdx] === digit;
-        const instantCheck = state.settings.instantErrorCheck;
+        const instantCheck = Boolean(state.settings.instantErrorCheck);
 
         if (isCorrect) {
           if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
           audio.playPluck(digit, false);
           const r = Math.floor(selectedIdx / 9);
           const c = selectedIdx % 9;
-          spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 8);
+          spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 10);
           checkCompletedUnits(selectedIdx);
 
           if (g.board.every((val, i) => val === g.solution[i])) {
@@ -2549,10 +2552,11 @@
             g.mistakes++;
             audio.playSoftError();
           } else {
+            // Treat silently like paper Sudoku so the game never spoils mistakes
             if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
             audio.playPluck(digit, false);
             if (g.board.every(val => val !== 0)) {
-              showToast(t("toastBoardNotQuite"));
+              showToast(t("toastBoardNotSolvedYet"));
             }
           }
         }
@@ -2567,14 +2571,14 @@
         const g = state.game;
         g.completed = true;
         audio.playChimeChord(true);
-        spawnGoldBurst(0.5, 0.5, 52);
+        spawnGoldBurst(0.5, 0.5, 55);
 
-        const isTimed = Boolean(state.settings.timedMode || g.wasTimed);
+        const isTimed = Boolean(state.settings.timedMode);
         state.profile.wins += 1;
         state.profile.solvedByDiff[g.diffKey] = (state.profile.solvedByDiff[g.diffKey] || 0) + 1;
 
         if (isTimed) {
-          state.profile.timedWins += 1;
+          state.profile.timedWins = (state.profile.timedWins || 0) + 1;
           const prevBest = state.profile.bestTimes[g.diffKey];
           if (!prevBest || g.elapsedSeconds < prevBest) {
             state.profile.bestTimes[g.diffKey] = g.elapsedSeconds;
@@ -2587,16 +2591,16 @@
           seconds: g.elapsedSeconds,
           date: Date.now()
         });
-        if (state.profile.history.length > 40) state.profile.history.pop();
+        if (state.profile.history.length > 30) state.profile.history.pop();
 
         saveState();
         renderHeaderStats();
 
-        const lvlName = getDiffLabel(g.diffKey);
-        document.getElementById("victory-subtitle").textContent = `${t("victoryTitle")} (${lvlName})`;
+        const diffName = getDiffLabel(g.diffKey);
+        document.getElementById("victory-subtitle").textContent = `${t("victoryTitle")} (${diffName})`;
         document.getElementById("victory-stats").textContent = isTimed
-          ? `${t("timerOnLabel")}: ${formatTime(g.elapsedSeconds)} • ${t("solvedSummary", state.profile.wins)}`
-          : `${t("timerOffLabel")} • ${t("solvedSummary", state.profile.wins)}`;
+          ? `${t("thBest")}: ${formatTime(g.elapsedSeconds)} • ${t("solvedSummary", state.profile.wins)}`
+          : `${t("relaxedTag")} • ${t("solvedSummary", state.profile.wins)}`;
         openModal("modal-victory");
       }
 
@@ -2619,7 +2623,7 @@
       }
 
       /* ========================================================================
-         10. SAVE SLOTS MANAGEMENT
+         9. SAVE SLOTS
          ======================================================================== */
       function createSaveSlot() {
         const g = state.game;
@@ -2631,9 +2635,10 @@
 
         const slot = {
           id: "slot_" + Date.now(),
-          name: customName || `${diffLabel}`,
+          name: customName || `${diffLabel} (${Math.round((filledCount / 81) * 100)}%)`,
           timestamp: Date.now(),
           progressPct: Math.round((filledCount / 81) * 100),
+          timed: Boolean(state.settings.timedMode),
           gameState: JSON.parse(JSON.stringify(g))
         };
 
@@ -2664,7 +2669,7 @@
       }
 
       /* ========================================================================
-         11. UI RENDERING & RESPONSIVE BOARD SIZING
+         10. UI RENDERING & RESPONSIVE BOARD SIZING
          ======================================================================== */
       function formatTime(sec) {
         const m = Math.floor(sec / 60).toString().padStart(2, "0");
@@ -2684,12 +2689,13 @@
         const padH = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
 
         const isLandscapeWide = window.innerWidth >= 820 && window.innerWidth > window.innerHeight;
-        const availH = app.clientHeight - padV - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 24 : controls.offsetHeight + 20);
+        const availH = app.clientHeight - padV - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 24 : controls.offsetHeight + 24);
         const availW = isLandscapeWide ? app.clientWidth - padH - controls.offsetWidth - 44 : app.clientWidth - padH - 4;
 
         const maxCap = isLandscapeWide ? 680 : 620;
         const size = Math.max(220, Math.min(availH, availW, maxCap));
         const digitBoost = state.settings.textSize === "xlarge" ? 1.14 : state.settings.textSize === "large" ? 1.07 : 1;
+
         boardEl.style.width = `${size}px`;
         boardEl.style.height = `${size}px`;
         boardEl.style.fontSize = `${Math.round((size / 15.5) * digitBoost)}px`;
@@ -2737,7 +2743,7 @@
         const selBoxR = Math.floor(selR / 3);
         const selBoxC = Math.floor(selC / 3);
         const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
-        const instantCheck = state.settings.instantErrorCheck;
+        const instantCheck = Boolean(state.settings.instantErrorCheck);
 
         for (let i = 0; i < 81; i++) {
           const cell = cells[i];
@@ -2778,6 +2784,7 @@
       function renderLanguageStrings() {
         const lang = state.settings.lang || "vi";
         document.documentElement.lang = lang;
+
         const langSwitch = document.getElementById("btn-lang");
         langSwitch.setAttribute("data-lang", lang);
         langSwitch.setAttribute("aria-checked", lang === "en" ? "true" : "false");
@@ -2792,25 +2799,25 @@
         document.getElementById("lbl-erase").textContent = t("erase");
         document.getElementById("lbl-notes").textContent = t("notes");
         document.getElementById("lbl-hint").textContent = t("hint");
-        document.getElementById("btn-apply-hint").textContent = t("applyHint");
+        document.getElementById("btn-apply-hint").textContent = t("place");
 
-        document.getElementById("modal-new-title").textContent = t("modalNewTitle");
-        document.getElementById("modal-new-sub").textContent = t("modalNewSub");
-        document.getElementById("modal-saves-title").textContent = t("modalSavesTitle");
+        document.getElementById("modal-new-title").textContent = t("chooseLevelTitle");
+        document.getElementById("modal-new-sub").textContent = t("chooseLevelSub");
+        document.getElementById("modal-saves-title").textContent = t("savedGamesTitle");
         document.getElementById("save-slot-name").placeholder = t("savePlaceholder");
-        document.getElementById("btn-create-save").textContent = t("saveCurrent");
+        document.getElementById("btn-create-save").textContent = t("saveBtn");
 
-        document.getElementById("modal-records-title").textContent = t("modalRecordsTitle");
-        document.getElementById("lbl-stat-wins").textContent = t("statWins");
-        document.getElementById("lbl-stat-timed").textContent = t("statTimed");
-        document.getElementById("lbl-stat-fav").textContent = t("statFav");
+        document.getElementById("modal-records-title").textContent = t("recordsTitle");
+        document.getElementById("lbl-stat-wins").textContent = t("totalWins");
+        document.getElementById("lbl-stat-timed").textContent = t("timedWins");
+        document.getElementById("lbl-stat-fav").textContent = t("highestLevel");
         document.getElementById("th-level").textContent = t("thLevel");
         document.getElementById("th-solved").textContent = t("thSolved");
         document.getElementById("th-best").textContent = t("thBest");
         document.getElementById("lbl-recent-history").textContent = t("recentHistory");
         document.getElementById("lbl-palettes").textContent = t("palettes");
 
-        document.getElementById("modal-settings-title").textContent = t("modalSettingsTitle");
+        document.getElementById("modal-settings-title").textContent = t("settingsTitle");
         document.getElementById("set-timed-title").textContent = t("setTimedTitle");
         document.getElementById("set-timed-desc").textContent = t("setTimedDesc");
         document.getElementById("set-check-title").textContent = t("setCheckTitle");
@@ -2823,7 +2830,7 @@
         document.getElementById("set-sound-desc").textContent = t("setSoundDesc");
         document.getElementById("lbl-version").textContent = t("version");
         document.getElementById("btn-check-update").textContent = t("checkUpdateBtn");
-        document.getElementById("btn-victory-view").textContent = t("victoryView");
+        document.getElementById("btn-victory-view").textContent = t("victoryViewBoard");
         document.getElementById("btn-victory-next").textContent = t("victoryNext");
       }
 
@@ -2833,38 +2840,33 @@
         document.getElementById("icon-sound-off").style.display = state.settings.soundEnabled ? "none" : "block";
       }
 
-      function renderTextSizeSwitch() {
-        const cur = state.settings.textSize || "large";
-        document.documentElement.setAttribute("data-text-size", cur);
-        document.querySelectorAll(".size-opt").forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.size === cur);
-        });
-      }
-
       function renderTelemetry() {
         const g = state.game;
         if (!g) return;
         document.getElementById("btn-diff-pill").textContent = getDiffLabel(g.diffKey);
 
-        const mistakesStat = document.getElementById("mistakes-stat");
+        // Sync active state on A- / A / A+ buttons
+        const activeSize = state.settings.textSize || "large";
+        document.querySelectorAll(".size-opt").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.size === activeSize);
+        });
+
+        const mistakesEl = document.getElementById("mistakes-stat");
         if (state.settings.instantErrorCheck) {
-          mistakesStat.style.display = "flex";
+          mistakesEl.style.display = "flex";
           document.getElementById("mistakes-count").textContent = g.mistakes;
         } else {
-          mistakesStat.style.display = "none";
+          mistakesEl.style.display = "none";
         }
 
         const timerBtn = document.getElementById("btn-timer-pill");
-        const timerTxt = document.getElementById("timer-display");
-        if (state.settings.timedMode) {
-          timerBtn.classList.add("timer-on");
-          timerBtn.setAttribute("aria-checked", "true");
-          timerTxt.textContent = formatTime(g.elapsedSeconds);
-        } else {
-          timerBtn.classList.remove("timer-on");
-          timerBtn.setAttribute("aria-checked", "false");
-          timerTxt.textContent = t("timerOffLabel");
-        }
+        const timerText = document.getElementById("timer-display");
+        const isTimed = Boolean(state.settings.timedMode);
+        timerBtn.classList.toggle("timer-on", isTimed);
+        timerBtn.setAttribute("aria-checked", isTimed ? "true" : "false");
+        timerText.textContent = isTimed
+          ? `${t("timerOnPrefix")} ${formatTime(g.elapsedSeconds)}`
+          : t("timerOff");
       }
 
       function renderControls() {
@@ -2873,35 +2875,34 @@
 
         document.getElementById("tool-undo").disabled = g.undoStack.length === 0 || g.completed;
         document.getElementById("tool-redo").disabled = g.redoStack.length === 0 || g.completed;
-        document.getElementById("tool-erase").disabled = g.completed || selectedIdx < 0 || g.initial[selectedIdx] !== 0;
+        document.getElementById("tool-erase").disabled = g.completed || (selectedIdx >= 0 && g.initial[selectedIdx] !== 0);
+        document.getElementById("tool-hint").disabled = g.completed || g.hintsLeft <= 0;
+
         const notesBtn = document.getElementById("tool-notes");
         notesBtn.classList.toggle("active", notesMode);
         document.getElementById("notes-state-badge").textContent = notesMode ? t("on") : t("off");
         document.getElementById("hints-left-badge").textContent = g.hintsLeft;
-        document.getElementById("tool-hint").disabled = g.completed || g.hintsLeft <= 0;
 
         const bar = document.getElementById("intuition-bar");
         const txt = document.getElementById("intuition-text");
         const applyBtn = document.getElementById("btn-apply-hint");
-        bar.classList.remove("active-hint", "notes-active-banner");
 
+        bar.classList.remove("active-hint", "notes-active-banner");
         if (activeHint) {
           bar.classList.add("active-hint");
-          if (activeHint.type === "naked") txt.textContent = t("nakedSingle", activeHint.r, activeHint.c, activeHint.digit);
-          else if (activeHint.type === "hidden") txt.textContent = t("hiddenSingle", activeHint.box, activeHint.r, activeHint.c, activeHint.digit);
-          else txt.textContent = t("zenInsight", activeHint.r, activeHint.c, activeHint.digit);
+          txt.textContent = formatHintReason(activeHint);
           applyBtn.style.display = "inline-block";
         } else if (notesMode) {
           bar.classList.add("notes-active-banner");
-          txt.textContent = t("promptNotes");
+          txt.innerHTML = t("guideNotes");
           applyBtn.style.display = "none";
         } else {
-          txt.textContent = t("promptDefault");
+          txt.innerHTML = t("guideDefault");
           applyBtn.style.display = "none";
         }
 
         const counts = new Array(10).fill(0);
-        const instantCheck = state.settings.instantErrorCheck;
+        const instantCheck = Boolean(state.settings.instantErrorCheck);
         for (let i = 0; i < 81; i++) {
           const val = g.board[i];
           if (val !== 0 && (!instantCheck || val === g.solution[i])) {
@@ -2913,10 +2914,9 @@
         const numpad = document.getElementById("numpad");
         numpad.innerHTML = "";
         for (let d = 1; d <= 9; d++) {
-          const isDone = counts[d] >= 9;
           const btn = document.createElement("button");
           btn.className = "num-btn";
-          if (isDone && !notesMode) btn.classList.add("completed");
+          if (counts[d] >= 9) btn.classList.add("completed");
           if (selectedVal === d) btn.classList.add("active-digit");
           if (notesMode) btn.classList.add("notes-key-style");
           btn.innerHTML = `<span class="num-digit">${d}</span>`;
@@ -2932,24 +2932,26 @@
       function renderDifficultyList() {
         const container = document.getElementById("difficulty-list");
         container.innerHTML = "";
-        const isVi = (state.settings.lang || "vi") === "vi";
+        const lang = state.settings.lang || "vi";
+        const dictDiffs = (I18N[lang] || I18N.vi).diffs;
         const currentKey = state.game ? state.game.diffKey : "hard";
 
-        DIFFICULTIES.forEach(d => {
-          const solved = state.profile.solvedByDiff[d.key] || 0;
-          const isCur = d.key === currentKey;
+        Object.keys(DIFFICULTY_CONFIGS).forEach(key => {
+          const info = dictDiffs[key];
+          const solved = state.profile.solvedByDiff[key] || 0;
+          const isCurrent = key === currentKey;
           const btn = document.createElement("button");
-          btn.className = `diff-option${isCur ? " current-diff" : ""}`;
+          btn.className = `diff-option${isCurrent ? " current-diff" : ""}`;
           btn.innerHTML = `
             <div>
-              <span class="diff-name">${isVi ? d.vi : d.en}</span>
-              <span class="diff-desc">${isVi ? d.descVi : d.descEn}</span>
+              <span class="diff-name">${info.name}</span>
+              <span class="diff-desc">${info.desc}</span>
             </div>
-            <span class="diff-badge">${isCur ? t("currentBadge") : t("solvedCountBadge", solved)}</span>
+            <span class="diff-badge">${isCurrent ? t("currentBadge") : `${solved} ✓`}</span>
           `;
           btn.addEventListener("click", () => {
             closeModal("modal-new");
-            startNewGame(d.key);
+            startNewGame(key);
           });
           container.appendChild(btn);
         });
@@ -2964,16 +2966,16 @@
         container.innerHTML = "";
         state.saveSlots.forEach(slot => {
           const date = new Date(slot.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-          const timePart = slot.gameState.wasTimed ? ` • ${formatTime(slot.gameState.elapsedSeconds)}` : "";
+          const timeInfo = slot.timed ? ` • ${formatTime(slot.gameState.elapsedSeconds)}` : "";
           const div = document.createElement("div");
           div.className = "slot-item";
           div.innerHTML = `
             <div class="slot-meta">
               <div class="slot-title">${escapeHtml(slot.name)}</div>
-              <div class="slot-sub">${slot.progressPct}%${timePart} • ${date}</div>
+              <div class="slot-sub">${slot.progressPct}%${timeInfo} • ${date}</div>
             </div>
             <div class="slot-actions">
-              <button class="btn-sm primary" data-load="${slot.id}">${t("load")}</button>
+              <button class="btn-sm primary" data-load="${slot.id}">${t("loadBtn")}</button>
               <button class="btn-sm danger" data-del="${slot.id}">&times;</button>
             </div>
           `;
@@ -2983,78 +2985,81 @@
         });
       }
 
-      function renderStatsAndSanctuaryModal() {
+      function renderRecordsAndPalettesModal() {
         document.getElementById("stat-total-wins").textContent = state.profile.wins;
-        document.getElementById("stat-timed-wins").textContent = state.profile.timedWins;
+        document.getElementById("stat-timed-wins").textContent = state.profile.timedWins || 0;
 
+        let highestKey = null;
         let highestRank = 0;
-        let highestLabel = "—";
-        DIFFICULTIES.forEach(d => {
-          if ((state.profile.solvedByDiff[d.key] || 0) > 0 && d.rank >= highestRank) {
-            highestRank = d.rank;
-            highestLabel = getDiffLabel(d.key);
+        Object.keys(DIFFICULTY_CONFIGS).forEach(k => {
+          if ((state.profile.solvedByDiff[k] || 0) > 0 && DIFFICULTY_CONFIGS[k].rank >= highestRank) {
+            highestRank = DIFFICULTY_CONFIGS[k].rank;
+            highestKey = k;
           }
         });
-        document.getElementById("stat-fav-level").textContent = highestLabel;
+        document.getElementById("stat-fav-level").textContent = highestKey ? getDiffLabel(highestKey) : "—";
 
         const tbody = document.getElementById("records-tbody");
         tbody.innerHTML = "";
-        DIFFICULTIES.forEach(d => {
-          const count = state.profile.solvedByDiff[d.key] || 0;
-          const best = state.profile.bestTimes[d.key];
+        Object.keys(DIFFICULTY_CONFIGS).forEach(k => {
+          const count = state.profile.solvedByDiff[k] || 0;
+          const bestSec = state.profile.bestTimes[k];
           const tr = document.createElement("tr");
           tr.innerHTML = `
-            <td><strong>${getDiffLabel(d.key)}</strong></td>
+            <td><strong>${getDiffLabel(k)}</strong></td>
             <td>${count}</td>
-            <td>${best ? formatTime(best) : "—"}</td>
+            <td>${bestSec ? formatTime(bestSec) : "—"}</td>
           `;
           tbody.appendChild(tr);
         });
 
-        const histEl = document.getElementById("history-list");
+        const historyEl = document.getElementById("history-list");
         if (state.profile.history.length === 0) {
-          histEl.innerHTML = `<div style="font-size:13px; color:var(--ink-secondary); padding:10px 2px;">${t("noHistory")}</div>`;
+          historyEl.innerHTML = `<div style="font-size:13px; color:var(--ink-secondary); text-align:center; padding:12px 0;">${t("noHistory")}</div>`;
         } else {
-          histEl.innerHTML = "";
+          historyEl.innerHTML = "";
           state.profile.history.slice(0, 15).forEach(entry => {
-            const dt = new Date(entry.date).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+            const dStr = new Date(entry.date).toLocaleDateString(undefined, { month: "short", day: "numeric" });
             const row = document.createElement("div");
             row.className = "history-row";
             row.innerHTML = `
-              <span><strong>${getDiffLabel(entry.diffKey)}</strong> • ${dt}</span>
-              <span>${entry.timed ? formatTime(entry.seconds) : "Zen"}</span>
+              <span><strong>${getDiffLabel(entry.diffKey)}</strong> <span style="color:var(--ink-secondary)">(${dStr})</span></span>
+              <span style="font-weight:700; color:var(--accent-moss-dark);">${entry.timed ? formatTime(entry.seconds) : t("relaxedTag")}</span>
             `;
-            histEl.appendChild(row);
+            historyEl.appendChild(row);
           });
         }
 
-        const isVi = (state.settings.lang || "vi") === "vi";
         const grid = document.getElementById("theme-grid");
         grid.innerHTML = "";
-        THEMES.forEach(th => {
-          const active = state.settings.theme === th.id;
+        const lang = state.settings.lang || "vi";
+        const themeDict = (I18N[lang] || I18N.vi).themes;
+
+        THEME_IDS.forEach(id => {
+          const info = themeDict[id];
+          const active = state.settings.theme === id;
           const card = document.createElement("button");
           card.className = `theme-card${active ? " active" : ""}`;
           card.innerHTML = `
-            <div style="font-weight:700; font-size:14px;">${isVi ? th.vi : th.en}</div>
-            <div style="font-size:12px; font-weight:600; color:var(--accent-gold); margin-top:3px;">
-              ${active ? t("activeTheme") : t("tapTheme")}
+            <div style="font-weight:700; font-size:13.5px;">${info.name}</div>
+            <div style="font-size:11.5px; color:var(--ink-secondary); margin:2px 0 4px;">${info.desc}</div>
+            <div style="font-size:11.5px; font-weight:700; color:var(--accent-gold);">
+              ${active ? t("activeTheme") : t("tapToApply")}
             </div>
           `;
           card.addEventListener("click", () => {
-            state.settings.theme = th.id;
-            document.documentElement.setAttribute("data-theme", th.id);
+            state.settings.theme = id;
+            document.documentElement.setAttribute("data-theme", id);
             const metaTheme = document.querySelector('meta[name="theme-color"]');
             if (metaTheme) metaTheme.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--bg-base").trim());
             saveState();
-            renderStatsAndSanctuaryModal();
+            renderRecordsAndPalettesModal();
           });
           grid.appendChild(card);
         });
       }
 
       function renderAll() {
-        renderTextSizeSwitch();
         renderLanguageStrings();
         renderHeaderStats();
         renderTelemetry();
@@ -3065,7 +3070,7 @@
       }
 
       /* ========================================================================
-         12. HELPERS, MODALS & KEYBOARD SHORTCUTS
+         11. HELPERS, MODALS & EVENT BINDINGS
          ======================================================================== */
       let toastTimeout = null;
       function showToast(msg) {
@@ -3073,7 +3078,7 @@
         el.textContent = msg;
         el.classList.add("show");
         clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => el.classList.remove("show"), 2500);
+        toastTimeout = setTimeout(() => el.classList.remove("show"), 2600);
       }
 
       function escapeHtml(str) {
@@ -3083,30 +3088,21 @@
       function openModal(id) {
         if (id === "modal-new") renderDifficultyList();
         if (id === "modal-saves") renderSaveSlots();
-        if (id === "modal-records") renderStatsAndSanctuaryModal();
+        if (id === "modal-records") renderRecordsAndPalettesModal();
         if (id === "modal-settings") {
-          document.getElementById("toggle-timed-mode").checked = state.settings.timedMode;
-          document.getElementById("toggle-instant-check").checked = state.settings.instantErrorCheck;
-          document.getElementById("toggle-auto-notes").checked = state.settings.autoClearNotes;
-          document.getElementById("toggle-highlight-same").checked = state.settings.highlightSame;
-          document.getElementById("toggle-sound").checked = state.settings.soundEnabled;
+          document.getElementById("toggle-timed-mode").checked = Boolean(state.settings.timedMode);
+          document.getElementById("toggle-instant-check").checked = Boolean(state.settings.instantErrorCheck);
+          document.getElementById("toggle-auto-notes").checked = Boolean(state.settings.autoClearNotes);
+          document.getElementById("toggle-highlight-same").checked = Boolean(state.settings.highlightSame);
+          document.getElementById("toggle-sound").checked = Boolean(state.settings.soundEnabled);
           document.getElementById("app-version-label").textContent = APP_VERSION;
+          document.getElementById("update-status-text").textContent = t("upToDate");
         }
         document.getElementById(id).classList.add("open");
       }
 
       function closeModal(id) {
         document.getElementById(id).classList.remove("open");
-      }
-
-      function toggleTimedMode() {
-        state.settings.timedMode = !state.settings.timedMode;
-        if (state.settings.timedMode && state.game) {
-          state.game.wasTimed = true;
-        }
-        saveState();
-        renderTelemetry();
-        showToast(state.settings.timedMode ? t("toastTimerOn") : t("toastTimerOff"));
       }
 
       function setupEventListeners() {
@@ -3120,23 +3116,35 @@
           });
         });
 
+        // Sliding Language Switch (VN <-> EN)
         document.getElementById("btn-lang").addEventListener("click", () => {
           state.settings.lang = state.settings.lang === "vi" ? "en" : "vi";
+          audio.playSelect();
           saveState();
           renderAll();
         });
 
+        // Center Text Size Switcher (A- | A | A+)
         document.querySelectorAll(".size-opt").forEach(btn => {
           btn.addEventListener("click", () => {
-            state.settings.textSize = btn.dataset.size;
+            const newSize = btn.dataset.size;
+            state.settings.textSize = newSize;
+            document.documentElement.setAttribute("data-text-size", newSize);
+            audio.playSelect();
             saveState();
-            renderTextSizeSwitch();
-            resizeBoardSquare();
-            requestAnimationFrame(resizeBoardSquare);
+            renderAll();
           });
         });
 
-        document.getElementById("btn-timer-pill").addEventListener("click", toggleTimedMode);
+        // Timer Toggle Switch Pill
+        document.getElementById("btn-timer-pill").addEventListener("click", () => {
+          state.settings.timedMode = !state.settings.timedMode;
+          audio.playSelect();
+          saveState();
+          renderTelemetry();
+          showToast(state.settings.timedMode ? t("toastTimerEnabled") : t("toastTimerDisabled"));
+        });
+
         document.getElementById("btn-new-game").addEventListener("click", () => openModal("modal-new"));
         document.getElementById("btn-diff-pill").addEventListener("click", () => openModal("modal-new"));
         document.getElementById("btn-saves").addEventListener("click", () => openModal("modal-saves"));
@@ -3157,6 +3165,7 @@
           renderHeaderStats();
         });
 
+        // Tool Row
         document.getElementById("tool-undo").addEventListener("click", handleUndo);
         document.getElementById("tool-redo").addEventListener("click", handleRedo);
         document.getElementById("tool-erase").addEventListener("click", handleErase);
@@ -3174,9 +3183,9 @@
           }
         });
 
+        // Settings Toggles
         document.getElementById("toggle-timed-mode").addEventListener("change", (e) => {
           state.settings.timedMode = e.target.checked;
-          if (state.settings.timedMode && state.game) state.game.wasTimed = true;
           saveState();
           renderTelemetry();
         });
@@ -3204,6 +3213,7 @@
         });
         document.getElementById("btn-check-update").addEventListener("click", () => checkForAppUpdate(true));
 
+        // Keyboard Support
         window.addEventListener("keydown", (e) => {
           if (document.querySelector(".modal-backdrop.open")) {
             if (e.key === "Escape") {
@@ -3214,19 +3224,19 @@
           const r = Math.floor(selectedIdx / 9);
           const c = selectedIdx % 9;
 
-          if (e.key === "ArrowUp") {
+          if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
             e.preventDefault();
             selectedIdx = ((r + 8) % 9) * 9 + c;
             renderBoard(); renderControls();
-          } else if (e.key === "ArrowDown") {
+          } else if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
             e.preventDefault();
             selectedIdx = ((r + 1) % 9) * 9 + c;
             renderBoard(); renderControls();
-          } else if (e.key === "ArrowLeft") {
+          } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
             e.preventDefault();
             selectedIdx = r * 9 + ((c + 8) % 9);
             renderBoard(); renderControls();
-          } else if (e.key === "ArrowRight") {
+          } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
             e.preventDefault();
             selectedIdx = r * 9 + ((c + 1) % 9);
             renderBoard(); renderControls();
@@ -3252,21 +3262,20 @@
           }
         });
 
-        window.addEventListener("resize", () => {
-          resizeBoardSquare();
-          requestAnimationFrame(resizeBoardSquare);
-        });
+        window.addEventListener("resize", resizeBoardSquare);
         document.addEventListener("visibilitychange", () => {
           if (document.hidden) saveState();
         });
       }
 
       /* ========================================================================
-         13. BOOTSTRAP INITIALIZATION
+         12. BOOTSTRAP INITIALIZATION
          ======================================================================== */
       function init() {
         generateDynamicAppIcon();
         loadState();
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--bg-base").trim());
         buildBoardDom();
         setupEventListeners();
 
@@ -3276,12 +3285,12 @@
           renderAll();
         }
 
-        setInterval(() => {
+        timerInterval = setInterval(() => {
           if (!state.game || state.game.completed || document.hidden) return;
           if (!state.settings.timedMode) return;
           if (document.querySelector(".modal-backdrop.open")) return;
           state.game.elapsedSeconds++;
-          document.getElementById("timer-display").textContent = formatTime(state.game.elapsedSeconds);
+          renderTelemetry();
           if (state.game.elapsedSeconds % 15 === 0) saveState();
         }, 1000);
 
