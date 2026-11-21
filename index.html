@@ -37,7 +37,7 @@
       --accent-moss: #3F6344;
       --accent-moss-dark: #2C4830;
       --accent-gold: #B08435;
-      --accent-gold-soft: rgba(176, 132, 53, 0.2);
+      --accent-gold-soft: rgba(176, 132, 53, 0.22);
 
       --border-thin: #D3CCB9;
       --border-thick: #525A4D;
@@ -167,10 +167,10 @@
       width: 100%;
       height: 100%;
       height: 100dvh;
-      padding-top: calc(10px + var(--safe-top));
-      padding-bottom: calc(10px + var(--safe-bottom));
-      padding-left: calc(12px + var(--safe-left));
-      padding-right: calc(12px + var(--safe-right));
+      padding-top: calc(8px + var(--safe-top));
+      padding-bottom: calc(8px + var(--safe-bottom));
+      padding-left: calc(10px + var(--safe-left));
+      padding-right: calc(10px + var(--safe-right));
       max-width: 1180px;
       margin: 0 auto;
       -webkit-font-smoothing: antialiased;
@@ -179,11 +179,13 @@
     @media (min-width: 740px) {
       #app {
         padding-top: calc(44px + var(--safe-top));
+        padding-left: calc(16px + var(--safe-left));
+        padding-right: calc(16px + var(--safe-right));
       }
     }
 
     /* ==========================================================================
-       4. TOP HEADER BAR & CLEAR LANGUAGE / TIMER SWITCHES
+       4. TOP HEADER BAR & SLIDING LANGUAGE SWITCH (Zero Overlap on iPhone)
        ========================================================================== */
     .top-bar {
       display: flex;
@@ -191,7 +193,7 @@
       justify-content: space-between;
       gap: 6px;
       flex-shrink: 0;
-      min-height: calc(46px * var(--ui-scale));
+      min-height: 44px;
       width: 100%;
     }
 
@@ -200,38 +202,13 @@
       align-items: center;
       gap: 8px;
       min-width: 0;
-      flex: 1 1 auto;
-    }
-
-    @media (min-width: 740px) {
-      #app {
-        padding-top: calc(44px + var(--safe-top));
-      }
-    }
-
-    /* ==========================================================================
-       4. TOP HEADER BAR & CLEAR LANGUAGE / TIMER SWITCHES
-       ========================================================================== */
-    .top-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-      flex-shrink: 0;
-      min-height: calc(50px * var(--ui-scale));
-    }
-
-    .brand-group {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      min-width: 0;
+      flex: 0 1 auto;
     }
 
     .brand-emblem {
       position: relative;
-      width: calc(42px * var(--ui-scale));
-      height: calc(42px * var(--ui-scale));
+      width: 40px;
+      height: 40px;
       border-radius: 12px;
       background: linear-gradient(145deg, #436848 0%, #263E29 100%);
       border: 1.5px solid #C69A4B;
@@ -241,7 +218,7 @@
       color: #FAF7F0;
       font-family: var(--font-serif);
       font-weight: 700;
-      font-size: calc(20px * var(--ui-scale));
+      font-size: 19px;
       flex-shrink: 0;
       overflow: hidden;
       box-shadow: 0 3px 10px rgba(34, 38, 32, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -295,24 +272,25 @@
     .top-actions {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
-    /* Clear Segmented Language Switch (VN | EN) */
+    /* Sliding Language Switch (VN | EN) */
     .lang-switch {
       position: relative;
       display: inline-grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
       padding: 2px;
-      height: calc(42px * var(--ui-scale));
+      height: 40px;
       border-radius: 12px;
       background: var(--bg-elevated);
       border: 1.5px solid var(--border-thin);
       cursor: pointer;
       box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
       transition: border-color 0.2s ease, transform 0.12s ease;
+      flex-shrink: 0;
     }
 
     .lang-switch:active {
@@ -342,142 +320,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      height: 100%;
-      padding: 0 calc(9px * var(--ui-scale));
-      font-size: calc(12.5px * var(--ui-scale));
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      color: var(--ink-secondary);
-      white-space: nowrap;
-      transition: color 0.2s ease;
-    }
-
-    .lang-opt.active {
-      color: #FAF7F0;
-    }
-
-    .lang-flag {
-      font-size: calc(13px * var(--ui-scale));
-      line-height: 1;
-    }
-
-    @media (max-width: 640px) {
-      .lang-full { display: none; }
-    }
-    @media (min-width: 641px) {
-      .lang-short { display: none; }
-    }
-
-    .icon-btn {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      height: calc(42px * var(--ui-scale));
-      min-width: calc(42px * var(--ui-scale));
-      padding: 0 calc(12px * var(--ui-scale));
-      border-radius: 12px;
-      border: 1.5px solid var(--border-thin);
-      background: var(--bg-card);
-      color: var(--ink-primary);
-      font-size: calc(13.5px * var(--ui-scale));
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-    .icon-btn:active {
-      transform: scale(0.95);
-    }
-
-    .icon-btn.accent {
-      background: var(--accent-moss);
-      color: #FAF7F0;
-      border-color: var(--accent-moss-dark);
-    }
-
-    .icon-btn svg {
-      width: calc(18px * var(--ui-scale));
-      height: calc(18px * var(--ui-scale));
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.1;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      flex-shrink: 0;
-    }
-
-    @media (max-width: 520px) {
-      .hide-xs { display: none; }
-      .brand-titles { display: none; }
-      .top-actions { gap: 4px; }
-      .icon-btn {
-        min-width: calc(36px * var(--ui-scale));
-        height: calc(38px * var(--ui-scale));
-        padding: 0 8px;
-        font-size: calc(12.5px * var(--ui-scale));
-      }
-      .lang-switch {
-        height: calc(38px * var(--ui-scale));
-      }
-      .lang-opt {
-        padding: 0 7px;
-        font-size: 11.5px;
-      }
-      .lang-flag { display: none; }
-    }
-
-    /* Clear Segmented Language Switch (VN | EN) */
-    .lang-switch {
-      position: relative;
-      display: inline-grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      padding: 3px;
-      height: calc(44px * var(--ui-scale));
-      border-radius: 13px;
-      background: var(--bg-elevated);
-      border: 1.5px solid var(--border-thin);
-      cursor: pointer;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
-      transition: border-color 0.2s ease, transform 0.12s ease;
-    }
-
-    .lang-switch:active {
-      transform: scale(0.96);
-    }
-
-    .lang-thumb {
-      position: absolute;
-      top: 3px;
-      bottom: 3px;
-      left: 3px;
-      width: calc(50% - 3px);
-      border-radius: 9px;
-      background: var(--accent-moss);
-      box-shadow: 0 2px 6px rgba(34, 38, 32, 0.22);
-      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
-      pointer-events: none;
-    }
-
-    .lang-switch[data-lang="en"] .lang-thumb {
-      transform: translateX(100%);
-    }
-
-    .lang-opt {
-      position: relative;
-      z-index: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
       gap: 5px;
       height: 100%;
-      padding: 0 calc(11px * var(--ui-scale));
-      font-size: calc(13px * var(--ui-scale));
+      padding: 0 10px;
+      font-size: 13px;
       font-weight: 800;
       letter-spacing: 0.02em;
       color: var(--ink-secondary);
@@ -490,14 +336,14 @@
     }
 
     .lang-flag {
-      font-size: calc(14px * var(--ui-scale));
+      font-size: 14px;
       line-height: 1;
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 680px) {
       .lang-full { display: none; }
     }
-    @media (min-width: 641px) {
+    @media (min-width: 681px) {
       .lang-short { display: none; }
     }
 
@@ -507,18 +353,20 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      height: calc(44px * var(--ui-scale));
-      min-width: calc(44px * var(--ui-scale));
-      padding: 0 calc(13px * var(--ui-scale));
+      height: 40px;
+      min-width: 40px;
+      padding: 0 12px;
       border-radius: 12px;
       border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
-      font-size: calc(14px * var(--ui-scale));
+      font-size: 13.5px;
       font-weight: 700;
       cursor: pointer;
+      white-space: nowrap;
       transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      flex-shrink: 0;
     }
 
     .icon-btn:active {
@@ -532,8 +380,8 @@
     }
 
     .icon-btn svg {
-      width: calc(19px * var(--ui-scale));
-      height: calc(19px * var(--ui-scale));
+      width: 18px;
+      height: 18px;
       stroke: currentColor;
       fill: none;
       stroke-width: 2.1;
@@ -542,9 +390,35 @@
       flex-shrink: 0;
     }
 
-    @media (max-width: 480px) {
+    /* Compact iPhone Header Adaptation (Guarantees zero clipping on 375px-430px screens) */
+    @media (max-width: 540px) {
       .hide-xs { display: none; }
-      .icon-btn { padding: 0 10px; }
+      .brand-titles { display: none; }
+      .brand-emblem {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 16px;
+      }
+      .top-actions { gap: 4px; }
+      .lang-switch { height: 34px; border-radius: 10px; }
+      .lang-thumb { border-radius: 7px; }
+      .lang-opt { padding: 0 7px; font-size: 11.5px; }
+      .lang-flag { display: none; }
+      .icon-btn {
+        height: 34px;
+        min-width: 34px;
+        padding: 0 7px;
+        border-radius: 10px;
+        font-size: 12px;
+      }
+      .icon-btn svg {
+        width: 16px;
+        height: 16px;
+      }
+      .icon-btn.accent {
+        padding: 0 9px;
+      }
     }
 
     .badge-dot {
@@ -558,35 +432,37 @@
       border: 1.5px solid var(--bg-card);
     }
 
-    /* Telemetry / Status Bar with Center Text-Size Selector */
+    /* ==========================================================================
+       5. COMPACT SINGLE-ROW TELEMETRY BAR (Difficulty | A- A A+ | Timer Switch)
+       ========================================================================== */
     .telemetry-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 7px 10px;
+      gap: 6px;
+      padding: 5px 8px;
       margin-top: 6px;
-      border-radius: 14px;
+      border-radius: 13px;
       background: var(--bg-elevated);
       border: 1px solid var(--border-thin);
       flex-shrink: 0;
+      width: 100%;
     }
 
     .difficulty-pill {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      height: calc(40px * var(--ui-scale));
-      padding: 0 calc(14px * var(--ui-scale));
-      border-radius: 11px;
+      justify-content: center;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 10px;
       background: var(--bg-card);
       border: 1.5px solid var(--border-thin);
       color: var(--accent-moss-dark);
       font-weight: 800;
-      font-size: calc(14px * var(--ui-scale));
-      letter-spacing: 0.02em;
+      font-size: 13.5px;
       cursor: pointer;
+      white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
@@ -598,23 +474,24 @@
     .text-size-switch {
       display: inline-flex;
       align-items: center;
-      padding: 3px;
-      height: calc(40px * var(--ui-scale));
-      border-radius: 11px;
+      padding: 2px;
+      height: 36px;
+      border-radius: 10px;
       background: var(--bg-card);
       border: 1.5px solid var(--border-thin);
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      flex-shrink: 0;
     }
 
     .size-opt {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: calc(36px * var(--ui-scale));
+      min-width: 32px;
       height: 100%;
-      padding: 0 8px;
+      padding: 0 7px;
       border: none;
-      border-radius: 8px;
+      border-radius: 7px;
       background: transparent;
       color: var(--ink-secondary);
       font-family: var(--font-sans);
@@ -623,9 +500,9 @@
       transition: all 0.16s ease;
     }
 
-    .size-opt[data-size="normal"] { font-size: 13px; }
-    .size-opt[data-size="large"]  { font-size: 15px; }
-    .size-opt[data-size="xlarge"] { font-size: 18px; }
+    .size-opt[data-size="normal"] { font-size: 12px; }
+    .size-opt[data-size="large"]  { font-size: 14px; }
+    .size-opt[data-size="xlarge"] { font-size: 16px; }
 
     .size-opt.active {
       background: var(--accent-moss);
@@ -636,15 +513,16 @@
     .telemetry-right {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
     .stat-pill {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       color: var(--ink-secondary);
-      font-size: calc(13px * var(--ui-scale));
+      font-size: 12px;
       font-weight: 600;
     }
 
@@ -658,16 +536,17 @@
     .timer-switch-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      height: calc(40px * var(--ui-scale));
-      padding: 0 calc(13px * var(--ui-scale));
-      border-radius: 11px;
+      gap: 6px;
+      height: 36px;
+      padding: 0 10px;
+      border-radius: 10px;
       background: var(--bg-card);
       border: 1.5px solid var(--border-thin);
       color: var(--ink-secondary);
-      font-size: calc(14px * var(--ui-scale));
+      font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+      white-space: nowrap;
       transition: all 0.18s ease;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
@@ -682,8 +561,8 @@
     }
 
     .timer-switch-btn svg {
-      width: calc(17px * var(--ui-scale));
-      height: calc(17px * var(--ui-scale));
+      width: 15px;
+      height: 15px;
       stroke: currentColor;
       fill: none;
       stroke-width: 2.2;
@@ -692,8 +571,8 @@
 
     .mini-track {
       position: relative;
-      width: 34px;
-      height: 20px;
+      width: 30px;
+      height: 18px;
       border-radius: 99px;
       background: var(--border-thin);
       transition: background-color 0.2s ease;
@@ -708,8 +587,8 @@
       position: absolute;
       top: 2px;
       left: 2px;
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       background: #FAF7F0;
       box-shadow: 0 1px 3px rgba(0,0,0,0.25);
@@ -717,11 +596,22 @@
     }
 
     .timer-switch-btn.timer-on .mini-thumb {
-      transform: translateX(14px);
+      transform: translateX(12px);
+    }
+
+    @media (max-width: 440px) {
+      .difficulty-pill { height: 32px; padding: 0 9px; font-size: 12.5px; }
+      .text-size-switch { height: 32px; }
+      .size-opt { min-width: 27px; padding: 0 5px; }
+      .timer-switch-btn { height: 32px; padding: 0 8px; gap: 5px; font-size: 12px; }
+      .timer-switch-btn svg { display: none; }
+      .mini-track { width: 26px; height: 16px; }
+      .mini-thumb { width: 12px; height: 12px; }
+      .timer-switch-btn.timer-on .mini-thumb { transform: translateX(10px); }
     }
 
     /* ==========================================================================
-       5. MAIN WORKSPACE (Board + Controls)
+       6. MAIN WORKSPACE (Board + Controls)
        ========================================================================== */
     .workspace {
       flex: 1;
@@ -729,10 +619,10 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       min-height: 0;
       width: 100%;
-      padding: 4px 0;
+      padding: 2px 0;
     }
 
     @media (min-width: 820px) and (orientation: landscape) {
@@ -886,12 +776,12 @@
     }
 
     /* ==========================================================================
-       6. CONTROLS DECK (Intuition Banner + Tool Row + Clean 1-9 Keys)
+       7. CONTROLS DECK (Intuition Banner + Tool Row + Clean 1-9 Keys)
        ========================================================================== */
     .controls-deck {
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 7px;
       width: 100%;
       max-width: 480px;
       flex-shrink: 0;
@@ -902,14 +792,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      min-height: calc(40px * var(--ui-scale));
-      padding: 7px 13px;
-      border-radius: 12px;
+      min-height: calc(36px * var(--ui-scale));
+      padding: 6px 11px;
+      border-radius: 11px;
       background: var(--bg-card);
       border: 1.5px solid var(--border-thin);
-      font-size: calc(13.5px * var(--ui-scale));
+      font-size: calc(13px * var(--ui-scale));
       color: var(--ink-secondary);
-      line-height: 1.35;
+      line-height: 1.3;
     }
 
     .intuition-bar.active-hint {
@@ -929,13 +819,13 @@
     }
 
     .intuition-apply {
-      padding: 6px 13px;
-      border-radius: 9px;
+      padding: 5px 12px;
+      border-radius: 8px;
       border: none;
       background: var(--accent-gold);
       color: #FFFDF9;
       font-weight: 700;
-      font-size: calc(13px * var(--ui-scale));
+      font-size: calc(12.5px * var(--ui-scale));
       cursor: pointer;
       white-space: nowrap;
     }
@@ -943,7 +833,7 @@
     .tool-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 7px;
+      gap: 6px;
     }
 
     .tool-btn {
@@ -952,14 +842,16 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      height: calc(56px * var(--ui-scale));
-      border-radius: 13px;
+      gap: 3px;
+      height: calc(50px * var(--ui-scale));
+      padding: 4px 2px 2px;
+      border-radius: 12px;
       border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
-      font-size: calc(12px * var(--ui-scale));
+      font-size: clamp(10.5px, calc(11.5px * var(--ui-scale)), 13px);
       font-weight: 700;
+      white-space: nowrap;
       cursor: pointer;
       transition: all 0.14s ease;
     }
@@ -980,8 +872,8 @@
     }
 
     .tool-btn svg {
-      width: calc(20px * var(--ui-scale));
-      height: calc(20px * var(--ui-scale));
+      width: calc(18px * var(--ui-scale));
+      height: calc(18px * var(--ui-scale));
       stroke: currentColor;
       fill: none;
       stroke-width: 2.1;
@@ -991,12 +883,12 @@
 
     .tool-pill-badge {
       position: absolute;
-      top: 3px;
+      top: 2px;
       right: 3px;
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 800;
-      line-height: 1.1;
-      padding: 1px 4px;
+      line-height: 1;
+      padding: 1.5px 4px;
       border-radius: 5px;
       background: var(--accent-gold-soft);
       color: var(--ink-primary);
@@ -1012,7 +904,7 @@
     .numpad {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      gap: 6px;
+      gap: 5px;
     }
 
     @media (min-width: 820px) and (orientation: landscape) {
@@ -1030,8 +922,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: calc(60px * var(--ui-scale));
-      border-radius: 13px;
+      height: calc(52px * var(--ui-scale));
+      border-radius: 12px;
       border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
@@ -1066,20 +958,20 @@
     .num-btn.notes-key-style::after {
       content: "✎";
       position: absolute;
-      top: 4px;
-      right: 5px;
-      font-size: calc(11px * var(--ui-scale));
+      top: 3px;
+      right: 4px;
+      font-size: 10px;
       opacity: 0.7;
     }
 
     .num-digit {
-      font-size: calc(25px * var(--ui-scale));
+      font-size: calc(23px * var(--ui-scale));
       font-weight: 800;
       line-height: 1;
     }
 
     /* ==========================================================================
-       7. MODALS (New Game, Save Slots, Records & Sanctuary, Settings, Victory)
+       8. MODALS (New Game, Save Slots, Records & Palettes, Settings, Victory)
        ========================================================================== */
     .modal-backdrop {
       position: fixed;
@@ -1345,7 +1237,7 @@
       background: var(--bg-cell-same);
     }
 
-    /* Accessible Large Pill Toggle Switch for Settings */
+    /* Accessible Pill Toggle Switch for Settings */
     .setting-row {
       display: flex;
       align-items: center;
@@ -1484,7 +1376,7 @@
       </div>
     </header>
 
-    <!-- TELEMETRY BAR WITH CENTER UI TEXT SIZE SELECTOR -->
+    <!-- SINGLE-ROW TELEMETRY BAR WITH CENTER UI TEXT SIZE SELECTOR -->
     <div class="telemetry-bar">
       <button class="difficulty-pill" id="btn-diff-pill">Khó</button>
 
@@ -1699,7 +1591,7 @@
 
       <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border-thin); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="font-size:13px; color:var(--ink-secondary);">
-          <span id="lbl-version">Phiên bản</span> <strong id="app-version-label">1.5.0</strong>
+          <span id="lbl-version">Phiên bản</span> <strong id="app-version-label">1.6.0</strong>
           <div id="update-status-text">Đã cập nhật mới nhất</div>
         </div>
         <button class="btn-sm" id="btn-check-update">Kiểm tra cập nhật</button>
@@ -1729,7 +1621,7 @@
       /* ========================================================================
          1. APP VERSION & BOOKMARK-SAFE AUTO-UPDATE
          ======================================================================== */
-      const APP_VERSION = "1.5.0";
+      const APP_VERSION = "1.6.0";
       const STORAGE_KEY = "SUDOZEN_STATE_V1";
 
       function compareSemver(a, b) {
@@ -1967,7 +1859,6 @@
           canvas.height = size;
           const ctx = canvas.getContext("2d");
 
-          // Rich Kyoto moss & deep pine gradient (fills full square so iOS masks cleanly)
           const grad = ctx.createLinearGradient(0, 0, size, size);
           grad.addColorStop(0, "#476E4C");
           grad.addColorStop(0.55, "#355439");
@@ -1975,14 +1866,12 @@
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, size, size);
 
-          // Soft ambient top-left glow
           const glow = ctx.createRadialGradient(size * 0.3, size * 0.25, 20, size * 0.3, size * 0.25, size * 0.75);
           glow.addColorStop(0, "rgba(255, 250, 240, 0.12)");
           glow.addColorStop(1, "rgba(255, 250, 240, 0)");
           ctx.fillStyle = glow;
           ctx.fillRect(0, 0, size, size);
 
-          // Subtle architectural 3x3 Sudoku grid lines in background
           ctx.strokeStyle = "rgba(250, 247, 240, 0.11)";
           ctx.lineWidth = 3;
           const step = size / 3;
@@ -1998,7 +1887,6 @@
             ctx.stroke();
           }
 
-          // Fine inner Kintsugi gold frame
           const framePad = 36;
           ctx.strokeStyle = "rgba(212, 171, 94, 0.65)";
           ctx.lineWidth = 5;
@@ -2007,7 +1895,6 @@
           else ctx.rect(framePad, framePad, size - framePad * 2, size - framePad * 2);
           ctx.stroke();
 
-          // Luminous Zen Enso ring around the central kanji
           const cx = size / 2;
           const cy = size / 2;
           const radius = 152;
@@ -2027,7 +1914,6 @@
           ctx.stroke();
           ctx.restore();
 
-          // Crisp central "禅" (Zen) kanji in warm Washi ivory
           ctx.save();
           ctx.shadowColor = "rgba(18, 28, 19, 0.45)";
           ctx.shadowBlur = 18;
@@ -2798,7 +2684,7 @@
         const padH = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
 
         const isLandscapeWide = window.innerWidth >= 820 && window.innerWidth > window.innerHeight;
-        const availH = app.clientHeight - padV - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 24 : controls.offsetHeight + 24);
+        const availH = app.clientHeight - padV - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 24 : controls.offsetHeight + 20);
         const availW = isLandscapeWide ? app.clientWidth - padH - controls.offsetWidth - 44 : app.clientWidth - padH - 4;
 
         const maxCap = isLandscapeWide ? 680 : 620;
@@ -3240,7 +3126,6 @@
           renderAll();
         });
 
-        // Quick UI Text Size Switcher (A- / A / A+)
         document.querySelectorAll(".size-opt").forEach(btn => {
           btn.addEventListener("click", () => {
             state.settings.textSize = btn.dataset.size;
