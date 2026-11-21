@@ -21,17 +21,18 @@
       --bg-elevated: #F5F1E8;
       --bg-card: #FAF7F0;
       --bg-cell: #FDFBF7;
-      --bg-cell-given: #EFEAE0;
-      --bg-cell-peer: #E5E0D3;
-      --bg-cell-same: #D8E2CE;
-      --bg-cell-selected: #CBE0BD;
+      --bg-cell-given: #E5DFD2;
+      --bg-cell-peer: #E6EFE3;
+      --bg-cell-given-peer: #D8E2D4;
+      --bg-cell-same: #CFE2C8;
+      --bg-cell-selected: #BBD7B2;
       --bg-cell-error: #F6DFDC;
 
-      --ink-primary: #222620;
-      --ink-secondary: #555D50;
+      --ink-primary: #141613;
+      --ink-secondary: #52594D;
       --ink-muted: #848B7E;
-      --ink-user: #275830;
-      --ink-note: #5E6659;
+      --ink-user: #60675C;
+      --ink-note: #4B5563;
       --ink-error: #B8423A;
 
       --accent-moss: #3F6344;
@@ -64,14 +65,15 @@
       --bg-elevated: #F2E7D8;
       --bg-card: #F8F0E5;
       --bg-cell: #FCF8F2;
-      --bg-cell-given: #EFE3D3;
-      --bg-cell-peer: #E6D7C4;
+      --bg-cell-given: #E4D4BE;
+      --bg-cell-peer: #EFE5D3;
+      --bg-cell-given-peer: #DFCEB4;
       --bg-cell-same: #E2CEB5;
       --bg-cell-selected: #D8BE9E;
-      --ink-primary: #2B2017;
+      --ink-primary: #241A12;
       --ink-secondary: #624F3E;
       --ink-muted: #917E6C;
-      --ink-user: #78481E;
+      --ink-user: #78695A;
       --accent-moss: #855325;
       --accent-moss-dark: #633B17;
       --border-thin: #D6C3AC;
@@ -84,14 +86,15 @@
       --bg-elevated: #ECF0F2;
       --bg-card: #F4F7F9;
       --bg-cell: #FAFCFD;
-      --bg-cell-given: #E7EDF0;
-      --bg-cell-peer: #DCE4E8;
+      --bg-cell-given: #DCE4E9;
+      --bg-cell-peer: #E1ECF2;
+      --bg-cell-given-peer: #D0DFE7;
       --bg-cell-same: #CEDCE3;
       --bg-cell-selected: #BFD3DD;
-      --ink-primary: #1B252C;
+      --ink-primary: #161F26;
       --ink-secondary: #4C5D69;
       --ink-muted: #7C8D99;
-      --ink-user: #245370;
+      --ink-user: #5E6E7A;
       --accent-moss: #346684;
       --accent-moss-dark: #224960;
       --border-thin: #C8D3D9;
@@ -104,14 +107,15 @@
       --bg-elevated: #F4ECE7;
       --bg-card: #FAF4F0;
       --bg-cell: #FDF9F7;
-      --bg-cell-given: #EFE3DC;
-      --bg-cell-peer: #E7D8D0;
+      --bg-cell-given: #E4D5CD;
+      --bg-cell-peer: #F2E4DF;
+      --bg-cell-given-peer: #E1CCC5;
       --bg-cell-same: #E3CBC2;
       --bg-cell-selected: #DABAB0;
-      --ink-primary: #291D1A;
+      --ink-primary: #211613;
       --ink-secondary: #624B45;
       --ink-muted: #917A74;
-      --ink-user: #893325;
+      --ink-user: #76645F;
       --accent-moss: #983D2E;
       --accent-moss-dark: #72291E;
       --border-thin: #D6C2BA;
@@ -695,11 +699,22 @@
     .cell.given {
       background: var(--bg-cell-given);
       color: var(--ink-primary);
-      font-weight: 700;
+      font-family: var(--font-sans);
+      font-weight: 800;
+    }
+
+    .cell.user-filled {
+      color: var(--ink-user);
+      font-family: var(--font-sans);
+      font-weight: 500;
     }
 
     .cell.peer {
       background: var(--bg-cell-peer);
+    }
+
+    .cell.given.peer {
+      background: var(--bg-cell-given-peer);
     }
 
     .cell.same-num {
@@ -1076,15 +1091,19 @@
     }
 
     .diff-badge {
-      font-size: calc(12px * var(--ui-scale));
-      font-weight: 700;
-      color: var(--accent-moss-dark);
-      background: var(--bg-card);
-      border: 1px solid var(--border-thin);
-      padding: 5px 10px;
-      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: calc(13px * var(--ui-scale));
+      font-weight: 800;
+      color: #FAF7F0;
+      background: var(--accent-moss);
+      border: 1.5px solid var(--accent-moss-dark);
+      padding: 8px 13px;
+      border-radius: 10px;
       white-space: nowrap;
-      margin-left: 8px;
+      margin-left: 10px;
+      box-shadow: 0 2px 6px rgba(34, 38, 32, 0.14);
     }
 
     .slot-item {
@@ -1438,9 +1457,8 @@
           </button>
 
           <button class="tool-btn" id="tool-hint">
-            <span class="tool-pill-badge" id="hints-left-badge">3</span>
             <svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
-            <span id="lbl-hint">Gợi ý</span>
+            <span id="lbl-hint">Gợi ý (3)</span>
           </button>
         </div>
 
@@ -1621,7 +1639,7 @@
       /* ========================================================================
          1. APP VERSION & BOOKMARK-SAFE AUTO-UPDATE
          ======================================================================== */
-      const APP_VERSION = "1.6.1";
+      const APP_VERSION = "1.7.0";
       const STORAGE_KEY = "SUDOZEN_STATE_V1";
 
       function compareSemver(a, b) {
@@ -1759,9 +1777,9 @@
           off: "TẮT",
           guideDefault: "Chạm vào một ô trống rồi chọn số từ 1 đến 9.",
           guideNotes: "<strong>Chế độ Ghi chú đang BẬT:</strong> Chạm số để đánh dấu các số có thể điền vào ô.",
-          chooseLevelTitle: "Chọn mức độ chơi",
-          chooseLevelSub: "Mỗi ván đều được tạo mới và đảm bảo chỉ có một lời giải duy nhất.",
-          currentBadge: "Đang chơi",
+          chooseLevelTitle: "Chọn mức độ để chơi ván mới",
+          chooseLevelSub: "Chạm vào một mức độ bên dưới để bắt đầu ngay bàn cờ mới.",
+          playNowBadge: "Chơi ngay ▶",
           savedGamesTitle: "Ván chơi đã lưu",
           savePlaceholder: "Tên gợi nhớ (ví dụ: Buổi sáng)",
           saveBtn: "Lưu ván này",
@@ -1799,7 +1817,7 @@
           victoryViewBoard: "Xem lại bàn cờ",
           victoryNext: "Chơi ván mới",
           toastNewPuzzle: (lvl) => `Đã tạo ván mới mức ${lvl}`,
-          toastLockedCell: "Đây là số cố định ban đầu, không thể xóa",
+          toastLockedCell: "Đây là số đề bài có sẵn (chữ đen đậm), không thể xóa hay sửa",
           toastNoHints: "Bạn đã dùng hết 3 lượt gợi ý cho ván này",
           toastSaved: "Đã lưu ván chơi thành công",
           toastLoaded: (name) => `Đã mở lại "${name}"`,
@@ -1842,9 +1860,9 @@
           off: "OFF",
           guideDefault: "Tap any empty cell and choose a number from 1 to 9.",
           guideNotes: "<strong>Notes Mode ON:</strong> Tap numbers to mark possible candidates.",
-          chooseLevelTitle: "Choose Difficulty",
-          chooseLevelSub: "Every puzzle is freshly generated with a single guaranteed unique solution.",
-          currentBadge: "Current",
+          chooseLevelTitle: "Start a New Game",
+          chooseLevelSub: "Tap any difficulty below to start a fresh puzzle right away.",
+          playNowBadge: "Play ▶",
           savedGamesTitle: "Saved Games",
           savePlaceholder: "Label (e.g. Morning Tea)",
           saveBtn: "Save Current",
@@ -1882,7 +1900,7 @@
           victoryViewBoard: "View Board",
           victoryNext: "Play Another",
           toastNewPuzzle: (lvl) => `Started new ${lvl} puzzle`,
-          toastLockedCell: "Starting digits cannot be erased",
+          toastLockedCell: "This is a printed starting number (bold black) and cannot be changed",
           toastNoHints: "No hints remaining for this puzzle",
           toastSaved: "Puzzle saved",
           toastLoaded: (name) => `Loaded "${name}"`,
@@ -2501,8 +2519,16 @@
         const g = state.game;
         if (!g || g.completed || selectedIdx < 0) return;
 
+        // If given cell selected, gently remind and highlight matching numbers
         if (g.initial[selectedIdx] !== 0) {
           audio.playSelect();
+          const cellEl = document.querySelector(`.cell[data-idx="${selectedIdx}"]`);
+          if (cellEl) {
+            cellEl.style.animation = "none";
+            void cellEl.offsetWidth;
+            cellEl.style.animation = "gentleShake 0.28s ease";
+          }
+          showToast(t("toastLockedCell"));
           renderBoard();
           return;
         }
@@ -2757,7 +2783,8 @@
 
           cell.className = "cell";
           if (isGiven) cell.classList.add("given");
-          else if (isPeer) cell.classList.add("peer");
+          else if (val !== 0) cell.classList.add("user-filled");
+          if (isPeer) cell.classList.add("peer");
           if (isSameNum) cell.classList.add("same-num");
           if (i === selectedIdx) cell.classList.add("selected");
           if (activeHint && activeHint.idx === i) cell.classList.add("hint-target");
@@ -2798,7 +2825,7 @@
         document.getElementById("lbl-redo").textContent = t("redo");
         document.getElementById("lbl-erase").textContent = t("erase");
         document.getElementById("lbl-notes").textContent = t("notes");
-        document.getElementById("lbl-hint").textContent = t("hint");
+        document.getElementById("lbl-hint").textContent = `${t("hint")} (${state.game ? state.game.hintsLeft : 3})`;
         document.getElementById("btn-apply-hint").textContent = t("place");
 
         document.getElementById("modal-new-title").textContent = t("chooseLevelTitle");
@@ -2881,7 +2908,7 @@
         const notesBtn = document.getElementById("tool-notes");
         notesBtn.classList.toggle("active", notesMode);
         document.getElementById("notes-state-badge").textContent = notesMode ? t("on") : t("off");
-        document.getElementById("hints-left-badge").textContent = g.hintsLeft;
+        document.getElementById("lbl-hint").textContent = `${t("hint")} (${g.hintsLeft})`;
 
         const bar = document.getElementById("intuition-bar");
         const txt = document.getElementById("intuition-text");
@@ -2938,7 +2965,6 @@
 
         Object.keys(DIFFICULTY_CONFIGS).forEach(key => {
           const info = dictDiffs[key];
-          const solved = state.profile.solvedByDiff[key] || 0;
           const isCurrent = key === currentKey;
           const btn = document.createElement("button");
           btn.className = `diff-option${isCurrent ? " current-diff" : ""}`;
@@ -2947,7 +2973,7 @@
               <span class="diff-name">${info.name}</span>
               <span class="diff-desc">${info.desc}</span>
             </div>
-            <span class="diff-badge">${isCurrent ? t("currentBadge") : `${solved} ✓`}</span>
+            <span class="diff-badge">${t("playNowBadge")}</span>
           `;
           btn.addEventListener("click", () => {
             closeModal("modal-new");
