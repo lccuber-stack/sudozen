@@ -167,13 +167,19 @@
       width: 100%;
       height: 100%;
       height: 100dvh;
-      padding-top: calc(8px + var(--safe-top));
-      padding-bottom: calc(10px + var(--safe-bottom));
-      padding-left: calc(12px + var(--safe-left));
-      padding-right: calc(12px + var(--safe-right));
+      padding-top: calc(34px + var(--safe-top));
+      padding-bottom: calc(12px + var(--safe-bottom));
+      padding-left: calc(14px + var(--safe-left));
+      padding-right: calc(14px + var(--safe-right));
       max-width: 1180px;
       margin: 0 auto;
       -webkit-font-smoothing: antialiased;
+    }
+
+    @media (min-width: 740px) {
+      #app {
+        padding-top: calc(44px + var(--safe-top));
+      }
     }
 
     /* ==========================================================================
@@ -268,31 +274,72 @@
 
     /* Clear Segmented Language Switch (VN | EN) */
     .lang-switch {
-      display: inline-flex;
+      position: relative;
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
       align-items: center;
       padding: 3px;
       height: calc(44px * var(--ui-scale));
-      border-radius: 12px;
+      border-radius: 13px;
       background: var(--bg-elevated);
       border: 1.5px solid var(--border-thin);
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+      transition: border-color 0.2s ease, transform 0.12s ease;
+    }
+
+    .lang-switch:active {
+      transform: scale(0.96);
+    }
+
+    .lang-thumb {
+      position: absolute;
+      top: 3px;
+      bottom: 3px;
+      left: 3px;
+      width: calc(50% - 3px);
+      border-radius: 9px;
+      background: var(--accent-moss);
+      box-shadow: 0 2px 6px rgba(34, 38, 32, 0.22);
+      transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+    }
+
+    .lang-switch[data-lang="en"] .lang-thumb {
+      transform: translateX(100%);
     }
 
     .lang-opt {
-      padding: calc(6px * var(--ui-scale)) calc(10px * var(--ui-scale));
-      border-radius: 9px;
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      height: 100%;
+      padding: 0 calc(11px * var(--ui-scale));
       font-size: calc(13px * var(--ui-scale));
       font-weight: 800;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       color: var(--ink-secondary);
-      transition: all 0.18s ease;
+      white-space: nowrap;
+      transition: color 0.2s ease;
     }
 
     .lang-opt.active {
-      background: var(--bg-card);
-      color: var(--accent-moss-dark);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      color: #FAF7F0;
+    }
+
+    .lang-flag {
+      font-size: calc(14px * var(--ui-scale));
+      line-height: 1;
+    }
+
+    @media (max-width: 640px) {
+      .lang-full { display: none; }
+    }
+    @media (min-width: 641px) {
+      .lang-short { display: none; }
     }
 
     .icon-btn {
@@ -1236,10 +1283,19 @@
       </div>
 
       <div class="top-actions">
-        <!-- Clear Segmented Language Switch -->
-        <button class="lang-switch" id="btn-lang" aria-label="Switch Language">
-          <span class="lang-opt active" id="lang-opt-vi">VN</span>
-          <span class="lang-opt" id="lang-opt-en">EN</span>
+        <!-- Clear Sliding Language Switch -->
+        <button class="lang-switch" id="btn-lang" data-lang="vi" role="switch" aria-checked="false" aria-label="Switch Language (Tiếng Việt / English)">
+          <span class="lang-thumb" aria-hidden="true"></span>
+          <span class="lang-opt active" id="lang-opt-vi">
+            <span class="lang-flag" aria-hidden="true">🇻🇳</span>
+            <span class="lang-short">VN</span>
+            <span class="lang-full">Tiếng Việt</span>
+          </span>
+          <span class="lang-opt" id="lang-opt-en">
+            <span class="lang-flag" aria-hidden="true">🇬🇧</span>
+            <span class="lang-short">EN</span>
+            <span class="lang-full">English</span>
+          </span>
         </button>
 
         <button class="icon-btn" id="btn-records" aria-label="Records">
@@ -2675,6 +2731,9 @@
       function renderLanguageStrings() {
         const lang = state.settings.lang || "vi";
         document.documentElement.lang = lang;
+        const langSwitch = document.getElementById("btn-lang");
+        langSwitch.setAttribute("data-lang", lang);
+        langSwitch.setAttribute("aria-checked", lang === "en" ? "true" : "false");
         document.getElementById("lang-opt-vi").classList.toggle("active", lang === "vi");
         document.getElementById("lang-opt-en").classList.toggle("active", lang === "en");
 
