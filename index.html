@@ -147,7 +147,7 @@
     }
 
     /* ==========================================================================
-       3. APP SHELL LAYOUT (Zero Overlapping, Full Viewport Fit)
+       3. APP SHELL LAYOUT
        ========================================================================== */
     #app {
       position: relative;
@@ -167,7 +167,7 @@
     }
 
     /* ==========================================================================
-       4. TOP HEADER BAR & TELEMETRY STRIP
+       4. TOP HEADER BAR & CLEAR LANGUAGE / TIMER SWITCHES
        ========================================================================== */
     .top-bar {
       display: flex;
@@ -232,6 +232,37 @@
       flex-shrink: 0;
     }
 
+    /* Segmented Physical-Style Language Switch (VN / EN) */
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px;
+      height: 38px;
+      border-radius: 11px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-thin);
+      cursor: pointer;
+      gap: 2px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+    }
+
+    .lang-seg {
+      padding: 4px 7px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      color: var(--ink-muted);
+      transition: all 0.18s ease;
+    }
+
+    .lang-seg.active {
+      background: var(--bg-card);
+      color: var(--accent-moss-dark);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      border: 1px solid var(--border-thin);
+    }
+
     .icon-btn {
       position: relative;
       display: inline-flex;
@@ -263,15 +294,6 @@
       padding: 0 11px;
     }
 
-    .icon-btn.lang-btn {
-      background: var(--bg-elevated);
-      border-color: var(--accent-gold);
-      color: var(--ink-primary);
-      font-size: 11px;
-      letter-spacing: 0.03em;
-      padding: 0 8px;
-    }
-
     .icon-btn svg {
       width: 17px;
       height: 17px;
@@ -294,10 +316,12 @@
       border: 1.5px solid var(--bg-card);
     }
 
-    @media (max-width: 410px) {
+    @media (max-width: 430px) {
       .hide-xs { display: none; }
       .icon-btn { padding: 0 7px; min-width: 35px; height: 36px; }
       .icon-btn.accent { padding: 0 9px; }
+      .lang-switch { height: 36px; }
+      .lang-seg { padding: 3px 6px; font-size: 10.5px; }
     }
 
     /* Telemetry Strip */
@@ -316,7 +340,7 @@
     }
 
     .difficulty-pill {
-      padding: 4px 10px;
+      padding: 5px 10px;
       border-radius: 8px;
       background: var(--bg-card);
       border: 1px solid var(--border-thin);
@@ -343,25 +367,66 @@
       font-variant-numeric: tabular-nums;
     }
 
-    .timer-pill {
+    /* Unmistakable Timer Toggle Pill with Clock Icon & Switch Indicator */
+    .timer-switch-pill {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       padding: 4px 9px;
-      border-radius: 8px;
+      border-radius: 9px;
       background: var(--bg-card);
       border: 1px solid var(--border-thin);
       color: var(--ink-secondary);
       font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
+      transition: all 0.2s ease;
     }
 
-    .timer-pill.active {
+    .timer-switch-pill svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      flex-shrink: 0;
+    }
+
+    .mini-track {
+      position: relative;
+      width: 24px;
+      height: 14px;
+      border-radius: 99px;
+      background: var(--border-thin);
+      transition: background-color 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .mini-thumb {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #FFFDF9;
+      transition: transform 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    }
+
+    .timer-switch-pill.active {
       color: var(--ink-primary);
       border-color: var(--accent-moss);
+    }
+
+    .timer-switch-pill.active .mini-track {
+      background: var(--accent-moss);
+    }
+
+    .timer-switch-pill.active .mini-thumb {
+      transform: translateX(10px);
     }
 
     /* ==========================================================================
@@ -496,7 +561,7 @@
       100% { background-color: var(--bg-cell); }
     }
 
-    /* Pencil Notes 3x3 Mini-Grid */
+    /* Pencil Notes 3x3 Mini-Grid inside Board Cells */
     .notes-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -525,7 +590,7 @@
     }
 
     /* ==========================================================================
-       6. CONTROLS DECK (Intuition Banner + Action Tools + 1-9 Numpad)
+       6. CONTROLS DECK (Intuition Banner + Action Tools + Clean 1-9 Numpad)
        ========================================================================== */
     .controls-deck {
       display: flex;
@@ -639,6 +704,7 @@
       color: #FFF;
     }
 
+    /* Clean, Uncluttered 1-9 Numpad (Zero confusing sub-numbers) */
     .numpad {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
@@ -658,17 +724,16 @@
     .num-btn {
       position: relative;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 54px;
+      height: 52px;
       border-radius: 11px;
-      border: 1px solid var(--border-thin);
+      border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
       cursor: pointer;
       box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-      transition: transform 0.1s ease, background-color 0.15s ease, opacity 0.2s ease;
+      transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
     }
 
     .num-btn:active {
@@ -677,26 +742,36 @@
     }
 
     .num-btn.completed {
-      opacity: 0.35;
+      opacity: 0.3;
       background: var(--bg-elevated);
     }
 
     .num-btn.active-digit {
       border-color: var(--accent-moss);
-      box-shadow: inset 0 0 0 1.5px var(--accent-moss);
+      box-shadow: inset 0 0 0 1px var(--accent-moss);
+    }
+
+    /* Visual distinction when Notes Mode is active */
+    .numpad.notes-mode .num-btn {
+      border-style: dashed;
+      border-color: var(--accent-moss);
+      background: var(--bg-elevated);
+      color: var(--accent-moss-dark);
+    }
+
+    .numpad.notes-mode .num-btn::after {
+      content: "✎";
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      font-size: 9px;
+      opacity: 0.7;
     }
 
     .num-digit {
-      font-size: 22px;
+      font-size: 23px;
       font-weight: 700;
-      line-height: 1.05;
-    }
-
-    .num-rem {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--ink-muted);
-      margin-top: 1px;
+      line-height: 1;
     }
 
     /* ==========================================================================
@@ -811,7 +886,6 @@
       margin-left: 8px;
     }
 
-    /* Tabs inside Statistics / Sanctuary Modal */
     .tab-bar {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -840,7 +914,6 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
-    /* Stats Summary Cards */
     .stats-summary-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -895,7 +968,6 @@
       border-bottom: none;
     }
 
-    /* Save Slots List */
     .slot-item {
       display: flex;
       align-items: center;
@@ -1041,8 +1113,11 @@
       </div>
 
       <div class="top-actions">
-        <!-- Instant VN / EN Toggle -->
-        <button class="icon-btn lang-btn" id="btn-lang" aria-label="Switch Language">VN | EN</button>
+        <!-- Clear Segmented Language Toggle Switch (VN / EN) -->
+        <button class="lang-switch" id="btn-lang" role="switch" aria-label="Switch Language VN or EN">
+          <span class="lang-seg active" id="seg-vi">VN</span>
+          <span class="lang-seg" id="seg-en">EN</span>
+        </button>
 
         <!-- Statistics & Sanctuary -->
         <button class="icon-btn" id="btn-stats" aria-label="Statistics & Sanctuary">
@@ -1083,9 +1158,11 @@
         <strong id="mistakes-count">0</strong>
       </div>
 
-      <!-- Optional Timer Pill (Off by default, tap to toggle) -->
-      <button class="timer-pill" id="btn-timer-pill" title="Toggle Timer">
-        <span id="timer-display">Thư giãn</span>
+      <!-- Clear Timer Switch Pill (Clock Icon + Label + Mini Toggle Track) -->
+      <button class="timer-switch-pill" id="btn-timer-pill" role="switch" aria-checked="false">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/></svg>
+        <span id="timer-display">Tính giờ: TẮT</span>
+        <span class="mini-track" aria-hidden="true"><span class="mini-thumb"></span></span>
       </button>
     </div>
 
@@ -1133,7 +1210,7 @@
           </button>
         </div>
 
-        <!-- 1-9 Numpad -->
+        <!-- Clean 1-9 Numpad -->
         <div class="numpad" id="numpad"></div>
       </section>
     </main>
@@ -1279,7 +1356,7 @@
 
       <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border-thin); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="font-size:12px; color:var(--ink-secondary);">
-          SudoZen v<strong id="app-version-label">1.1.0</strong>
+          SudoZen v<strong id="app-version-label">1.2.0</strong>
           <div id="update-status-text">Phiên bản mới nhất</div>
         </div>
         <button class="btn-sm" id="btn-check-update">Kiểm tra cập nhật</button>
@@ -1314,7 +1391,7 @@
       /* ========================================================================
          1. APP VERSION & BOOKMARK-SAFE AUTO-UPDATE
          ======================================================================== */
-      const APP_VERSION = "1.1.0";
+      const APP_VERSION = "1.2.0";
       const STORAGE_KEY = "SUDOZEN_STATE_V1";
 
       function compareSemver(a, b) {
@@ -1378,10 +1455,9 @@
           statsBtn: "Thành tích",
           newBtn: "Ván mới",
           mistakesLbl: "Lỗi:",
-          relaxedTimer: "Thư giãn",
-          timedLabel: "Giờ",
+          timerOffLabel: "Tính giờ: TẮT",
           defaultPrompt: "Chạm vào một ô trống rồi chọn số từ 1 đến 9.",
-          notesActivePrompt: "Đang bật Ghi chú: Chạm số để ghi nháp các khả năng.",
+          notesActivePrompt: "Đang bật Ghi chú (✎): Chạm số để ghi nháp vào ô.",
           applyHintBtn: "Điền số",
           undo: "Hoàn tác",
           redo: "Làm lại",
@@ -1408,9 +1484,8 @@
           historyHeader: "Nhật ký các ván đã hoàn thành gần đây",
           noHistoryMsg: "Chưa có ván nào hoàn thành. Hãy giải xong một ván để ghi dấu nhé!",
           bestTimeLbl: "Nhanh nhất: {t}",
-          noTimedYet: "Chưa tính giờ",
           solvedCountLbl: "{n} ván",
-          relaxedTag: "Thư giãn",
+          relaxedTag: "Không tính giờ",
           sanctuaryCaption: "Mỗi ván hoàn thành sẽ tặng Đá Hòa Hợp để mở khóa các bảng màu dịu mắt.",
           unlockedActive: "Đang dùng",
           unlockedApply: "Đã mở • Chạm để dùng",
@@ -1446,8 +1521,8 @@
           toastSaved: "Đã lưu ván chơi vào sổ!",
           toastLoaded: "Đã mở lại ván '{name}'",
           toastNeedStones: "Cần thêm {n} Đá Hòa Hợp để mở màu này",
-          toastTimerOn: "Đã bật đồng hồ tính giờ",
-          toastTimerOff: "Đã tắt đồng hồ — Chơi thư giãn",
+          toastTimerOn: "Đã BẬT đồng hồ tính giờ",
+          toastTimerOff: "Đã TẮT đồng hồ tính giờ",
           toast3Mistakes: "Đã chạm 3 lỗi — Bộ đếm lỗi được đặt lại để bạn tiếp tục!",
           hintNaked: "Ô duy nhất: Hàng {r}, Cột {c} chỉ có thể điền số {d}.",
           hintHiddenBox: "Vị trí duy nhất trong khối: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
@@ -1474,10 +1549,9 @@
           statsBtn: "Records",
           newBtn: "New",
           mistakesLbl: "Mistakes:",
-          relaxedTimer: "Relaxed",
-          timedLabel: "Time",
+          timerOffLabel: "Timer: OFF",
           defaultPrompt: "Tap an empty cell and choose a digit from 1 to 9.",
-          notesActivePrompt: "Notes Mode ON: Tap numbers to toggle pencil candidates.",
+          notesActivePrompt: "Notes Mode ON (✎): Tap numbers to write small pencil notes.",
           applyHintBtn: "Place",
           undo: "Undo",
           redo: "Redo",
@@ -1504,9 +1578,8 @@
           historyHeader: "Recent Completed Puzzles",
           noHistoryMsg: "No completed puzzles yet. Finish a board to record your achievement!",
           bestTimeLbl: "Best: {t}",
-          noTimedYet: "No timed runs",
           solvedCountLbl: "{n} solved",
-          relaxedTag: "Relaxed",
+          relaxedTag: "Untimed",
           sanctuaryCaption: "Complete puzzles to earn Harmony Stones and unlock calming color palettes.",
           unlockedActive: "Active",
           unlockedApply: "Unlocked • Tap to apply",
@@ -1542,8 +1615,8 @@
           toastSaved: "Game saved to your scrolls!",
           toastLoaded: "Loaded '{name}'",
           toastNeedStones: "Earn {n} more Harmony Stones to unlock",
-          toastTimerOn: "Timer enabled",
-          toastTimerOff: "Timer disabled — Relaxed Zen mode",
+          toastTimerOn: "Timer switched ON",
+          toastTimerOff: "Timer switched OFF",
           toast3Mistakes: "3 mistakes reached — Counter reset so you can keep playing!",
           hintNaked: "Naked Single: Row {r}, Col {c} can only hold {d}.",
           hintHiddenBox: "Hidden Single in Box: {d} only fits at Row {r}, Col {c}.",
@@ -1594,7 +1667,6 @@
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, size, size);
 
-          // Raked sand rings
           ctx.strokeStyle = "rgba(250, 247, 240, 0.13)";
           ctx.lineWidth = 6;
           for (let r = 90; r <= 340; r += 44) {
@@ -1603,7 +1675,6 @@
             ctx.stroke();
           }
 
-          // Inner Washi card
           const pad = 74;
           const box = size - pad * 2;
           ctx.fillStyle = "#FAF7F0";
@@ -1615,7 +1686,6 @@
           ctx.lineWidth = 8;
           ctx.stroke();
 
-          // 3x3 grid lines
           const innerPad = pad + 44;
           const innerSize = size - innerPad * 2;
           const cell = innerSize / 3;
@@ -1909,7 +1979,6 @@
          6. SMART LOGICAL INTUITION HINT ENGINE (Bilingual Reasoning)
          ======================================================================== */
       function findLogicalHint(currentBoard, solution) {
-        // 1. Naked Single
         for (let i = 0; i < 81; i++) {
           if (currentBoard[i] !== 0) continue;
           const r = Math.floor(i / 9);
@@ -1923,7 +1992,6 @@
           }
         }
 
-        // 2. Hidden Single in 3x3 Box
         for (let box = 0; box < 9; box++) {
           const br = Math.floor(box / 3) * 3;
           const bc = (box % 3) * 3;
@@ -1945,7 +2013,6 @@
           }
         }
 
-        // 3. Hidden Single in Row
         for (let r = 0; r < 9; r++) {
           for (let n = 1; n <= 9; n++) {
             const spots = [];
@@ -1962,7 +2029,6 @@
           }
         }
 
-        // 4. Hidden Single in Column
         for (let c = 0; c < 9; c++) {
           for (let n = 1; n <= 9; n++) {
             const spots = [];
@@ -1979,7 +2045,6 @@
           }
         }
 
-        // 5. Guided Cell Deduction
         const targetIdx = (selectedIdx >= 0 && currentBoard[selectedIdx] === 0)
           ? selectedIdx
           : currentBoard.findIndex(v => v === 0);
@@ -2111,9 +2176,9 @@
       const defaultState = () => ({
         version: APP_VERSION,
         settings: {
-          lang: "vi",           // Vietnamese default for Mom
-          timerEnabled: false,  // Timer OFF by default
-          mistakeLimit: false,  // Stress-free Zen mode by default
+          lang: "vi",
+          timerEnabled: false,
+          mistakeLimit: false,
           autoClearNotes: true,
           highlightSame: true,
           soundEnabled: true,
@@ -2125,7 +2190,7 @@
           streak: 0,
           solvedByDiff: { easy: 0, medium: 0, hard: 0, veryhard: 0, master: 0, daily: 0 },
           bestTimes: {},
-          history: [] // Logs recent solved puzzles { diffKey, timed, seconds, date }
+          history: []
         },
         game: null,
         saveSlots: []
@@ -2593,7 +2658,10 @@
 
       function renderStaticTranslations() {
         const lang = state.settings.lang || "vi";
-        document.getElementById("btn-lang").textContent = lang === "vi" ? "VN | EN" : "EN | VN";
+        document.getElementById("seg-vi").classList.toggle("active", lang === "vi");
+        document.getElementById("seg-en").classList.toggle("active", lang === "en");
+        document.getElementById("btn-lang").setAttribute("aria-checked", lang === "en" ? "true" : "false");
+
         document.getElementById("brand-sub-text").textContent = t("solvedSummary", { n: state.profile.wins });
         document.getElementById("lbl-stats-btn").textContent = t("statsBtn");
         document.getElementById("lbl-new-btn").textContent = t("newBtn");
@@ -2619,13 +2687,10 @@
 
         const timerPill = document.getElementById("btn-timer-pill");
         const timerDisplay = document.getElementById("timer-display");
-        if (state.settings.timerEnabled) {
-          timerPill.classList.add("active");
-          timerDisplay.textContent = `⏱ ${formatTime(g.elapsedSeconds)}`;
-        } else {
-          timerPill.classList.remove("active");
-          timerDisplay.textContent = `🌿 ${t("relaxedTimer")}`;
-        }
+        const isTimed = Boolean(state.settings.timerEnabled);
+        timerPill.classList.toggle("active", isTimed);
+        timerPill.setAttribute("aria-checked", isTimed ? "true" : "false");
+        timerDisplay.textContent = isTimed ? formatTime(g.elapsedSeconds) : t("timerOffLabel");
       }
 
       function renderControls() {
@@ -2661,14 +2726,15 @@
         const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
 
         const numpad = document.getElementById("numpad");
+        numpad.classList.toggle("notes-mode", notesMode);
         numpad.innerHTML = "";
         for (let d = 1; d <= 9; d++) {
-          const rem = Math.max(0, 9 - counts[d]);
+          const isComplete = counts[d] >= 9;
           const btn = document.createElement("button");
           btn.className = "num-btn";
-          if (rem === 0) btn.classList.add("completed");
+          if (isComplete) btn.classList.add("completed");
           if (selectedVal === d) btn.classList.add("active-digit");
-          btn.innerHTML = `<span class="num-digit">${d}</span><span class="num-rem">${rem === 0 ? "✓" : rem}</span>`;
+          btn.innerHTML = `<span class="num-digit">${d}</span>`;
           btn.addEventListener("pointerdown", (e) => {
             e.preventDefault();
             audio.unlock();
@@ -2686,7 +2752,6 @@
         const lang = state.settings.lang || "vi";
 
         DIFF_ORDER.forEach(key => {
-          const cfg = DIFFICULTY_CONFIG[key];
           const textCfg = I18N[lang].diffs[key];
           const solved = state.profile.solvedByDiff[key] || 0;
           const best = state.profile.bestTimes[key];
@@ -2779,7 +2844,7 @@
           state.profile.history.slice(0, 12).forEach(entry => {
             const label = (I18N[lang].diffs[entry.diffKey] || I18N[lang].diffs.hard).label;
             const dateStr = new Date(entry.date).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-            const modeStr = entry.timed ? `⏱ ${formatTime(entry.seconds)}` : `🌿 ${t("relaxedTag")}`;
+            const modeStr = entry.timed ? formatTime(entry.seconds) : t("relaxedTag");
             const item = document.createElement("div");
             item.className = "history-item";
             item.innerHTML = `<span><strong>${label}</strong> • ${dateStr}</span><span style="color:var(--accent-moss); font-weight:700;">${modeStr}</span>`;
@@ -2787,7 +2852,6 @@
           });
         }
 
-        // Render Garden Themes
         document.getElementById("sanctuary-caption").textContent = t("sanctuaryCaption");
         const grid = document.getElementById("theme-grid");
         grid.innerHTML = "";
@@ -2927,7 +2991,6 @@
         document.getElementById("btn-settings").addEventListener("click", () => openModal("modal-settings"));
         document.getElementById("btn-create-save").addEventListener("click", createSaveSlot);
 
-        // Tabs inside Stats/Garden modal
         document.querySelectorAll(".tab-btn").forEach(tab => {
           tab.addEventListener("click", () => {
             document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
@@ -2952,7 +3015,6 @@
           renderStaticTranslations();
         });
 
-        // Tool Buttons
         document.getElementById("tool-undo").addEventListener("click", handleUndo);
         document.getElementById("tool-redo").addEventListener("click", handleRedo);
         document.getElementById("tool-erase").addEventListener("click", handleErase);
@@ -2970,7 +3032,6 @@
           }
         });
 
-        // Settings Toggles
         document.getElementById("toggle-timer-mode").addEventListener("change", (e) => {
           state.settings.timerEnabled = e.target.checked;
           if (state.settings.timerEnabled && state.game && !state.game.completed) {
@@ -3001,7 +3062,6 @@
         });
         document.getElementById("btn-check-update").addEventListener("click", () => checkForAppUpdate(true));
 
-        // Keyboard Navigation
         window.addEventListener("keydown", (e) => {
           if (document.querySelector(".modal-backdrop.open")) {
             if (e.key === "Escape") {
@@ -3076,7 +3136,7 @@
           if (!state.settings.timerEnabled) return;
           if (document.querySelector(".modal-backdrop.open")) return;
           state.game.elapsedSeconds++;
-          document.getElementById("timer-display").textContent = `⏱ ${formatTime(state.game.elapsedSeconds)}`;
+          document.getElementById("timer-display").textContent = formatTime(state.game.elapsedSeconds);
           if (state.game.elapsedSeconds % 15 === 0) saveState();
         }, 1000);
 
