@@ -1,0 +1,3095 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SudoZen" />
+  <meta name="theme-color" content="#EAE5D9" />
+  <title>SudoZen</title>
+  <link id="dynamic-favicon" rel="icon" type="image/png" href="" />
+  <link id="dynamic-apple-icon" rel="apple-touch-icon" href="" />
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN TOKENS & SERENE PALETTES (Washi, Moss, Hinoki, Kyoto Mist, Maple)
+       ========================================================================== */
+    :root {
+      --bg-base: #EAE5D9;
+      --bg-elevated: #F5F1E8;
+      --bg-card: #FAF7F0;
+      --bg-cell: #FDFBF7;
+      --bg-cell-given: #F1ECE1;
+      --bg-cell-peer: #E8E4D8;
+      --bg-cell-same: #DCE3D3;
+      --bg-cell-selected: #CFE0C1;
+      --bg-cell-error: #F6DFDC;
+
+      --ink-primary: #222620;
+      --ink-secondary: #535A4E;
+      --ink-muted: #82887C;
+      --ink-user: #25562E;
+      --ink-note: #5D6558;
+      --ink-error: #B8423A;
+
+      --accent-moss: #436647;
+      --accent-moss-dark: #2E4B32;
+      --accent-gold: #B68D40;
+      --accent-gold-soft: rgba(182, 141, 64, 0.22);
+
+      --border-thin: #D5CEBE;
+      --border-thick: #52594D;
+      --shadow-soft: 0 8px 24px rgba(34, 38, 32, 0.08);
+      --shadow-card: 0 14px 36px rgba(34, 38, 32, 0.16);
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-serif: "New York", "Iowan Old Style", Georgia, "Times New Roman", serif;
+    }
+
+    [data-theme="hinoki"] {
+      --bg-base: #E6D7C3;
+      --bg-elevated: #F2E7D8;
+      --bg-card: #F8F0E5;
+      --bg-cell: #FCF8F2;
+      --bg-cell-given: #EFE3D3;
+      --bg-cell-peer: #E6D7C4;
+      --bg-cell-same: #E2CEB5;
+      --bg-cell-selected: #D8BE9E;
+      --ink-primary: #2F241B;
+      --ink-secondary: #685544;
+      --ink-muted: #988472;
+      --ink-user: #7D4E24;
+      --accent-moss: #8C5A2B;
+      --accent-moss-dark: #6B421D;
+      --border-thin: #D6C3AC;
+      --border-thick: #685544;
+    }
+
+    [data-theme="mist"] {
+      --bg-base: #DFE5E8;
+      --bg-elevated: #ECF0F2;
+      --bg-card: #F4F7F9;
+      --bg-cell: #FAFCFD;
+      --bg-cell-given: #E7EDF0;
+      --bg-cell-peer: #DCE4E8;
+      --bg-cell-same: #CEDCE3;
+      --bg-cell-selected: #BFD3DD;
+      --ink-primary: #1F2930;
+      --ink-secondary: #51626E;
+      --ink-muted: #82939E;
+      --ink-user: #2B5B78;
+      --accent-moss: #3B6E8C;
+      --accent-moss-dark: #285068;
+      --border-thin: #C8D3D9;
+      --border-thick: #51626E;
+    }
+
+    [data-theme="maple"] {
+      --bg-base: #EAE0DA;
+      --bg-elevated: #F4ECE7;
+      --bg-card: #FAF4F0;
+      --bg-cell: #FDF9F7;
+      --bg-cell-given: #EFE3DC;
+      --bg-cell-peer: #E7D8D0;
+      --bg-cell-same: #E3CBC2;
+      --bg-cell-selected: #DABAB0;
+      --ink-primary: #2D211E;
+      --ink-secondary: #68514B;
+      --ink-muted: #99827C;
+      --ink-user: #8F392B;
+      --accent-moss: #9E4334;
+      --accent-moss-dark: #7A3024;
+      --border-thin: #D6C2BA;
+      --border-thick: #68514B;
+    }
+
+    /* ==========================================================================
+       2. GLOBAL RESET & iOS TOUCH / SAFE-AREA HARDENING
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+      touch-action: manipulation;
+      background-color: var(--bg-base);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+      background-image: radial-gradient(rgba(80, 75, 65, 0.08) 1px, transparent 0),
+                        radial-gradient(rgba(182, 141, 64, 0.06) 1px, transparent 0);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    /* ==========================================================================
+       3. APP SHELL LAYOUT (Zero Overlapping, Full Viewport Fit)
+       ========================================================================== */
+    #app {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      padding-top: calc(6px + var(--safe-top));
+      padding-bottom: calc(8px + var(--safe-bottom));
+      padding-left: calc(10px + var(--safe-left));
+      padding-right: calc(10px + var(--safe-right));
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       4. TOP HEADER BAR & TELEMETRY STRIP
+       ========================================================================== */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      flex-shrink: 0;
+      min-height: 44px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .brand-emblem {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-moss), var(--accent-moss-dark));
+      border: 1.5px solid var(--accent-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FAF7F0;
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .brand-titles {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--ink-primary);
+      line-height: 1.15;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 38px;
+      min-width: 38px;
+      padding: 0 9px;
+      border-radius: 10px;
+      border: 1px solid var(--border-thin);
+      background: var(--bg-card);
+      color: var(--ink-primary);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.95);
+    }
+
+    .icon-btn.accent {
+      background: var(--accent-moss);
+      color: #FAF7F0;
+      border-color: var(--accent-moss-dark);
+      padding: 0 11px;
+    }
+
+    .icon-btn.lang-btn {
+      background: var(--bg-elevated);
+      border-color: var(--accent-gold);
+      color: var(--ink-primary);
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      padding: 0 8px;
+    }
+
+    .icon-btn svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .badge-dot {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      border: 1.5px solid var(--bg-card);
+    }
+
+    @media (max-width: 410px) {
+      .hide-xs { display: none; }
+      .icon-btn { padding: 0 7px; min-width: 35px; height: 36px; }
+      .icon-btn.accent { padding: 0 9px; }
+    }
+
+    /* Telemetry Strip */
+    .telemetry-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      padding: 6px 10px;
+      margin-top: 5px;
+      border-radius: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-thin);
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+
+    .difficulty-pill {
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      color: var(--accent-moss);
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--ink-secondary);
+      font-weight: 600;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .stat-pill strong {
+      color: var(--ink-primary);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 9px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      color: var(--ink-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .timer-pill.active {
+      color: var(--ink-primary);
+      border-color: var(--accent-moss);
+    }
+
+    /* ==========================================================================
+       5. MAIN PLAYGROUND (Board + Controls Responsive Split)
+       ========================================================================== */
+    .workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 0;
+      width: 100%;
+      padding: 2px 0;
+    }
+
+    @media (min-width: 820px) and (orientation: landscape) {
+      .workspace {
+        flex-direction: row;
+        justify-content: center;
+        gap: 28px;
+      }
+    }
+
+    .board-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sudoku-board {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      grid-template-rows: repeat(9, 1fr);
+      background: var(--border-thick);
+      border: 2.5px solid var(--border-thick);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+      touch-action: none;
+    }
+
+    #fx-canvas {
+      position: absolute;
+      inset: -16px;
+      width: calc(100% + 32px);
+      height: calc(100% + 32px);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .cell {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-cell);
+      border-right: 1px solid var(--border-thin);
+      border-bottom: 1px solid var(--border-thin);
+      font-family: var(--font-sans);
+      font-weight: 600;
+      color: var(--ink-user);
+      cursor: pointer;
+      transition: background-color 0.1s ease, color 0.1s ease;
+    }
+
+    .cell[data-col="2"], .cell[data-col="5"] {
+      border-right: 2px solid var(--border-thick);
+    }
+    .cell[data-row="2"], .cell[data-row="5"] {
+      border-bottom: 2px solid var(--border-thick);
+    }
+    .cell[data-col="8"] { border-right: none; }
+    .cell[data-row="8"] { border-bottom: none; }
+
+    .cell.given {
+      background: var(--bg-cell-given);
+      color: var(--ink-primary);
+      font-weight: 700;
+    }
+
+    .cell.peer {
+      background: var(--bg-cell-peer);
+    }
+
+    .cell.same-num {
+      background: var(--bg-cell-same);
+    }
+
+    .cell.selected {
+      background: var(--bg-cell-selected) !important;
+      box-shadow: inset 0 0 0 2.5px var(--accent-moss);
+    }
+
+    .cell.hint-target {
+      box-shadow: inset 0 0 0 2.5px var(--accent-gold) !important;
+      background: rgba(182, 141, 64, 0.2) !important;
+    }
+
+    .cell.error {
+      background: var(--bg-cell-error) !important;
+      color: var(--ink-error) !important;
+      animation: gentleShake 0.28s ease;
+    }
+
+    .cell.pop-in .cell-val {
+      animation: digitBloom 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .cell.ripple-flash {
+      animation: kintsugiFlash 0.65s ease;
+    }
+
+    @keyframes digitBloom {
+      0% { transform: scale(0.45); opacity: 0.3; }
+      70% { transform: scale(1.12); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-3px); }
+      75% { transform: translateX(3px); }
+    }
+
+    @keyframes kintsugiFlash {
+      0% { background-color: rgba(182, 141, 64, 0.42); }
+      100% { background-color: var(--bg-cell); }
+    }
+
+    /* Pencil Notes 3x3 Mini-Grid */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      width: 100%;
+      height: 100%;
+      padding: 1px;
+      pointer-events: none;
+    }
+
+    .note-num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(9px, 2vw, 12px);
+      line-height: 1;
+      font-weight: 700;
+      color: var(--ink-note);
+    }
+
+    .note-num.highlight-note {
+      color: var(--accent-moss-dark);
+      font-weight: 800;
+      background: rgba(182, 141, 64, 0.28);
+      border-radius: 3px;
+    }
+
+    /* ==========================================================================
+       6. CONTROLS DECK (Intuition Banner + Action Tools + 1-9 Numpad)
+       ========================================================================== */
+    .controls-deck {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      width: 100%;
+      max-width: 450px;
+      flex-shrink: 0;
+    }
+
+    .intuition-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 36px;
+      padding: 6px 11px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      line-height: 1.3;
+    }
+
+    .intuition-bar.active-hint {
+      border-color: var(--accent-gold);
+      background: linear-gradient(to right, var(--bg-card), rgba(182, 141, 64, 0.14));
+      color: var(--ink-primary);
+    }
+
+    .intuition-text {
+      flex: 1;
+    }
+
+    .intuition-apply {
+      padding: 5px 11px;
+      border-radius: 8px;
+      border: none;
+      background: var(--accent-gold);
+      color: #FFFDF9;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .tool-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .tool-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      height: 48px;
+      border-radius: 11px;
+      border: 1px solid var(--border-thin);
+      background: var(--bg-card);
+      color: var(--ink-primary);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+
+    .tool-btn:active {
+      transform: scale(0.95);
+    }
+
+    .tool-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .tool-btn.active {
+      background: var(--accent-moss);
+      color: #FAF7F0;
+      border-color: var(--accent-moss-dark);
+    }
+
+    .tool-btn svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .tool-pill-badge {
+      position: absolute;
+      top: 3px;
+      right: 4px;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 4px;
+      border-radius: 6px;
+      background: var(--accent-gold-soft);
+      color: var(--ink-primary);
+    }
+
+    .tool-btn.active .tool-pill-badge {
+      background: rgba(255,255,255,0.25);
+      color: #FFF;
+    }
+
+    .numpad {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 5px;
+    }
+
+    @media (min-width: 820px) and (orientation: landscape) {
+      .numpad {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .num-btn {
+        height: 58px !important;
+      }
+    }
+
+    .num-btn {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 54px;
+      border-radius: 11px;
+      border: 1px solid var(--border-thin);
+      background: var(--bg-card);
+      color: var(--ink-primary);
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+      transition: transform 0.1s ease, background-color 0.15s ease, opacity 0.2s ease;
+    }
+
+    .num-btn:active {
+      transform: scale(0.93);
+      background: var(--bg-cell-selected);
+    }
+
+    .num-btn.completed {
+      opacity: 0.35;
+      background: var(--bg-elevated);
+    }
+
+    .num-btn.active-digit {
+      border-color: var(--accent-moss);
+      box-shadow: inset 0 0 0 1.5px var(--accent-moss);
+    }
+
+    .num-digit {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.05;
+    }
+
+    .num-rem {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-top: 1px;
+    }
+
+    /* ==========================================================================
+       7. MODALS (New Game, Save Scrolls, Statistics & Sanctuary, Settings, Win)
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: calc(14px + var(--safe-top)) calc(14px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(14px + var(--safe-left));
+      background: rgba(28, 31, 26, 0.52);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 460px;
+      max-height: 86dvh;
+      overflow-y: auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+      color: var(--ink-primary);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .modal-title {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .close-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1px solid var(--border-thin);
+      background: var(--bg-elevated);
+      color: var(--ink-primary);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .diff-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border-thin);
+      background: var(--bg-elevated);
+      color: var(--ink-primary);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .diff-option:hover, .diff-option:active {
+      border-color: var(--accent-moss);
+      transform: translateY(-1px);
+    }
+
+    .diff-name {
+      font-weight: 700;
+      font-size: 15px;
+      display: block;
+    }
+
+    .diff-desc {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .diff-reward {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      background: var(--accent-gold-soft);
+      padding: 4px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+      margin-left: 8px;
+    }
+
+    /* Tabs inside Statistics / Sanctuary Modal */
+    .tab-bar {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      background: var(--bg-elevated);
+      padding: 4px;
+      border-radius: 11px;
+      border: 1px solid var(--border-thin);
+      margin-bottom: 12px;
+    }
+
+    .tab-btn {
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--ink-secondary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--bg-card);
+      color: var(--ink-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    /* Stats Summary Cards */
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .summary-box {
+      padding: 10px 8px;
+      border-radius: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-thin);
+      text-align: center;
+    }
+
+    .summary-val {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent-moss);
+      display: block;
+    }
+
+    .summary-lbl {
+      font-size: 11px;
+      color: var(--ink-secondary);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .stat-table-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 11px;
+      margin-bottom: 6px;
+      border-radius: 10px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-thin);
+      font-size: 13px;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border-thin);
+      font-size: 12px;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Save Slots List */
+    .slot-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 12px;
+      margin-bottom: 8px;
+      border-radius: 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-thin);
+    }
+
+    .slot-meta {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .slot-title {
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .slot-sub {
+      font-size: 11.5px;
+      color: var(--ink-secondary);
+      margin-top: 2px;
+    }
+
+    .slot-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-sm {
+      padding: 7px 11px;
+      border-radius: 8px;
+      border: 1px solid var(--border-thin);
+      background: var(--bg-card);
+      color: var(--ink-primary);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-sm.primary {
+      background: var(--accent-moss);
+      color: #FAF7F0;
+      border-color: var(--accent-moss-dark);
+    }
+
+    .btn-sm.danger {
+      color: var(--ink-error);
+    }
+
+    .sanctuary-preview {
+      width: 100%;
+      height: 145px;
+      border-radius: 14px;
+      border: 1px solid var(--border-thin);
+      margin-bottom: 12px;
+      overflow: hidden;
+      background: var(--bg-elevated);
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .theme-card {
+      padding: 10px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-thin);
+      background: var(--bg-elevated);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .theme-card.active {
+      border-color: var(--accent-moss);
+      background: var(--bg-cell-same);
+    }
+
+    .theme-card.locked {
+      opacity: 0.65;
+    }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--border-thin);
+      font-size: 14px;
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: calc(18px + var(--safe-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 90;
+      padding: 10px 16px;
+      border-radius: 99px;
+      background: var(--ink-primary);
+      color: #FAF7F0;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.22);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      max-width: 90vw;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- TOP HEADER -->
+    <header class="top-bar">
+      <div class="brand-group">
+        <div class="brand-emblem" aria-hidden="true">禅</div>
+        <div class="brand-titles">
+          <div class="brand-title">SudoZen</div>
+          <div class="brand-sub" id="brand-sub-text">0 ván đã giải</div>
+        </div>
+      </div>
+
+      <div class="top-actions">
+        <!-- Instant VN / EN Toggle -->
+        <button class="icon-btn lang-btn" id="btn-lang" aria-label="Switch Language">VN | EN</button>
+
+        <!-- Statistics & Sanctuary -->
+        <button class="icon-btn" id="btn-stats" aria-label="Statistics & Sanctuary">
+          <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          <span class="hide-xs" id="lbl-stats-btn">Thành tích</span>
+        </button>
+
+        <!-- Save Scrolls -->
+        <button class="icon-btn" id="btn-saves" aria-label="Save Slots">
+          <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        </button>
+
+        <!-- Audio Mute / Unmute -->
+        <button class="icon-btn" id="btn-audio" aria-label="Toggle Sound">
+          <svg id="icon-sound-on" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          <svg id="icon-sound-off" style="display:none" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+        </button>
+
+        <!-- Settings -->
+        <button class="icon-btn" id="btn-settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span id="update-dot" class="badge-dot" style="display:none"></span>
+        </button>
+
+        <!-- New Game -->
+        <button class="icon-btn accent" id="btn-new-game">
+          <span id="lbl-new-btn">Ván mới</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- TELEMETRY BAR -->
+    <div class="telemetry-bar">
+      <button class="difficulty-pill" id="btn-diff-pill">Khó</button>
+
+      <div class="stat-pill" id="mistakes-stat">
+        <span id="lbl-mistakes">Lỗi:</span>
+        <strong id="mistakes-count">0</strong>
+      </div>
+
+      <!-- Optional Timer Pill (Off by default, tap to toggle) -->
+      <button class="timer-pill" id="btn-timer-pill" title="Toggle Timer">
+        <span id="timer-display">Thư giãn</span>
+      </button>
+    </div>
+
+    <!-- MAIN WORKSPACE -->
+    <main class="workspace" id="workspace">
+      <div class="board-stage" id="board-stage">
+        <div class="sudoku-board" id="sudoku-board" role="grid" aria-label="Sudoku Grid"></div>
+        <canvas id="fx-canvas"></canvas>
+      </div>
+
+      <section class="controls-deck" aria-label="Puzzle Controls">
+        <!-- Smart Intuition Hint Banner -->
+        <div class="intuition-bar" id="intuition-bar">
+          <span class="intuition-text" id="intuition-text">Chạm vào một ô trống rồi chọn số từ 1 đến 9.</span>
+          <button class="intuition-apply" id="btn-apply-hint" style="display:none">Điền số</button>
+        </div>
+
+        <!-- Action Tools -->
+        <div class="tool-row">
+          <button class="tool-btn" id="tool-undo">
+            <svg viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+            <span id="lbl-undo">Hoàn tác</span>
+          </button>
+
+          <button class="tool-btn" id="tool-redo">
+            <svg viewBox="0 0 24 24"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/></svg>
+            <span id="lbl-redo">Làm lại</span>
+          </button>
+
+          <button class="tool-btn" id="tool-erase">
+            <svg viewBox="0 0 24 24"><path d="M20 20H7L3 16c-.6-.6-.6-1.5 0-2.1l10-10c.6-.6 1.5-.6 2.1 0l6 6c.6.6.6 1.5 0 2.1L13 20"/></svg>
+            <span id="lbl-erase">Xóa</span>
+          </button>
+
+          <button class="tool-btn" id="tool-notes">
+            <span class="tool-pill-badge" id="notes-state-badge">TẮT</span>
+            <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span id="lbl-notes">Ghi chú</span>
+          </button>
+
+          <button class="tool-btn" id="tool-hint">
+            <span class="tool-pill-badge" id="hints-left-badge">3</span>
+            <svg viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+            <span id="lbl-hint">Gợi ý</span>
+          </button>
+        </div>
+
+        <!-- 1-9 Numpad -->
+        <div class="numpad" id="numpad"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: NEW GAME / DIFFICULTY -->
+  <div class="modal-backdrop" id="modal-new">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-new-title">Chọn độ khó ván mới</h2>
+        <button class="close-btn" data-close="modal-new">&times;</button>
+      </div>
+      <p id="modal-new-desc" style="font-size:13px; color:var(--ink-secondary); margin-top:0;">
+        Mỗi bàn cờ đều được kiểm tra toán học để bảo đảm chỉ có một lời giải duy nhất.
+      </p>
+      <div id="difficulty-list"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: SAVE SLOTS -->
+  <div class="modal-backdrop" id="modal-saves">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-saves-title">Sổ lưu ván chơi</h2>
+        <button class="close-btn" data-close="modal-saves">&times;</button>
+      </div>
+      <div style="display:flex; gap:8px; margin-bottom:12px;">
+        <input id="save-slot-name" type="text" maxlength="28" placeholder="Tên ván lưu (tùy chọn)..."
+               style="flex:1; padding:9px 12px; border-radius:10px; border:1px solid var(--border-thin); background:var(--bg-elevated); color:var(--ink-primary); font-size:13px; user-select:text; -webkit-user-select:text;" />
+        <button class="btn-sm primary" id="btn-create-save">Lưu ván này</button>
+      </div>
+      <div id="save-slots-container"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: STATISTICS & ZEN SANCTUARY -->
+  <div class="modal-backdrop" id="modal-stats">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-stats-title">Thành tích & Vườn Thiền</h2>
+        <button class="close-btn" data-close="modal-stats">&times;</button>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" id="tab-records" data-tab="records">Thành tích giải</button>
+        <button class="tab-btn" id="tab-garden" data-tab="garden">Vườn Thiền & Màu sắc</button>
+      </div>
+
+      <!-- Tab 1: Records & History -->
+      <div id="pane-records">
+        <div class="stats-summary-grid">
+          <div class="summary-box">
+            <span class="summary-val" id="stat-total-wins">0</span>
+            <span class="summary-lbl" id="lbl-stat-wins">Tổng ván thắng</span>
+          </div>
+          <div class="summary-box">
+            <span class="summary-val" id="stat-streak">0</span>
+            <span class="summary-lbl" id="lbl-stat-streak">Chuỗi thắng</span>
+          </div>
+          <div class="summary-box">
+            <span class="summary-val" id="stat-stones">0</span>
+            <span class="summary-lbl" id="lbl-stat-stones">Đá Hòa Hợp</span>
+          </div>
+        </div>
+
+        <div style="font-size:12px; font-weight:700; color:var(--ink-secondary); margin-bottom:6px; text-transform:uppercase;" id="lbl-breakdown-header">
+          Chi tiết theo từng cấp độ
+        </div>
+        <div id="stats-breakdown-list"></div>
+
+        <div style="font-size:12px; font-weight:700; color:var(--ink-secondary); margin:12px 0 6px; text-transform:uppercase;" id="lbl-history-header">
+          Nhật ký các ván đã hoàn thành gần đây
+        </div>
+        <div id="stats-history-list" style="background:var(--bg-elevated); border:1px solid var(--border-thin); border-radius:12px; padding:4px 8px;"></div>
+      </div>
+
+      <!-- Tab 2: Zen Sanctuary & Themes -->
+      <div id="pane-garden" style="display:none;">
+        <canvas class="sanctuary-preview" id="sanctuary-canvas"></canvas>
+        <div style="font-size:13px; color:var(--ink-secondary); margin-bottom:10px;" id="sanctuary-caption">
+          Mỗi ván Sudoku hoàn thành sẽ mang lại Đá Hòa Hợp để mở khóa các bảng màu dịu mắt.
+        </div>
+        <div class="theme-grid" id="theme-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SETTINGS -->
+  <div class="modal-backdrop" id="modal-settings">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-settings-title">Cài đặt</h2>
+        <button class="close-btn" data-close="modal-settings">&times;</button>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong id="set-lang-title">Ngôn ngữ / Language</strong>
+          <div style="font-size:12px; color:var(--ink-secondary);" id="set-lang-desc">Chuyển đổi giữa Tiếng Việt và English</div>
+        </div>
+        <button class="btn-sm primary" id="btn-settings-lang">Tiếng Việt</button>
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong id="set-timer-title">Chế độ tính giờ</strong>
+          <div style="font-size:12px; color:var(--ink-secondary);" id="set-timer-desc">Mặc định tắt để chơi thư giãn không áp lực</div>
+        </div>
+        <input type="checkbox" id="toggle-timer-mode" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong id="set-mistake-title">Giới hạn 3 lỗi</strong>
+          <div style="font-size:12px; color:var(--ink-secondary);" id="set-mistake-desc">Tắt để chơi thoải mái không sợ thua ván</div>
+        </div>
+        <input type="checkbox" id="toggle-mistake-limit" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong id="set-autonote-title">Tự xóa ghi chú trùng</strong>
+          <div style="font-size:12px; color:var(--ink-secondary);" id="set-autonote-desc">Tự động xóa số ghi chú khi đã điền số chính xác</div>
+        </div>
+        <input type="checkbox" id="toggle-auto-notes" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong id="set-same-title">Làm nổi bật các số giống nhau</strong>
+          <div style="font-size:12px; color:var(--ink-secondary);" id="set-same-desc">Tô sáng tất cả ô có cùng chữ số đang chọn</div>
+        </div>
+        <input type="checkbox" id="toggle-highlight-same" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
+      </div>
+
+      <div class="setting-row">
+        <div>
+          <strong id="set-sound-title">Âm thanh đàn tranh dịu nhẹ</strong>
+          <div style="font-size:12px; color:var(--ink-secondary);" id="set-sound-desc">Tiếng gảy nhẹ nhàng khi chạm ô và điền số</div>
+        </div>
+        <input type="checkbox" id="toggle-sound" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
+      </div>
+
+      <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border-thin); display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div style="font-size:12px; color:var(--ink-secondary);">
+          SudoZen v<strong id="app-version-label">1.1.0</strong>
+          <div id="update-status-text">Phiên bản mới nhất</div>
+        </div>
+        <button class="btn-sm" id="btn-check-update">Kiểm tra cập nhật</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: VICTORY -->
+  <div class="modal-backdrop" id="modal-victory">
+    <div class="modal-card" style="text-align:center;">
+      <div style="font-family:var(--font-serif); font-size:26px; color:var(--accent-gold); margin-bottom:4px;" id="victory-kicker">
+        Hoàn thành xuất sắc!
+      </div>
+      <h2 class="modal-title" style="margin-bottom:8px;" id="victory-subtitle">Đã giải xong mức Khó</h2>
+      <p style="font-size:14px; color:var(--ink-secondary); margin:0 0 16px; line-height:1.45;" id="victory-stats">
+        Tổng số ván đã giải: 1 • +45 Đá Hòa Hợp
+      </p>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button class="btn-sm" data-close="modal-victory" id="btn-victory-admire">Xem lại bàn cờ</button>
+        <button class="btn-sm primary" id="btn-victory-next">Chơi ván mới</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      /* ========================================================================
+         1. APP VERSION & BOOKMARK-SAFE AUTO-UPDATE
+         ======================================================================== */
+      const APP_VERSION = "1.1.0";
+      const STORAGE_KEY = "SUDOZEN_STATE_V1";
+
+      function compareSemver(a, b) {
+        const pa = a.split(".").map(Number);
+        const pb = b.split(".").map(Number);
+        for (let i = 0; i < 3; i++) {
+          if ((pa[i] || 0) > (pb[i] || 0)) return 1;
+          if ((pa[i] || 0) < (pb[i] || 0)) return -1;
+        }
+        return 0;
+      }
+
+      function triggerCacheBustingReload(targetVersion) {
+        try {
+          if ("caches" in window) {
+            caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+          }
+        } catch (_) {}
+        const url = new URL(window.location.href);
+        url.searchParams.set("v", targetVersion || Date.now().toString());
+        window.location.replace(url.toString());
+      }
+
+      async function checkForAppUpdate(manual = false) {
+        const statusEl = document.getElementById("update-status-text");
+        if (manual && statusEl) statusEl.textContent = t("checkingUpdate");
+        try {
+          const checkUrl = new URL(window.location.href);
+          checkUrl.searchParams.set("_ts", Date.now().toString());
+          const res = await fetch(checkUrl.toString(), { cache: "no-store" });
+          if (!res.ok) throw new Error("Fetch failed");
+          const html = await res.text();
+          const match = html.match(/const\s+APP_VERSION\s*=\s*["']([^"']+)["']/);
+          if (match && match[1]) {
+            const remoteVersion = match[1];
+            if (compareSemver(remoteVersion, APP_VERSION) > 0) {
+              document.getElementById("update-dot").style.display = "block";
+              if (statusEl) statusEl.textContent = `v${remoteVersion}`;
+              showToast(t("updatingTo", { v: remoteVersion }));
+              setTimeout(() => triggerCacheBustingReload(remoteVersion), 900);
+              return;
+            }
+          }
+          if (statusEl) statusEl.textContent = t("upToDate", { v: APP_VERSION });
+          if (manual) showToast(t("upToDate", { v: APP_VERSION }));
+        } catch (_) {
+          if (statusEl) statusEl.textContent = t("upToDate", { v: APP_VERSION });
+          if (manual) {
+            showToast(t("refreshingCache"));
+            setTimeout(() => triggerCacheBustingReload(Date.now().toString()), 600);
+          }
+        }
+      }
+
+      /* ========================================================================
+         2. BILINGUAL I18N DICTIONARY (South Vietnamese Natural Default + English)
+         ======================================================================== */
+      const I18N = {
+        vi: {
+          solvedSummary: "{n} ván đã giải",
+          statsBtn: "Thành tích",
+          newBtn: "Ván mới",
+          mistakesLbl: "Lỗi:",
+          relaxedTimer: "Thư giãn",
+          timedLabel: "Giờ",
+          defaultPrompt: "Chạm vào một ô trống rồi chọn số từ 1 đến 9.",
+          notesActivePrompt: "Đang bật Ghi chú: Chạm số để ghi nháp các khả năng.",
+          applyHintBtn: "Điền số",
+          undo: "Hoàn tác",
+          redo: "Làm lại",
+          erase: "Xóa",
+          notes: "Ghi chú",
+          hint: "Gợi ý",
+          on: "BẬT",
+          off: "TẮT",
+          modalNewTitle: "Chọn độ khó ván mới",
+          modalNewDesc: "Mỗi bàn cờ đều được kiểm tra kỹ để bảo đảm chỉ có một lời giải duy nhất.",
+          modalSavesTitle: "Sổ lưu ván chơi",
+          saveInputPlaceholder: "Tên ván lưu (tùy chọn)...",
+          saveCurrentBtn: "Lưu ván này",
+          noSavesMsg: "Chưa có ván nào được lưu. Bấm 'Lưu ván này' để cất lại.",
+          loadBtn: "Mở lại",
+          solvedPct: "Đã giải {pct}%",
+          modalStatsTitle: "Thành tích & Vườn Thiền",
+          tabRecords: "Thành tích giải",
+          tabGarden: "Vườn Thiền & Màu sắc",
+          statTotalWins: "Tổng ván thắng",
+          statStreak: "Chuỗi thắng",
+          statStones: "Đá Hòa Hợp",
+          breakdownHeader: "Chi tiết theo từng cấp độ",
+          historyHeader: "Nhật ký các ván đã hoàn thành gần đây",
+          noHistoryMsg: "Chưa có ván nào hoàn thành. Hãy giải xong một ván để ghi dấu nhé!",
+          bestTimeLbl: "Nhanh nhất: {t}",
+          noTimedYet: "Chưa tính giờ",
+          solvedCountLbl: "{n} ván",
+          relaxedTag: "Thư giãn",
+          sanctuaryCaption: "Mỗi ván hoàn thành sẽ tặng Đá Hòa Hợp để mở khóa các bảng màu dịu mắt.",
+          unlockedActive: "Đang dùng",
+          unlockedApply: "Đã mở • Chạm để dùng",
+          lockedNeed: "Cần {n} Đá Hòa Hợp",
+          modalSettingsTitle: "Cài đặt",
+          setLangTitle: "Ngôn ngữ / Language",
+          setLangDesc: "Chuyển đổi giữa Tiếng Việt và English",
+          setLangBtnName: "Tiếng Việt (Đổi sang EN)",
+          setTimerTitle: "Chế độ tính giờ",
+          setTimerDesc: "Mặc định tắt để chơi thư giãn không áp lực",
+          setMistakeTitle: "Giới hạn 3 lỗi",
+          setMistakeDesc: "Tắt để chơi thoải mái không bao giờ bị thua",
+          setAutonoteTitle: "Tự xóa ghi chú trùng",
+          setAutonoteDesc: "Tự động xóa số nháp khi đã điền số chính xác",
+          setSameTitle: "Làm nổi bật số giống nhau",
+          setSameDesc: "Tô sáng tất cả ô có cùng chữ số đang chọn",
+          setSoundTitle: "Âm thanh đàn tranh dịu nhẹ",
+          setSoundDesc: "Tiếng gảy nhẹ nhàng khi chạm ô và điền số",
+          checkUpdateBtn: "Kiểm tra cập nhật",
+          checkingUpdate: "Đang kiểm tra...",
+          upToDate: "Bản mới nhất (v{v})",
+          updatingTo: "Đang cập nhật lên v{v}...",
+          refreshingCache: "Đang làm mới ứng dụng...",
+          victoryKicker: "Hoàn thành xuất sắc!",
+          victorySub: "Đã giải xong mức {diff}",
+          victoryStatsRelaxed: "Tổng số ván đã giải: {wins} • +{stones} Đá Hòa Hợp",
+          victoryStatsTimed: "Thời gian: {time} • Tổng ván giải: {wins} • +{stones} Đá",
+          victoryAdmire: "Xem lại bàn cờ",
+          victoryNext: "Chơi ván mới",
+          toastNewGame: "Đã tạo ván mới mức {diff}",
+          toastCannotErase: "Số gốc của đề bài không thể xóa",
+          toastNoHints: "Bạn đã dùng hết 3 lượt gợi ý cho ván này",
+          toastSaved: "Đã lưu ván chơi vào sổ!",
+          toastLoaded: "Đã mở lại ván '{name}'",
+          toastNeedStones: "Cần thêm {n} Đá Hòa Hợp để mở màu này",
+          toastTimerOn: "Đã bật đồng hồ tính giờ",
+          toastTimerOff: "Đã tắt đồng hồ — Chơi thư giãn",
+          toast3Mistakes: "Đã chạm 3 lỗi — Bộ đếm lỗi được đặt lại để bạn tiếp tục!",
+          hintNaked: "Ô duy nhất: Hàng {r}, Cột {c} chỉ có thể điền số {d}.",
+          hintHiddenBox: "Vị trí duy nhất trong khối: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
+          hintHiddenRow: "Vị trí duy nhất trên hàng: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
+          hintHiddenCol: "Vị trí duy nhất trên cột: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
+          hintChain: "Suy luận loại trừ: Hàng {r}, Cột {c} chắc chắn là số {d}.",
+          diffs: {
+            easy: { label: "Dễ", desc: "Nhẹ nhàng khởi động • 39 số gợi ý sẵn" },
+            medium: { label: "Trung bình", desc: "Cân bằng vừa sức • 33 số gợi ý sẵn" },
+            hard: { label: "Khó", desc: "Suy luận sâu sắc • 28 số gợi ý sẵn" },
+            veryhard: { label: "Rất khó", desc: "Thử thách cao thủ • 24 số gợi ý sẵn" },
+            master: { label: "Bậc thầy", desc: "Đỉnh cao trí tuệ • 21 số gợi ý sẵn" },
+            daily: { label: "Thử thách hôm nay", desc: "Bàn cờ đặc biệt của ngày hôm nay" }
+          },
+          themes: {
+            moss: { name: "Vườn Rêu", desc: "Giấy Washi & xanh rêu dịu mắt" },
+            hinoki: { name: "Gỗ Hinoki", desc: "Tông gỗ bách ấm áp dễ đọc" },
+            mist: { name: "Sương Kyoto", desc: "Xanh xám sương sớm thanh tịnh" },
+            maple: { name: "Lá Thu", desc: "Sắc lá phong trầm ấm" }
+          }
+        },
+        en: {
+          solvedSummary: "{n} puzzles solved",
+          statsBtn: "Records",
+          newBtn: "New",
+          mistakesLbl: "Mistakes:",
+          relaxedTimer: "Relaxed",
+          timedLabel: "Time",
+          defaultPrompt: "Tap an empty cell and choose a digit from 1 to 9.",
+          notesActivePrompt: "Notes Mode ON: Tap numbers to toggle pencil candidates.",
+          applyHintBtn: "Place",
+          undo: "Undo",
+          redo: "Redo",
+          erase: "Erase",
+          notes: "Notes",
+          hint: "Hint",
+          on: "ON",
+          off: "OFF",
+          modalNewTitle: "Choose Difficulty",
+          modalNewDesc: "Every puzzle is mathematically verified to have one unique logical solution.",
+          modalSavesTitle: "Saved Scrolls",
+          saveInputPlaceholder: "Optional scroll name...",
+          saveCurrentBtn: "Save Current",
+          noSavesMsg: "No saved games yet. Tap 'Save Current' to store your progress.",
+          loadBtn: "Load",
+          solvedPct: "{pct}% solved",
+          modalStatsTitle: "Records & Zen Garden",
+          tabRecords: "Solved Records",
+          tabGarden: "Zen Garden & Themes",
+          statTotalWins: "Total Solved",
+          statStreak: "Win Streak",
+          statStones: "Harmony Stones",
+          breakdownHeader: "Solved by Difficulty",
+          historyHeader: "Recent Completed Puzzles",
+          noHistoryMsg: "No completed puzzles yet. Finish a board to record your achievement!",
+          bestTimeLbl: "Best: {t}",
+          noTimedYet: "No timed runs",
+          solvedCountLbl: "{n} solved",
+          relaxedTag: "Relaxed",
+          sanctuaryCaption: "Complete puzzles to earn Harmony Stones and unlock calming color palettes.",
+          unlockedActive: "Active",
+          unlockedApply: "Unlocked • Tap to apply",
+          lockedNeed: "Requires {n} Stones",
+          modalSettingsTitle: "Settings",
+          setLangTitle: "Language / Ngôn ngữ",
+          setLangDesc: "Switch between Vietnamese and English",
+          setLangBtnName: "English (Switch to VN)",
+          setTimerTitle: "Timed Mode",
+          setTimerDesc: "Off by default for calm, stress-free play",
+          setMistakeTitle: "3-Mistake Limit",
+          setMistakeDesc: "Turn off for endless Zen play without game overs",
+          setAutonoteTitle: "Auto-Clear Notes",
+          setAutonoteDesc: "Remove matching pencil marks when placing a digit",
+          setSameTitle: "Highlight Matching Digits",
+          setSameDesc: "Illuminate all cells sharing the selected number",
+          setSoundTitle: "Gentle Koto Soundscape",
+          setSoundDesc: "Soft pentatonic chimes when tapping and solving",
+          checkUpdateBtn: "Check for Update",
+          checkingUpdate: "Checking...",
+          upToDate: "Up to date (v{v})",
+          updatingTo: "Updating to v{v}...",
+          refreshingCache: "Refreshing application...",
+          victoryKicker: "Harmony Achieved!",
+          victorySub: "Completed {diff}",
+          victoryStatsRelaxed: "Total Solved: {wins} • +{stones} Harmony Stones",
+          victoryStatsTimed: "Time: {time} • Total Solved: {wins} • +{stones} Stones",
+          victoryAdmire: "Admire Board",
+          victoryNext: "New Puzzle",
+          toastNewGame: "Started new {diff} puzzle",
+          toastCannotErase: "Original puzzle clues cannot be erased",
+          toastNoHints: "No hints remaining for this puzzle",
+          toastSaved: "Game saved to your scrolls!",
+          toastLoaded: "Loaded '{name}'",
+          toastNeedStones: "Earn {n} more Harmony Stones to unlock",
+          toastTimerOn: "Timer enabled",
+          toastTimerOff: "Timer disabled — Relaxed Zen mode",
+          toast3Mistakes: "3 mistakes reached — Counter reset so you can keep playing!",
+          hintNaked: "Naked Single: Row {r}, Col {c} can only hold {d}.",
+          hintHiddenBox: "Hidden Single in Box: {d} only fits at Row {r}, Col {c}.",
+          hintHiddenRow: "Hidden Single in Row: {d} only fits at Row {r}, Col {c}.",
+          hintHiddenCol: "Hidden Single in Col: {d} only fits at Row {r}, Col {c}.",
+          hintChain: "Logical Deduction: Row {r}, Col {c} resolves to {d}.",
+          diffs: {
+            easy: { label: "Easy", desc: "Gentle warm-up • 39 given clues" },
+            medium: { label: "Medium", desc: "Balanced deduction • 33 given clues" },
+            hard: { label: "Hard", desc: "Deep logic • 28 given clues" },
+            veryhard: { label: "Very Hard", desc: "Expert challenge • 24 given clues" },
+            master: { label: "Master", desc: "Grandmaster test • 21 given clues" },
+            daily: { label: "Daily Zen", desc: "Today's special shared puzzle" }
+          },
+          themes: {
+            moss: { name: "Moss Garden", desc: "Washi paper & serene moss green" },
+            hinoki: { name: "Hinoki Wood", desc: "Warm cypress & cedar tones" },
+            mist: { name: "Kyoto Mist", desc: "Cool morning mountain slate" },
+            maple: { name: "Autumn Momiji", desc: "Warm terracotta & maple tones" }
+          }
+        }
+      };
+
+      function t(key, vars = {}) {
+        const lang = state.settings.lang || "vi";
+        const dict = I18N[lang] || I18N.vi;
+        let str = dict[key] !== undefined ? dict[key] : (I18N.en[key] || key);
+        for (const [k, v] of Object.entries(vars)) {
+          str = str.replace(new RegExp(`\\{${k}\\}`, "g"), v);
+        }
+        return str;
+      }
+
+      /* ========================================================================
+         3. DYNAMIC PWA HOME SCREEN ICON GENERATOR (Canvas -> PNG Data URL)
+         ======================================================================== */
+      function generateDynamicAppIcon() {
+        try {
+          const size = 512;
+          const canvas = document.createElement("canvas");
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext("2d");
+
+          const grad = ctx.createLinearGradient(0, 0, size, size);
+          grad.addColorStop(0, "#436647");
+          grad.addColorStop(1, "#273F2A");
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, size, size);
+
+          // Raked sand rings
+          ctx.strokeStyle = "rgba(250, 247, 240, 0.13)";
+          ctx.lineWidth = 6;
+          for (let r = 90; r <= 340; r += 44) {
+            ctx.beginPath();
+            ctx.arc(size * 0.85, size * 0.85, r, Math.PI, Math.PI * 1.55);
+            ctx.stroke();
+          }
+
+          // Inner Washi card
+          const pad = 74;
+          const box = size - pad * 2;
+          ctx.fillStyle = "#FAF7F0";
+          ctx.beginPath();
+          ctx.roundRect(pad, pad, box, box, 56);
+          ctx.fill();
+
+          ctx.strokeStyle = "#B68D40";
+          ctx.lineWidth = 8;
+          ctx.stroke();
+
+          // 3x3 grid lines
+          const innerPad = pad + 44;
+          const innerSize = size - innerPad * 2;
+          const cell = innerSize / 3;
+          ctx.strokeStyle = "#82887C";
+          ctx.lineWidth = 4;
+          for (let i = 1; i <= 2; i++) {
+            ctx.beginPath();
+            ctx.moveTo(innerPad + cell * i, innerPad);
+            ctx.lineTo(innerPad + cell * i, innerPad + innerSize);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(innerPad, innerPad + cell * i);
+            ctx.lineTo(innerPad + innerSize, innerPad + cell * i);
+            ctx.stroke();
+          }
+
+          ctx.fillStyle = "rgba(182, 141, 64, 0.24)";
+          ctx.beginPath();
+          ctx.arc(innerPad + cell * 1.5, innerPad + cell * 1.5, cell * 0.4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = "#222620";
+          ctx.font = "bold 62px Georgia, serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("9", innerPad + cell * 0.5, innerPad + cell * 0.52);
+          ctx.fillStyle = "#436647";
+          ctx.fillText("禅", innerPad + cell * 1.5, innerPad + cell * 1.52);
+          ctx.fillStyle = "#B68D40";
+          ctx.fillText("1", innerPad + cell * 2.5, innerPad + cell * 2.52);
+
+          const dataUrl = canvas.toDataURL("image/png");
+          document.getElementById("dynamic-apple-icon").href = dataUrl;
+          document.getElementById("dynamic-favicon").href = dataUrl;
+        } catch (_) {}
+      }
+
+      /* ========================================================================
+         4. GENTLE WEB AUDIO SOUNDSCAPE (iOS Unlock + Pentatonic Chimes)
+         ======================================================================== */
+      class ZenAudioEngine {
+        constructor() {
+          this.ctx = null;
+          this.enabled = true;
+          this.scale = [293.66, 329.63, 369.99, 440.00, 493.88, 587.33, 659.25, 739.99, 880.00];
+        }
+
+        unlock() {
+          if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.ctx = new AudioCtx();
+          }
+          if (this.ctx && this.ctx.state === "suspended") {
+            this.ctx.resume().catch(() => {});
+          }
+        }
+
+        playPluck(digit = 1, isNote = false) {
+          if (!this.enabled) return;
+          this.unlock();
+          if (!this.ctx) return;
+
+          const now = this.ctx.currentTime;
+          const freq = this.scale[(digit - 1) % this.scale.length] * (isNote ? 1.5 : 1);
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, now);
+          osc.frequency.exponentialRampToValueAtTime(freq * 0.996, now + 0.35);
+
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(isNote ? 0.032 : 0.07, now + 0.012);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + (isNote ? 0.18 : 0.4));
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.42);
+        }
+
+        playSelect() {
+          if (!this.enabled) return;
+          this.unlock();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(220, now);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(0.018, now + 0.006);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.07);
+        }
+
+        playSoftError() {
+          if (!this.enabled) return;
+          this.unlock();
+          if (!this.ctx) return;
+          const now = this.ctx.currentTime;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(165, now);
+          osc.frequency.linearRampToValueAtTime(138, now + 0.24);
+          gain.gain.setValueAtTime(0.0001, now);
+          gain.gain.linearRampToValueAtTime(0.05, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.28);
+        }
+
+        playChimeChord(isVictory = false) {
+          if (!this.enabled) return;
+          this.unlock();
+          if (!this.ctx) return;
+          const notes = isVictory ? [293.66, 369.99, 440.00, 587.33, 739.99] : [440.00, 587.33, 659.25];
+          notes.forEach((freq, idx) => {
+            const now = this.ctx.currentTime + idx * 0.07;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(0.048, now + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + (isVictory ? 1.35 : 0.72));
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now);
+            osc.stop(now + (isVictory ? 1.4 : 0.76));
+          });
+        }
+      }
+
+      const audio = new ZenAudioEngine();
+
+      /* ========================================================================
+         5. SUDOKU GENERATOR (ALL 5 DIFFICULTIES + UNIQUE SOLUTION VERIFIER)
+         ======================================================================== */
+      const DIFFICULTY_CONFIG = {
+        easy: { key: "easy", givens: 39, reward: 20 },
+        medium: { key: "medium", givens: 33, reward: 30 },
+        hard: { key: "hard", givens: 28, reward: 45 },
+        veryhard: { key: "veryhard", givens: 24, reward: 65 },
+        master: { key: "master", givens: 21, reward: 95 },
+        daily: { key: "daily", givens: 29, reward: 50 }
+      };
+
+      const DIFF_ORDER = ["easy", "medium", "hard", "veryhard", "master", "daily"];
+
+      function createSeededRng(seedStr) {
+        let h = 2166136261 >>> 0;
+        for (let i = 0; i < seedStr.length; i++) {
+          h ^= seedStr.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return () => {
+          h += 0x6D2B79F5;
+          let t = Math.imul(h ^ (h >>> 15), 1 | h);
+          t ^= t + Math.imul(t ^ (t >>> 7), 61 | t);
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function shuffle(arr, rng = Math.random) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function isValidPlacement(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+          if (board[row * 9 + i] === num) return false;
+          if (board[i * 9 + col] === num) return false;
+        }
+        const br = Math.floor(row / 3) * 3;
+        const bc = Math.floor(col / 3) * 3;
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < 3; c++) {
+            if (board[(br + r) * 9 + (bc + c)] === num) return false;
+          }
+        }
+        return true;
+      }
+
+      function generateSolvedBoard(rng = Math.random) {
+        const board = new Array(81).fill(0);
+        const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        function fill(idx) {
+          if (idx === 81) return true;
+          const r = Math.floor(idx / 9);
+          const c = idx % 9;
+          const candidates = shuffle(digits, rng);
+          for (const num of candidates) {
+            if (isValidPlacement(board, r, c, num)) {
+              board[idx] = num;
+              if (fill(idx + 1)) return true;
+              board[idx] = 0;
+            }
+          }
+          return false;
+        }
+        fill(0);
+        return board;
+      }
+
+      function countSolutions(board, limit = 2) {
+        let count = 0;
+        const work = board.slice();
+
+        function findBestEmpty() {
+          let bestIdx = -1;
+          let minOpts = 10;
+          for (let i = 0; i < 81; i++) {
+            if (work[i] === 0) {
+              const r = Math.floor(i / 9);
+              const c = i % 9;
+              let opts = 0;
+              for (let n = 1; n <= 9; n++) {
+                if (isValidPlacement(work, r, c, n)) opts++;
+              }
+              if (opts < minOpts) {
+                minOpts = opts;
+                bestIdx = i;
+                if (opts <= 1) break;
+              }
+            }
+          }
+          return bestIdx;
+        }
+
+        function backtrack() {
+          if (count >= limit) return;
+          const idx = findBestEmpty();
+          if (idx === -1) {
+            count++;
+            return;
+          }
+          const r = Math.floor(idx / 9);
+          const c = idx % 9;
+          for (let n = 1; n <= 9; n++) {
+            if (isValidPlacement(work, r, c, n)) {
+              work[idx] = n;
+              backtrack();
+              work[idx] = 0;
+              if (count >= limit) return;
+            }
+          }
+        }
+
+        backtrack();
+        return count;
+      }
+
+      function generatePuzzle(diffKey) {
+        const cfg = DIFFICULTY_CONFIG[diffKey] || DIFFICULTY_CONFIG.hard;
+        const todayStr = new Date().toISOString().slice(0, 10);
+        const rng = diffKey === "daily" ? createSeededRng("sudozen-" + todayStr) : Math.random;
+
+        const solution = generateSolvedBoard(rng);
+        const puzzle = solution.slice();
+        const indices = shuffle([...Array(81).keys()], rng);
+        let removed = 0;
+        const targetRemove = 81 - cfg.givens;
+
+        for (const idx of indices) {
+          if (removed >= targetRemove) break;
+          const backup = puzzle[idx];
+          puzzle[idx] = 0;
+          if (countSolutions(puzzle, 2) !== 1) {
+            puzzle[idx] = backup;
+          } else {
+            removed++;
+          }
+        }
+        return { puzzle, solution, diffKey, dateStr: diffKey === "daily" ? todayStr : null };
+      }
+
+      /* ========================================================================
+         6. SMART LOGICAL INTUITION HINT ENGINE (Bilingual Reasoning)
+         ======================================================================== */
+      function findLogicalHint(currentBoard, solution) {
+        // 1. Naked Single
+        for (let i = 0; i < 81; i++) {
+          if (currentBoard[i] !== 0) continue;
+          const r = Math.floor(i / 9);
+          const c = i % 9;
+          const candidates = [];
+          for (let n = 1; n <= 9; n++) {
+            if (isValidPlacement(currentBoard, r, c, n)) candidates.push(n);
+          }
+          if (candidates.length === 1) {
+            return { idx: i, digit: candidates[0], type: "hintNaked", r: r + 1, c: c + 1 };
+          }
+        }
+
+        // 2. Hidden Single in 3x3 Box
+        for (let box = 0; box < 9; box++) {
+          const br = Math.floor(box / 3) * 3;
+          const bc = (box % 3) * 3;
+          for (let n = 1; n <= 9; n++) {
+            const spots = [];
+            for (let r = br; r < br + 3; r++) {
+              for (let c = bc; c < bc + 3; c++) {
+                const idx = r * 9 + c;
+                if (currentBoard[idx] === 0 && isValidPlacement(currentBoard, r, c, n)) {
+                  spots.push(idx);
+                }
+              }
+            }
+            if (spots.length === 1) {
+              const r = Math.floor(spots[0] / 9);
+              const c = spots[0] % 9;
+              return { idx: spots[0], digit: n, type: "hintHiddenBox", r: r + 1, c: c + 1 };
+            }
+          }
+        }
+
+        // 3. Hidden Single in Row
+        for (let r = 0; r < 9; r++) {
+          for (let n = 1; n <= 9; n++) {
+            const spots = [];
+            for (let c = 0; c < 9; c++) {
+              const idx = r * 9 + c;
+              if (currentBoard[idx] === 0 && isValidPlacement(currentBoard, r, c, n)) {
+                spots.push(idx);
+              }
+            }
+            if (spots.length === 1) {
+              const c = spots[0] % 9;
+              return { idx: spots[0], digit: n, type: "hintHiddenRow", r: r + 1, c: c + 1 };
+            }
+          }
+        }
+
+        // 4. Hidden Single in Column
+        for (let c = 0; c < 9; c++) {
+          for (let n = 1; n <= 9; n++) {
+            const spots = [];
+            for (let r = 0; r < 9; r++) {
+              const idx = r * 9 + c;
+              if (currentBoard[idx] === 0 && isValidPlacement(currentBoard, r, c, n)) {
+                spots.push(idx);
+              }
+            }
+            if (spots.length === 1) {
+              const r = Math.floor(spots[0] / 9);
+              return { idx: spots[0], digit: n, type: "hintHiddenCol", r: r + 1, c: c + 1 };
+            }
+          }
+        }
+
+        // 5. Guided Cell Deduction
+        const targetIdx = (selectedIdx >= 0 && currentBoard[selectedIdx] === 0)
+          ? selectedIdx
+          : currentBoard.findIndex(v => v === 0);
+
+        if (targetIdx >= 0) {
+          const r = Math.floor(targetIdx / 9);
+          const c = targetIdx % 9;
+          return { idx: targetIdx, digit: solution[targetIdx], type: "hintChain", r: r + 1, c: c + 1 };
+        }
+        return null;
+      }
+
+      function formatHintReason(hint) {
+        if (!hint) return "";
+        return t(hint.type, { r: hint.r, c: hint.c, d: hint.digit });
+      }
+
+      /* ========================================================================
+         7. PARTICLE & SANCTUARY CANVAS RENDERERS
+         ======================================================================== */
+      const fxCanvas = document.getElementById("fx-canvas");
+      const fxCtx = fxCanvas.getContext("2d");
+      let particles = [];
+
+      function spawnGoldBurst(relX, relY, count = 20) {
+        const w = fxCanvas.width;
+        const h = fxCanvas.height;
+        const cx = 16 + relX * (w - 32);
+        const cy = 16 + relY * (h - 32);
+        for (let i = 0; i < count; i++) {
+          const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+          const speed = 1.2 + Math.random() * 2.6;
+          particles.push({
+            x: cx,
+            y: cy,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 0.4,
+            life: 1,
+            decay: 0.018 + Math.random() * 0.014,
+            size: 2.2 + Math.random() * 2.5,
+            gold: Math.random() > 0.35
+          });
+        }
+      }
+
+      function animateParticles() {
+        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vx *= 0.96;
+          p.vy *= 0.96;
+          p.life -= p.decay;
+          if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+          fxCtx.globalAlpha = Math.max(0, p.life);
+          fxCtx.fillStyle = p.gold ? "#B68D40" : "#436647";
+          fxCtx.beginPath();
+          fxCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+          fxCtx.fill();
+        }
+        fxCtx.globalAlpha = 1;
+        requestAnimationFrame(animateParticles);
+      }
+
+      function renderSanctuaryIllustration() {
+        const canvas = document.getElementById("sanctuary-canvas");
+        if (!canvas) return;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const rect = canvas.getBoundingClientRect();
+        const w = rect.width || 380;
+        const h = rect.height || 145;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        const ctx = canvas.getContext("2d");
+        ctx.scale(dpr, dpr);
+
+        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--bg-elevated").trim();
+        ctx.fillRect(0, 0, w, h);
+
+        ctx.strokeStyle = "rgba(130, 125, 110, 0.25)";
+        ctx.lineWidth = 1.5;
+        for (let y = 16; y < h; y += 12) {
+          ctx.beginPath();
+          for (let x = 0; x <= w; x += 16) {
+            const wave = Math.sin(x * 0.03 + y * 0.1) * 2.5;
+            if (x === 0) ctx.moveTo(x, y + wave);
+            else ctx.lineTo(x, y + wave);
+          }
+          ctx.stroke();
+        }
+
+        const stonesUnlocked = Math.min(5, 1 + Math.floor(state.profile.harmonyStones / 40));
+        const stonePositions = [
+          { x: w * 0.24, y: h * 0.62, rx: 26, ry: 16, col: "#4F564D" },
+          { x: w * 0.31, y: h * 0.52, rx: 16, ry: 11, col: "#6C7469" },
+          { x: w * 0.72, y: h * 0.65, rx: 32, ry: 18, col: "#3E453C" },
+          { x: w * 0.65, y: h * 0.72, rx: 14, ry: 9, col: "#7A8276" },
+          { x: w * 0.50, y: h * 0.44, rx: 20, ry: 12, col: "#B68D40" }
+        ];
+
+        for (let i = 0; i < stonesUnlocked; i++) {
+          const s = stonePositions[i];
+          ctx.strokeStyle = "rgba(182, 141, 64, 0.35)";
+          ctx.beginPath();
+          ctx.ellipse(s.x, s.y + 3, s.rx + 12, s.ry + 6, 0, 0, Math.PI * 2);
+          ctx.stroke();
+
+          ctx.fillStyle = s.col;
+          ctx.beginPath();
+          ctx.ellipse(s.x, s.y, s.rx, s.ry, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      /* ========================================================================
+         8. APPLICATION STATE & VERSIONED LOCALSTORAGE PERSISTENCE
+         ======================================================================== */
+      const THEME_LIST = [
+        { id: "moss", cost: 0 },
+        { id: "hinoki", cost: 40 },
+        { id: "mist", cost: 90 },
+        { id: "maple", cost: 160 }
+      ];
+
+      const defaultState = () => ({
+        version: APP_VERSION,
+        settings: {
+          lang: "vi",           // Vietnamese default for Mom
+          timerEnabled: false,  // Timer OFF by default
+          mistakeLimit: false,  // Stress-free Zen mode by default
+          autoClearNotes: true,
+          highlightSame: true,
+          soundEnabled: true,
+          theme: "moss"
+        },
+        profile: {
+          harmonyStones: 0,
+          wins: 0,
+          streak: 0,
+          solvedByDiff: { easy: 0, medium: 0, hard: 0, veryhard: 0, master: 0, daily: 0 },
+          bestTimes: {},
+          history: [] // Logs recent solved puzzles { diffKey, timed, seconds, date }
+        },
+        game: null,
+        saveSlots: []
+      });
+
+      let state = defaultState();
+      let selectedIdx = 40;
+      let notesMode = false;
+      let activeHint = null;
+      let timerInterval = null;
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            state = {
+              ...defaultState(),
+              ...parsed,
+              settings: { ...defaultState().settings, ...(parsed.settings || {}) },
+              profile: {
+                ...defaultState().profile,
+                ...(parsed.profile || {}),
+                solvedByDiff: { ...defaultState().profile.solvedByDiff, ...((parsed.profile && parsed.profile.solvedByDiff) || {}) },
+                bestTimes: { ...((parsed.profile && parsed.profile.bestTimes) || {}) },
+                history: Array.isArray(parsed.profile && parsed.profile.history) ? parsed.profile.history : []
+              },
+              saveSlots: Array.isArray(parsed.saveSlots) ? parsed.saveSlots : []
+            };
+          }
+        } catch (_) {}
+        audio.enabled = state.settings.soundEnabled;
+        document.documentElement.lang = state.settings.lang || "vi";
+        document.documentElement.setAttribute("data-theme", state.settings.theme || "moss");
+      }
+
+      function saveState() {
+        try {
+          state.version = APP_VERSION;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (_) {}
+      }
+
+      /* ========================================================================
+         9. GAME LIFECYCLE & CORE MOVES
+         ======================================================================== */
+      function startNewGame(diffKey = "hard") {
+        const generated = generatePuzzle(diffKey);
+        state.game = {
+          diffKey: generated.diffKey,
+          dateStr: generated.dateStr,
+          initial: generated.puzzle.slice(),
+          board: generated.puzzle.slice(),
+          solution: generated.solution.slice(),
+          notes: Array.from({ length: 81 }, () => []),
+          mistakes: 0,
+          hintsLeft: 3,
+          elapsedSeconds: 0,
+          wasTimed: Boolean(state.settings.timerEnabled),
+          completed: false,
+          undoStack: [],
+          redoStack: []
+        };
+        activeHint = null;
+        notesMode = false;
+        const firstEmpty = state.game.board.findIndex(v => v === 0);
+        selectedIdx = firstEmpty >= 0 ? firstEmpty : 40;
+        saveState();
+        renderAll();
+        const diffLabel = I18N[state.settings.lang].diffs[diffKey].label;
+        showToast(t("toastNewGame", { diff: diffLabel }));
+      }
+
+      function snapshotForUndo() {
+        const g = state.game;
+        if (!g) return;
+        g.undoStack.push({
+          board: g.board.slice(),
+          notes: g.notes.map(n => n.slice())
+        });
+        if (g.undoStack.length > 80) g.undoStack.shift();
+        g.redoStack = [];
+      }
+
+      function handleUndo() {
+        const g = state.game;
+        if (!g || g.completed || g.undoStack.length === 0) return;
+        g.redoStack.push({
+          board: g.board.slice(),
+          notes: g.notes.map(n => n.slice())
+        });
+        const prev = g.undoStack.pop();
+        g.board = prev.board;
+        g.notes = prev.notes;
+        activeHint = null;
+        audio.playSelect();
+        saveState();
+        renderBoard();
+        renderControls();
+      }
+
+      function handleRedo() {
+        const g = state.game;
+        if (!g || g.completed || g.redoStack.length === 0) return;
+        g.undoStack.push({
+          board: g.board.slice(),
+          notes: g.notes.map(n => n.slice())
+        });
+        const next = g.redoStack.pop();
+        g.board = next.board;
+        g.notes = next.notes;
+        activeHint = null;
+        audio.playSelect();
+        saveState();
+        renderBoard();
+        renderControls();
+      }
+
+      function handleErase() {
+        const g = state.game;
+        if (!g || g.completed || selectedIdx < 0) return;
+        if (g.initial[selectedIdx] !== 0) {
+          showToast(t("toastCannotErase"));
+          return;
+        }
+        if (g.board[selectedIdx] === 0 && g.notes[selectedIdx].length === 0) return;
+        snapshotForUndo();
+        g.board[selectedIdx] = 0;
+        g.notes[selectedIdx] = [];
+        activeHint = null;
+        audio.playSelect();
+        saveState();
+        renderBoard();
+        renderControls();
+      }
+
+      function clearPeerNotes(idx, digit) {
+        const g = state.game;
+        const r = Math.floor(idx / 9);
+        const c = idx % 9;
+        const br = Math.floor(r / 3) * 3;
+        const bc = Math.floor(c / 3) * 3;
+
+        for (let i = 0; i < 9; i++) {
+          g.notes[r * 9 + i] = g.notes[r * 9 + i].filter(n => n !== digit);
+          g.notes[i * 9 + c] = g.notes[i * 9 + c].filter(n => n !== digit);
+        }
+        for (let rr = br; rr < br + 3; rr++) {
+          for (let cc = bc; cc < bc + 3; cc++) {
+            const pIdx = rr * 9 + cc;
+            g.notes[pIdx] = g.notes[pIdx].filter(n => n !== digit);
+          }
+        }
+      }
+
+      function checkCompletedUnits(idx) {
+        const g = state.game;
+        const r = Math.floor(idx / 9);
+        const c = idx % 9;
+        const br = Math.floor(r / 3) * 3;
+        const bc = Math.floor(c / 3) * 3;
+
+        let rowDone = true, colDone = true, boxDone = true;
+        for (let i = 0; i < 9; i++) {
+          if (g.board[r * 9 + i] !== g.solution[r * 9 + i]) rowDone = false;
+          if (g.board[i * 9 + c] !== g.solution[i * 9 + c]) colDone = false;
+        }
+        for (let rr = br; rr < br + 3; rr++) {
+          for (let cc = bc; cc < bc + 3; cc++) {
+            const pIdx = rr * 9 + cc;
+            if (g.board[pIdx] !== g.solution[pIdx]) boxDone = false;
+          }
+        }
+
+        const completedCells = new Set();
+        if (rowDone) for (let i = 0; i < 9; i++) completedCells.add(r * 9 + i);
+        if (colDone) for (let i = 0; i < 9; i++) completedCells.add(i * 9 + c);
+        if (boxDone) {
+          for (let rr = br; rr < br + 3; rr++) {
+            for (let cc = bc; cc < bc + 3; cc++) completedCells.add(rr * 9 + cc);
+          }
+        }
+
+        if (completedCells.size > 0) {
+          audio.playChimeChord(false);
+          spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 24);
+          completedCells.forEach(ci => {
+            const cellEl = document.querySelector(`.cell[data-idx="${ci}"]`);
+            if (cellEl) {
+              cellEl.classList.remove("ripple-flash");
+              void cellEl.offsetWidth;
+              cellEl.classList.add("ripple-flash");
+            }
+          });
+        }
+      }
+
+      function handleDigitInput(digit) {
+        const g = state.game;
+        if (!g || g.completed || selectedIdx < 0) return;
+
+        if (g.initial[selectedIdx] !== 0) {
+          audio.playSelect();
+          renderBoard();
+          return;
+        }
+
+        if (notesMode) {
+          if (g.board[selectedIdx] !== 0) return;
+          snapshotForUndo();
+          const list = g.notes[selectedIdx];
+          const pos = list.indexOf(digit);
+          if (pos >= 0) list.splice(pos, 1);
+          else {
+            list.push(digit);
+            list.sort((a, b) => a - b);
+          }
+          audio.playPluck(digit, true);
+          saveState();
+          renderBoard();
+          renderControls();
+          return;
+        }
+
+        if (g.board[selectedIdx] === digit && g.solution[selectedIdx] === digit) return;
+
+        snapshotForUndo();
+        g.board[selectedIdx] = digit;
+        g.notes[selectedIdx] = [];
+        activeHint = null;
+
+        const isCorrect = g.solution[selectedIdx] === digit;
+        if (isCorrect) {
+          if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
+          audio.playPluck(digit, false);
+          const r = Math.floor(selectedIdx / 9);
+          const c = selectedIdx % 9;
+          spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 10);
+
+          checkCompletedUnits(selectedIdx);
+
+          if (g.board.every((val, i) => val === g.solution[i])) {
+            handlePuzzleVictory();
+          }
+        } else {
+          g.mistakes++;
+          audio.playSoftError();
+
+          if (state.settings.mistakeLimit && g.mistakes >= 3) {
+            showToast(t("toast3Mistakes"));
+            g.mistakes = 0;
+          }
+        }
+
+        saveState();
+        renderBoard(selectedIdx);
+        renderTelemetry();
+        renderControls();
+      }
+
+      function handlePuzzleVictory() {
+        const g = state.game;
+        g.completed = true;
+        audio.playChimeChord(true);
+        spawnGoldBurst(0.5, 0.5, 55);
+
+        const diffCfg = DIFFICULTY_CONFIG[g.diffKey] || DIFFICULTY_CONFIG.hard;
+        const earned = diffCfg.reward;
+        const isTimedRun = Boolean(state.settings.timerEnabled || g.wasTimed);
+
+        state.profile.harmonyStones += earned;
+        state.profile.wins += 1;
+        state.profile.streak = (state.profile.streak || 0) + 1;
+        state.profile.solvedByDiff[g.diffKey] = (state.profile.solvedByDiff[g.diffKey] || 0) + 1;
+
+        if (isTimedRun && g.elapsedSeconds > 0) {
+          const prevBest = state.profile.bestTimes[g.diffKey];
+          if (!prevBest || g.elapsedSeconds < prevBest) {
+            state.profile.bestTimes[g.diffKey] = g.elapsedSeconds;
+          }
+        }
+
+        state.profile.history.unshift({
+          diffKey: g.diffKey,
+          timed: isTimedRun,
+          seconds: g.elapsedSeconds,
+          date: Date.now()
+        });
+        if (state.profile.history.length > 30) state.profile.history.pop();
+
+        saveState();
+        renderAll();
+
+        const diffLabel = I18N[state.settings.lang].diffs[g.diffKey].label;
+        document.getElementById("victory-kicker").textContent = t("victoryKicker");
+        document.getElementById("victory-subtitle").textContent = t("victorySub", { diff: diffLabel });
+        document.getElementById("victory-stats").textContent = isTimedRun
+          ? t("victoryStatsTimed", { time: formatTime(g.elapsedSeconds), wins: state.profile.wins, stones: earned })
+          : t("victoryStatsRelaxed", { wins: state.profile.wins, stones: earned });
+        document.getElementById("btn-victory-admire").textContent = t("victoryAdmire");
+        document.getElementById("btn-victory-next").textContent = t("victoryNext");
+        openModal("modal-victory");
+      }
+
+      function requestIntuitionHint() {
+        const g = state.game;
+        if (!g || g.completed) return;
+        if (g.hintsLeft <= 0) {
+          showToast(t("toastNoHints"));
+          return;
+        }
+        const hint = findLogicalHint(g.board, g.solution);
+        if (!hint) return;
+        g.hintsLeft--;
+        selectedIdx = hint.idx;
+        activeHint = hint;
+        audio.playPluck(hint.digit, true);
+        saveState();
+        renderBoard();
+        renderControls();
+      }
+
+      /* ========================================================================
+         10. SAVE SLOTS MANAGEMENT
+         ======================================================================== */
+      function createSaveSlot() {
+        const g = state.game;
+        if (!g) return;
+        const input = document.getElementById("save-slot-name");
+        const customName = input.value.trim();
+        const diffLabel = I18N[state.settings.lang].diffs[g.diffKey].label;
+        const solvedCount = g.board.filter((v, i) => v !== 0 && v === g.solution[i]).length;
+
+        const slot = {
+          id: "slot_" + Date.now(),
+          name: customName || diffLabel,
+          timestamp: Date.now(),
+          progressPct: Math.round((solvedCount / 81) * 100),
+          gameState: JSON.parse(JSON.stringify(g))
+        };
+
+        state.saveSlots.unshift(slot);
+        if (state.saveSlots.length > 12) state.saveSlots.pop();
+        input.value = "";
+        saveState();
+        renderSaveSlots();
+        showToast(t("toastSaved"));
+      }
+
+      function loadSaveSlot(slotId) {
+        const slot = state.saveSlots.find(s => s.id === slotId);
+        if (!slot) return;
+        state.game = JSON.parse(JSON.stringify(slot.gameState));
+        activeHint = null;
+        notesMode = false;
+        saveState();
+        renderAll();
+        closeModal("modal-saves");
+        showToast(t("toastLoaded", { name: slot.name }));
+      }
+
+      function deleteSaveSlot(slotId) {
+        state.saveSlots = state.saveSlots.filter(s => s.id !== slotId);
+        saveState();
+        renderSaveSlots();
+      }
+
+      /* ========================================================================
+         11. UI RENDERING & RESPONSIVE BOARD SIZING
+         ======================================================================== */
+      function formatTime(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, "0");
+        const s = (sec % 60).toString().padStart(2, "0");
+        return `${m}:${s}`;
+      }
+
+      function resizeBoardSquare() {
+        const app = document.getElementById("app");
+        const topBar = document.querySelector(".top-bar");
+        const teleBar = document.querySelector(".telemetry-bar");
+        const controls = document.querySelector(".controls-deck");
+        const boardEl = document.getElementById("sudoku-board");
+
+        const isLandscapeWide = window.innerWidth >= 820 && window.innerWidth > window.innerHeight;
+        const availH = app.clientHeight - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 24 : controls.offsetHeight + 28);
+        const availW = isLandscapeWide ? app.clientWidth - controls.offsetWidth - 52 : app.clientWidth - 20;
+
+        const size = Math.max(248, Math.min(availH, availW, 530));
+        boardEl.style.width = `${size}px`;
+        boardEl.style.height = `${size}px`;
+        boardEl.style.fontSize = `${Math.round(size / 16.5)}px`;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        fxCanvas.width = (size + 32) * dpr;
+        fxCanvas.height = (size + 32) * dpr;
+      }
+
+      function buildBoardDom() {
+        const boardEl = document.getElementById("sudoku-board");
+        boardEl.innerHTML = "";
+        for (let i = 0; i < 81; i++) {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.dataset.idx = i;
+          cell.dataset.row = Math.floor(i / 9);
+          cell.dataset.col = i % 9;
+          cell.setAttribute("role", "gridcell");
+          cell.addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            audio.unlock();
+            selectedIdx = i;
+            audio.playSelect();
+            renderBoard();
+            renderControls();
+          });
+          boardEl.appendChild(cell);
+        }
+      }
+
+      function renderBoard(animatedIdx = -1) {
+        const g = state.game;
+        if (!g) return;
+        const cells = document.getElementById("sudoku-board").children;
+        const selR = Math.floor(selectedIdx / 9);
+        const selC = selectedIdx % 9;
+        const selBoxR = Math.floor(selR / 3);
+        const selBoxC = Math.floor(selC / 3);
+        const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
+
+        for (let i = 0; i < 81; i++) {
+          const cell = cells[i];
+          const val = g.board[i];
+          const isGiven = g.initial[i] !== 0;
+          const r = Math.floor(i / 9);
+          const c = i % 9;
+          const isPeer = (r === selR || c === selC || (Math.floor(r / 3) === selBoxR && Math.floor(c / 3) === selBoxC));
+          const isSameNum = state.settings.highlightSame && selectedVal !== 0 && val === selectedVal;
+          const isError = val !== 0 && val !== g.solution[i];
+
+          cell.className = "cell";
+          if (isGiven) cell.classList.add("given");
+          else if (isPeer) cell.classList.add("peer");
+          if (isSameNum) cell.classList.add("same-num");
+          if (i === selectedIdx) cell.classList.add("selected");
+          if (activeHint && activeHint.idx === i) cell.classList.add("hint-target");
+          if (isError) cell.classList.add("error");
+          if (i === animatedIdx) cell.classList.add("pop-in");
+
+          if (val !== 0) {
+            cell.innerHTML = `<span class="cell-val">${val}</span>`;
+          } else if (g.notes[i].length > 0) {
+            let html = `<div class="notes-grid">`;
+            for (let n = 1; n <= 9; n++) {
+              const has = g.notes[i].includes(n);
+              const hl = has && selectedVal === n ? " highlight-note" : "";
+              html += `<span class="note-num${hl}">${has ? n : ""}</span>`;
+            }
+            html += `</div>`;
+            cell.innerHTML = html;
+          } else {
+            cell.innerHTML = "";
+          }
+        }
+      }
+
+      function renderStaticTranslations() {
+        const lang = state.settings.lang || "vi";
+        document.getElementById("btn-lang").textContent = lang === "vi" ? "VN | EN" : "EN | VN";
+        document.getElementById("brand-sub-text").textContent = t("solvedSummary", { n: state.profile.wins });
+        document.getElementById("lbl-stats-btn").textContent = t("statsBtn");
+        document.getElementById("lbl-new-btn").textContent = t("newBtn");
+        document.getElementById("lbl-mistakes").textContent = t("mistakesLbl");
+
+        document.getElementById("lbl-undo").textContent = t("undo");
+        document.getElementById("lbl-redo").textContent = t("redo");
+        document.getElementById("lbl-erase").textContent = t("erase");
+        document.getElementById("lbl-notes").textContent = t("notes");
+        document.getElementById("lbl-hint").textContent = t("hint");
+        document.getElementById("btn-apply-hint").textContent = t("applyHintBtn");
+
+        document.getElementById("icon-sound-on").style.display = state.settings.soundEnabled ? "block" : "none";
+        document.getElementById("icon-sound-off").style.display = state.settings.soundEnabled ? "none" : "block";
+      }
+
+      function renderTelemetry() {
+        const g = state.game;
+        if (!g) return;
+        const diffLabel = I18N[state.settings.lang].diffs[g.diffKey].label;
+        document.getElementById("btn-diff-pill").textContent = diffLabel;
+        document.getElementById("mistakes-count").textContent = state.settings.mistakeLimit ? `${g.mistakes}/3` : `${g.mistakes}`;
+
+        const timerPill = document.getElementById("btn-timer-pill");
+        const timerDisplay = document.getElementById("timer-display");
+        if (state.settings.timerEnabled) {
+          timerPill.classList.add("active");
+          timerDisplay.textContent = `⏱ ${formatTime(g.elapsedSeconds)}`;
+        } else {
+          timerPill.classList.remove("active");
+          timerDisplay.textContent = `🌿 ${t("relaxedTimer")}`;
+        }
+      }
+
+      function renderControls() {
+        const g = state.game;
+        if (!g) return;
+
+        document.getElementById("tool-undo").disabled = g.undoStack.length === 0 || g.completed;
+        document.getElementById("tool-redo").disabled = g.redoStack.length === 0 || g.completed;
+        const notesBtn = document.getElementById("tool-notes");
+        notesBtn.classList.toggle("active", notesMode);
+        document.getElementById("notes-state-badge").textContent = notesMode ? t("on") : t("off");
+        document.getElementById("hints-left-badge").textContent = g.hintsLeft;
+
+        const bar = document.getElementById("intuition-bar");
+        const txt = document.getElementById("intuition-text");
+        const applyBtn = document.getElementById("btn-apply-hint");
+        if (activeHint) {
+          bar.classList.add("active-hint");
+          txt.textContent = formatHintReason(activeHint);
+          applyBtn.style.display = "inline-block";
+        } else {
+          bar.classList.remove("active-hint");
+          txt.textContent = notesMode ? t("notesActivePrompt") : t("defaultPrompt");
+          applyBtn.style.display = "none";
+        }
+
+        const counts = new Array(10).fill(0);
+        for (let i = 0; i < 81; i++) {
+          if (g.board[i] !== 0 && g.board[i] === g.solution[i]) {
+            counts[g.board[i]]++;
+          }
+        }
+        const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
+
+        const numpad = document.getElementById("numpad");
+        numpad.innerHTML = "";
+        for (let d = 1; d <= 9; d++) {
+          const rem = Math.max(0, 9 - counts[d]);
+          const btn = document.createElement("button");
+          btn.className = "num-btn";
+          if (rem === 0) btn.classList.add("completed");
+          if (selectedVal === d) btn.classList.add("active-digit");
+          btn.innerHTML = `<span class="num-digit">${d}</span><span class="num-rem">${rem === 0 ? "✓" : rem}</span>`;
+          btn.addEventListener("pointerdown", (e) => {
+            e.preventDefault();
+            audio.unlock();
+            handleDigitInput(d);
+          });
+          numpad.appendChild(btn);
+        }
+      }
+
+      function renderDifficultyList() {
+        document.getElementById("modal-new-title").textContent = t("modalNewTitle");
+        document.getElementById("modal-new-desc").textContent = t("modalNewDesc");
+        const container = document.getElementById("difficulty-list");
+        container.innerHTML = "";
+        const lang = state.settings.lang || "vi";
+
+        DIFF_ORDER.forEach(key => {
+          const cfg = DIFFICULTY_CONFIG[key];
+          const textCfg = I18N[lang].diffs[key];
+          const solved = state.profile.solvedByDiff[key] || 0;
+          const best = state.profile.bestTimes[key];
+          const bestPart = best ? ` • ${t("bestTimeLbl", { t: formatTime(best) })}` : "";
+
+          const btn = document.createElement("button");
+          btn.className = "diff-option";
+          btn.innerHTML = `
+            <div>
+              <span class="diff-name">${textCfg.label}</span>
+              <span class="diff-desc">${textCfg.desc}</span>
+            </div>
+            <span class="diff-reward">${t("solvedCountLbl", { n: solved })}${bestPart}</span>
+          `;
+          btn.addEventListener("click", () => {
+            closeModal("modal-new");
+            startNewGame(key);
+          });
+          container.appendChild(btn);
+        });
+      }
+
+      function renderSaveSlots() {
+        document.getElementById("modal-saves-title").textContent = t("modalSavesTitle");
+        document.getElementById("save-slot-name").placeholder = t("saveInputPlaceholder");
+        document.getElementById("btn-create-save").textContent = t("saveCurrentBtn");
+
+        const container = document.getElementById("save-slots-container");
+        if (state.saveSlots.length === 0) {
+          container.innerHTML = `<p style="font-size:13px; color:var(--ink-secondary); text-align:center; padding:16px 0;">${t("noSavesMsg")}</p>`;
+          return;
+        }
+        container.innerHTML = "";
+        state.saveSlots.forEach(slot => {
+          const date = new Date(slot.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+          const timeInfo = slot.gameState.wasTimed ? ` • ${formatTime(slot.gameState.elapsedSeconds)}` : "";
+          const div = document.createElement("div");
+          div.className = "slot-item";
+          div.innerHTML = `
+            <div class="slot-meta">
+              <div class="slot-title">${escapeHtml(slot.name)}</div>
+              <div class="slot-sub">${t("solvedPct", { pct: slot.progressPct })}${timeInfo} • ${date}</div>
+            </div>
+            <div class="slot-actions">
+              <button class="btn-sm primary" data-load="${slot.id}">${t("loadBtn")}</button>
+              <button class="btn-sm danger" data-del="${slot.id}">&times;</button>
+            </div>
+          `;
+          div.querySelector("[data-load]").addEventListener("click", () => loadSaveSlot(slot.id));
+          div.querySelector("[data-del]").addEventListener("click", () => deleteSaveSlot(slot.id));
+          container.appendChild(div);
+        });
+      }
+
+      function renderStatsAndSanctuaryModal() {
+        const lang = state.settings.lang || "vi";
+        document.getElementById("modal-stats-title").textContent = t("modalStatsTitle");
+        document.getElementById("tab-records").textContent = t("tabRecords");
+        document.getElementById("tab-garden").textContent = t("tabGarden");
+
+        document.getElementById("stat-total-wins").textContent = state.profile.wins;
+        document.getElementById("lbl-stat-wins").textContent = t("statTotalWins");
+        document.getElementById("stat-streak").textContent = state.profile.streak || 0;
+        document.getElementById("lbl-stat-streak").textContent = t("statStreak");
+        document.getElementById("stat-stones").textContent = state.profile.harmonyStones;
+        document.getElementById("lbl-stat-stones").textContent = t("statStones");
+
+        document.getElementById("lbl-breakdown-header").textContent = t("breakdownHeader");
+        const breakdownEl = document.getElementById("stats-breakdown-list");
+        breakdownEl.innerHTML = "";
+        DIFF_ORDER.forEach(key => {
+          const label = I18N[lang].diffs[key].label;
+          const count = state.profile.solvedByDiff[key] || 0;
+          const best = state.profile.bestTimes[key];
+          const rightText = best
+            ? `${t("solvedCountLbl", { n: count })} • ${t("bestTimeLbl", { t: formatTime(best) })}`
+            : `${t("solvedCountLbl", { n: count })}`;
+          const row = document.createElement("div");
+          row.className = "stat-table-row";
+          row.innerHTML = `<strong>${label}</strong><span style="color:var(--ink-secondary); font-weight:600;">${rightText}</span>`;
+          breakdownEl.appendChild(row);
+        });
+
+        document.getElementById("lbl-history-header").textContent = t("historyHeader");
+        const histEl = document.getElementById("stats-history-list");
+        if (!state.profile.history || state.profile.history.length === 0) {
+          histEl.innerHTML = `<div style="padding:12px 6px; font-size:12.5px; color:var(--ink-secondary); text-align:center;">${t("noHistoryMsg")}</div>`;
+        } else {
+          histEl.innerHTML = "";
+          state.profile.history.slice(0, 12).forEach(entry => {
+            const label = (I18N[lang].diffs[entry.diffKey] || I18N[lang].diffs.hard).label;
+            const dateStr = new Date(entry.date).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+            const modeStr = entry.timed ? `⏱ ${formatTime(entry.seconds)}` : `🌿 ${t("relaxedTag")}`;
+            const item = document.createElement("div");
+            item.className = "history-item";
+            item.innerHTML = `<span><strong>${label}</strong> • ${dateStr}</span><span style="color:var(--accent-moss); font-weight:700;">${modeStr}</span>`;
+            histEl.appendChild(item);
+          });
+        }
+
+        // Render Garden Themes
+        document.getElementById("sanctuary-caption").textContent = t("sanctuaryCaption");
+        const grid = document.getElementById("theme-grid");
+        grid.innerHTML = "";
+        THEME_LIST.forEach(th => {
+          const unlocked = state.profile.harmonyStones >= th.cost;
+          const active = state.settings.theme === th.id;
+          const info = I18N[lang].themes[th.id];
+          const card = document.createElement("button");
+          card.className = `theme-card${active ? " active" : ""}${!unlocked ? " locked" : ""}`;
+          card.innerHTML = `
+            <div style="font-weight:700; font-size:13.5px;">${info.name}</div>
+            <div style="font-size:11.5px; color:var(--ink-secondary); margin:2px 0 4px;">${info.desc}</div>
+            <div style="font-size:11px; font-weight:700; color:var(--accent-gold);">
+              ${active ? t("unlockedActive") : unlocked ? t("unlockedApply") : t("lockedNeed", { n: th.cost })}
+            </div>
+          `;
+          card.addEventListener("click", () => {
+            if (!unlocked) {
+              showToast(t("toastNeedStones", { n: th.cost - state.profile.harmonyStones }));
+              return;
+            }
+            state.settings.theme = th.id;
+            document.documentElement.setAttribute("data-theme", th.id);
+            saveState();
+            renderStatsAndSanctuaryModal();
+          });
+          grid.appendChild(card);
+        });
+
+        renderSanctuaryIllustration();
+      }
+
+      function renderSettingsModal() {
+        document.getElementById("modal-settings-title").textContent = t("modalSettingsTitle");
+        document.getElementById("set-lang-title").textContent = t("setLangTitle");
+        document.getElementById("set-lang-desc").textContent = t("setLangDesc");
+        document.getElementById("btn-settings-lang").textContent = t("setLangBtnName");
+
+        document.getElementById("set-timer-title").textContent = t("setTimerTitle");
+        document.getElementById("set-timer-desc").textContent = t("setTimerDesc");
+        document.getElementById("set-mistake-title").textContent = t("setMistakeTitle");
+        document.getElementById("set-mistake-desc").textContent = t("setMistakeDesc");
+        document.getElementById("set-autonote-title").textContent = t("setAutonoteTitle");
+        document.getElementById("set-autonote-desc").textContent = t("setAutonoteDesc");
+        document.getElementById("set-same-title").textContent = t("setSameTitle");
+        document.getElementById("set-same-desc").textContent = t("setSameDesc");
+        document.getElementById("set-sound-title").textContent = t("setSoundTitle");
+        document.getElementById("set-sound-desc").textContent = t("setSoundDesc");
+        document.getElementById("btn-check-update").textContent = t("checkUpdateBtn");
+
+        document.getElementById("toggle-timer-mode").checked = Boolean(state.settings.timerEnabled);
+        document.getElementById("toggle-mistake-limit").checked = Boolean(state.settings.mistakeLimit);
+        document.getElementById("toggle-auto-notes").checked = Boolean(state.settings.autoClearNotes);
+        document.getElementById("toggle-highlight-same").checked = Boolean(state.settings.highlightSame);
+        document.getElementById("toggle-sound").checked = Boolean(state.settings.soundEnabled);
+        document.getElementById("app-version-label").textContent = APP_VERSION;
+        document.getElementById("update-status-text").textContent = t("upToDate", { v: APP_VERSION });
+      }
+
+      function renderAll() {
+        renderStaticTranslations();
+        renderTelemetry();
+        renderBoard();
+        renderControls();
+        resizeBoardSquare();
+      }
+
+      function toggleLanguage() {
+        state.settings.lang = state.settings.lang === "vi" ? "en" : "vi";
+        document.documentElement.lang = state.settings.lang;
+        saveState();
+        renderAll();
+        if (document.getElementById("modal-settings").classList.contains("open")) renderSettingsModal();
+        if (document.getElementById("modal-new").classList.contains("open")) renderDifficultyList();
+        if (document.getElementById("modal-saves").classList.contains("open")) renderSaveSlots();
+        if (document.getElementById("modal-stats").classList.contains("open")) renderStatsAndSanctuaryModal();
+      }
+
+      function toggleTimerMode() {
+        state.settings.timerEnabled = !state.settings.timerEnabled;
+        if (state.settings.timerEnabled && state.game && !state.game.completed) {
+          state.game.wasTimed = true;
+        }
+        saveState();
+        renderTelemetry();
+        showToast(state.settings.timerEnabled ? t("toastTimerOn") : t("toastTimerOff"));
+      }
+
+      /* ========================================================================
+         12. HELPERS, MODALS & KEYBOARD NAVIGATION
+         ======================================================================== */
+      let toastTimeout = null;
+      function showToast(msg) {
+        const el = document.getElementById("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => el.classList.remove("show"), 2600);
+      }
+
+      function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+      }
+
+      function openModal(id) {
+        if (id === "modal-new") renderDifficultyList();
+        if (id === "modal-saves") renderSaveSlots();
+        if (id === "modal-stats") renderStatsAndSanctuaryModal();
+        if (id === "modal-settings") renderSettingsModal();
+        document.getElementById(id).classList.add("open");
+        if (id === "modal-stats") requestAnimationFrame(renderSanctuaryIllustration);
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("open");
+      }
+
+      function setupEventListeners() {
+        document.querySelectorAll("[data-close]").forEach(btn => {
+          btn.addEventListener("click", () => closeModal(btn.dataset.close));
+        });
+
+        document.querySelectorAll(".modal-backdrop").forEach(backdrop => {
+          backdrop.addEventListener("click", (e) => {
+            if (e.target === backdrop) backdrop.classList.remove("open");
+          });
+        });
+
+        document.getElementById("btn-lang").addEventListener("click", toggleLanguage);
+        document.getElementById("btn-settings-lang").addEventListener("click", toggleLanguage);
+        document.getElementById("btn-timer-pill").addEventListener("click", toggleTimerMode);
+
+        document.getElementById("btn-new-game").addEventListener("click", () => openModal("modal-new"));
+        document.getElementById("btn-diff-pill").addEventListener("click", () => openModal("modal-new"));
+        document.getElementById("btn-saves").addEventListener("click", () => openModal("modal-saves"));
+        document.getElementById("btn-stats").addEventListener("click", () => openModal("modal-stats"));
+        document.getElementById("btn-settings").addEventListener("click", () => openModal("modal-settings"));
+        document.getElementById("btn-create-save").addEventListener("click", createSaveSlot);
+
+        // Tabs inside Stats/Garden modal
+        document.querySelectorAll(".tab-btn").forEach(tab => {
+          tab.addEventListener("click", () => {
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            tab.classList.add("active");
+            const isGarden = tab.dataset.tab === "garden";
+            document.getElementById("pane-records").style.display = isGarden ? "none" : "block";
+            document.getElementById("pane-garden").style.display = isGarden ? "block" : "none";
+            if (isGarden) requestAnimationFrame(renderSanctuaryIllustration);
+          });
+        });
+
+        document.getElementById("btn-victory-next").addEventListener("click", () => {
+          closeModal("modal-victory");
+          openModal("modal-new");
+        });
+
+        document.getElementById("btn-audio").addEventListener("click", () => {
+          state.settings.soundEnabled = !state.settings.soundEnabled;
+          audio.enabled = state.settings.soundEnabled;
+          if (audio.enabled) audio.playPluck(5, true);
+          saveState();
+          renderStaticTranslations();
+        });
+
+        // Tool Buttons
+        document.getElementById("tool-undo").addEventListener("click", handleUndo);
+        document.getElementById("tool-redo").addEventListener("click", handleRedo);
+        document.getElementById("tool-erase").addEventListener("click", handleErase);
+        document.getElementById("tool-notes").addEventListener("click", () => {
+          notesMode = !notesMode;
+          audio.playSelect();
+          renderControls();
+        });
+        document.getElementById("tool-hint").addEventListener("click", requestIntuitionHint);
+        document.getElementById("btn-apply-hint").addEventListener("click", () => {
+          if (activeHint) {
+            selectedIdx = activeHint.idx;
+            notesMode = false;
+            handleDigitInput(activeHint.digit);
+          }
+        });
+
+        // Settings Toggles
+        document.getElementById("toggle-timer-mode").addEventListener("change", (e) => {
+          state.settings.timerEnabled = e.target.checked;
+          if (state.settings.timerEnabled && state.game && !state.game.completed) {
+            state.game.wasTimed = true;
+          }
+          saveState();
+          renderTelemetry();
+        });
+        document.getElementById("toggle-mistake-limit").addEventListener("change", (e) => {
+          state.settings.mistakeLimit = e.target.checked;
+          saveState();
+          renderTelemetry();
+        });
+        document.getElementById("toggle-auto-notes").addEventListener("change", (e) => {
+          state.settings.autoClearNotes = e.target.checked;
+          saveState();
+        });
+        document.getElementById("toggle-highlight-same").addEventListener("change", (e) => {
+          state.settings.highlightSame = e.target.checked;
+          saveState();
+          renderBoard();
+        });
+        document.getElementById("toggle-sound").addEventListener("change", (e) => {
+          state.settings.soundEnabled = e.target.checked;
+          audio.enabled = state.settings.soundEnabled;
+          saveState();
+          renderStaticTranslations();
+        });
+        document.getElementById("btn-check-update").addEventListener("click", () => checkForAppUpdate(true));
+
+        // Keyboard Navigation
+        window.addEventListener("keydown", (e) => {
+          if (document.querySelector(".modal-backdrop.open")) {
+            if (e.key === "Escape") {
+              document.querySelectorAll(".modal-backdrop.open").forEach(m => m.classList.remove("open"));
+            }
+            return;
+          }
+          const r = Math.floor(selectedIdx / 9);
+          const c = selectedIdx % 9;
+
+          if (e.key === "ArrowUp") {
+            e.preventDefault();
+            selectedIdx = ((r + 8) % 9) * 9 + c;
+            renderBoard(); renderControls();
+          } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            selectedIdx = ((r + 1) % 9) * 9 + c;
+            renderBoard(); renderControls();
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            selectedIdx = r * 9 + ((c + 8) % 9);
+            renderBoard(); renderControls();
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            selectedIdx = r * 9 + ((c + 1) % 9);
+            renderBoard(); renderControls();
+          } else if (e.key >= "1" && e.key <= "9") {
+            e.preventDefault();
+            handleDigitInput(Number(e.key));
+          } else if (e.key === "Backspace" || e.key === "Delete" || e.key === "0") {
+            e.preventDefault();
+            handleErase();
+          } else if (e.key === "n" || e.key === "N") {
+            e.preventDefault();
+            notesMode = !notesMode;
+            renderControls();
+          } else if (e.key === "z" || e.key === "Z") {
+            e.preventDefault();
+            if (e.shiftKey) handleRedo(); else handleUndo();
+          } else if (e.key === "y" || e.key === "Y") {
+            e.preventDefault();
+            handleRedo();
+          } else if (e.key === "h" || e.key === "H") {
+            e.preventDefault();
+            requestIntuitionHint();
+          }
+        });
+
+        window.addEventListener("resize", resizeBoardSquare);
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) saveState();
+        });
+      }
+
+      /* ========================================================================
+         13. BOOTSTRAP INITIALIZATION
+         ======================================================================== */
+      function init() {
+        generateDynamicAppIcon();
+        loadState();
+        buildBoardDom();
+        setupEventListeners();
+
+        if (!state.game || !Array.isArray(state.game.board) || state.game.board.length !== 81) {
+          startNewGame("hard");
+        } else {
+          renderAll();
+        }
+
+        timerInterval = setInterval(() => {
+          if (!state.game || state.game.completed || document.hidden) return;
+          if (!state.settings.timerEnabled) return;
+          if (document.querySelector(".modal-backdrop.open")) return;
+          state.game.elapsedSeconds++;
+          document.getElementById("timer-display").textContent = `⏱ ${formatTime(state.game.elapsedSeconds)}`;
+          if (state.game.elapsedSeconds % 15 === 0) saveState();
+        }, 1000);
+
+        requestAnimationFrame(animateParticles);
+        checkForAppUpdate(false);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html>
