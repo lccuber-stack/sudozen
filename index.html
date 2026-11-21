@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="SudoZen" />
   <meta name="theme-color" content="#EAE5D9" />
   <title>SudoZen</title>
@@ -13,54 +13,52 @@
 
   <style>
     /* ==========================================================================
-       1. DESIGN TOKENS & SERENE PALETTES (Washi, Moss, Hinoki, Kyoto Mist, Maple)
+       1. DESIGN TOKENS, TEXT SCALING & SEASONAL ZEN PALETTES
        ========================================================================== */
     :root {
+      --ui-scale: 1;
       --bg-base: #EAE5D9;
       --bg-elevated: #F5F1E8;
       --bg-card: #FAF7F0;
       --bg-cell: #FDFBF7;
-      --bg-cell-given: #F1ECE1;
-      --bg-cell-peer: #E8E4D8;
-      --bg-cell-same: #DCE3D3;
-      --bg-cell-selected: #CFE0C1;
+      --bg-cell-given: #EFEAE0;
+      --bg-cell-peer: #E5E0D3;
+      --bg-cell-same: #D8E2CE;
+      --bg-cell-selected: #CBE0BD;
       --bg-cell-error: #F6DFDC;
 
       --ink-primary: #222620;
-      --ink-secondary: #535A4E;
-      --ink-muted: #82887C;
-      --ink-user: #25562E;
-      --ink-note: #5D6558;
+      --ink-secondary: #555D50;
+      --ink-muted: #848B7E;
+      --ink-user: #275830;
+      --ink-note: #5E6659;
       --ink-error: #B8423A;
 
-      --accent-moss: #436647;
-      --accent-moss-dark: #2E4B32;
-      --accent-gold: #B68D40;
-      --accent-gold-soft: rgba(182, 141, 64, 0.22);
+      --accent-moss: #3F6344;
+      --accent-moss-dark: #2C4830;
+      --accent-gold: #B08435;
+      --accent-gold-soft: rgba(176, 132, 53, 0.2);
 
-      --border-thin: #D5CEBE;
-      --border-thick: #52594D;
+      --border-thin: #D3CCB9;
+      --border-thick: #525A4D;
       --shadow-soft: 0 8px 24px rgba(34, 38, 32, 0.08);
-      --shadow-card: 0 14px 36px rgba(34, 38, 32, 0.16);
+      --shadow-card: 0 16px 40px rgba(34, 38, 32, 0.16);
 
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
 
-      --ui-scale: 1;
       --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --font-serif: "New York", "Iowan Old Style", Georgia, "Times New Roman", serif;
     }
 
-    html[data-text-size="large"] {
-      --ui-scale: 1.13;
-    }
+    /* Quick UI Text Size Modes (A- / A / A+) */
+    [data-text-size="normal"] { --ui-scale: 0.92; }
+    [data-text-size="large"]  { --ui-scale: 1.00; }
+    [data-text-size="xlarge"] { --ui-scale: 1.12; }
 
-    html[data-text-size="xlarge"] {
-      --ui-scale: 1.26;
-    }
-
+    /* Theme: Hinoki Warm Wood */
     [data-theme="hinoki"] {
       --bg-base: #E6D7C3;
       --bg-elevated: #F2E7D8;
@@ -70,16 +68,17 @@
       --bg-cell-peer: #E6D7C4;
       --bg-cell-same: #E2CEB5;
       --bg-cell-selected: #D8BE9E;
-      --ink-primary: #2F241B;
-      --ink-secondary: #685544;
-      --ink-muted: #988472;
-      --ink-user: #7D4E24;
-      --accent-moss: #8C5A2B;
-      --accent-moss-dark: #6B421D;
+      --ink-primary: #2B2017;
+      --ink-secondary: #624F3E;
+      --ink-muted: #917E6C;
+      --ink-user: #78481E;
+      --accent-moss: #855325;
+      --accent-moss-dark: #633B17;
       --border-thin: #D6C3AC;
-      --border-thick: #685544;
+      --border-thick: #624F3E;
     }
 
+    /* Theme: Kyoto Morning Mist */
     [data-theme="mist"] {
       --bg-base: #DFE5E8;
       --bg-elevated: #ECF0F2;
@@ -89,16 +88,17 @@
       --bg-cell-peer: #DCE4E8;
       --bg-cell-same: #CEDCE3;
       --bg-cell-selected: #BFD3DD;
-      --ink-primary: #1F2930;
-      --ink-secondary: #51626E;
-      --ink-muted: #82939E;
-      --ink-user: #2B5B78;
-      --accent-moss: #3B6E8C;
-      --accent-moss-dark: #285068;
+      --ink-primary: #1B252C;
+      --ink-secondary: #4C5D69;
+      --ink-muted: #7C8D99;
+      --ink-user: #245370;
+      --accent-moss: #346684;
+      --accent-moss-dark: #224960;
       --border-thin: #C8D3D9;
-      --border-thick: #51626E;
+      --border-thick: #4C5D69;
     }
 
+    /* Theme: Autumn Momiji Maple */
     [data-theme="maple"] {
       --bg-base: #EAE0DA;
       --bg-elevated: #F4ECE7;
@@ -108,14 +108,14 @@
       --bg-cell-peer: #E7D8D0;
       --bg-cell-same: #E3CBC2;
       --bg-cell-selected: #DABAB0;
-      --ink-primary: #2D211E;
-      --ink-secondary: #68514B;
-      --ink-muted: #99827C;
-      --ink-user: #8F392B;
-      --accent-moss: #9E4334;
-      --accent-moss-dark: #7A3024;
+      --ink-primary: #291D1A;
+      --ink-secondary: #624B45;
+      --ink-muted: #917A74;
+      --ink-user: #893325;
+      --accent-moss: #983D2E;
+      --accent-moss-dark: #72291E;
       --border-thin: #D6C2BA;
-      --border-thick: #68514B;
+      --border-thick: #624B45;
     }
 
     /* ==========================================================================
@@ -139,7 +139,7 @@
       background-color: var(--bg-base);
       color: var(--ink-primary);
       font-family: var(--font-sans);
-      transition: background-color 0.3s ease, color 0.3s ease;
+      transition: background-color 0.35s ease, color 0.35s ease;
     }
 
     body::before {
@@ -150,7 +150,7 @@
       z-index: 0;
       opacity: 0.35;
       background-image: radial-gradient(rgba(80, 75, 65, 0.08) 1px, transparent 0),
-                        radial-gradient(rgba(182, 141, 64, 0.06) 1px, transparent 0);
+                        radial-gradient(rgba(176, 132, 53, 0.06) 1px, transparent 0);
       background-size: 24px 24px;
       background-position: 0 0, 12px 12px;
     }
@@ -167,12 +167,13 @@
       width: 100%;
       height: 100%;
       height: 100dvh;
-      padding-top: calc(6px + var(--safe-top));
-      padding-bottom: calc(8px + var(--safe-bottom));
-      padding-left: calc(10px + var(--safe-left));
-      padding-right: calc(10px + var(--safe-right));
-      max-width: 1040px;
+      padding-top: calc(8px + var(--safe-top));
+      padding-bottom: calc(10px + var(--safe-bottom));
+      padding-left: calc(12px + var(--safe-left));
+      padding-right: calc(12px + var(--safe-right));
+      max-width: 1180px;
       margin: 0 auto;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ==========================================================================
@@ -195,20 +196,41 @@
     }
 
     .brand-emblem {
-      width: calc(38px * var(--ui-scale));
-      height: calc(38px * var(--ui-scale));
-      border-radius: 11px;
-      background: linear-gradient(135deg, var(--accent-moss), var(--accent-moss-dark));
-      border: 1.5px solid var(--accent-gold);
+      position: relative;
+      width: calc(42px * var(--ui-scale));
+      height: calc(42px * var(--ui-scale));
+      border-radius: 12px;
+      background: linear-gradient(145deg, #436848 0%, #263E29 100%);
+      border: 1.5px solid #C69A4B;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #FAF7F0;
       font-family: var(--font-serif);
       font-weight: 700;
-      font-size: calc(18px * var(--ui-scale));
+      font-size: calc(20px * var(--ui-scale));
       flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(34, 38, 32, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .brand-emblem::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, transparent 32%, rgba(250, 247, 240, 0.12) 33%, transparent 34%, transparent 65%, rgba(250, 247, 240, 0.12) 66%, transparent 67%),
+        linear-gradient(to bottom, transparent 32%, rgba(250, 247, 240, 0.12) 33%, transparent 34%, transparent 65%, rgba(250, 247, 240, 0.12) 66%, transparent 67%);
+      pointer-events: none;
+    }
+
+    .brand-emblem::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(214, 173, 96, 0.65);
+      pointer-events: none;
     }
 
     .brand-titles {
@@ -223,12 +245,14 @@
       font-weight: 700;
       letter-spacing: 0.02em;
       color: var(--ink-primary);
-      line-height: 1.15;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .brand-sub {
       font-size: calc(12px * var(--ui-scale));
-      font-weight: 600;
+      font-weight: 500;
       color: var(--ink-secondary);
       white-space: nowrap;
       overflow: hidden;
@@ -242,7 +266,7 @@
       flex-shrink: 0;
     }
 
-    /* Segmented Physical-Style Language Switch (VN / EN) */
+    /* Clear Segmented Language Switch (VN | EN) */
     .lang-switch {
       display: inline-flex;
       align-items: center;
@@ -250,27 +274,25 @@
       height: calc(44px * var(--ui-scale));
       border-radius: 12px;
       background: var(--bg-elevated);
-      border: 1px solid var(--border-thin);
+      border: 1.5px solid var(--border-thin);
       cursor: pointer;
-      gap: 2px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
     }
 
-    .lang-seg {
-      padding: calc(5px * var(--ui-scale)) calc(9px * var(--ui-scale));
+    .lang-opt {
+      padding: calc(6px * var(--ui-scale)) calc(10px * var(--ui-scale));
       border-radius: 9px;
       font-size: calc(13px * var(--ui-scale));
       font-weight: 800;
       letter-spacing: 0.03em;
-      color: var(--ink-muted);
+      color: var(--ink-secondary);
       transition: all 0.18s ease;
     }
 
-    .lang-seg.active {
+    .lang-opt.active {
       background: var(--bg-card);
       color: var(--accent-moss-dark);
       box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-      border: 1px solid var(--border-thin);
     }
 
     .icon-btn {
@@ -281,16 +303,16 @@
       gap: 6px;
       height: calc(44px * var(--ui-scale));
       min-width: calc(44px * var(--ui-scale));
-      padding: 0 calc(11px * var(--ui-scale));
+      padding: 0 calc(13px * var(--ui-scale));
       border-radius: 12px;
-      border: 1px solid var(--border-thin);
+      border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
       font-size: calc(14px * var(--ui-scale));
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
     .icon-btn:active {
@@ -301,18 +323,22 @@
       background: var(--accent-moss);
       color: #FAF7F0;
       border-color: var(--accent-moss-dark);
-      padding: 0 calc(14px * var(--ui-scale));
     }
 
     .icon-btn svg {
-      width: calc(20px * var(--ui-scale));
-      height: calc(20px * var(--ui-scale));
+      width: calc(19px * var(--ui-scale));
+      height: calc(19px * var(--ui-scale));
       stroke: currentColor;
       fill: none;
-      stroke-width: 2;
+      stroke-width: 2.1;
       stroke-linecap: round;
       stroke-linejoin: round;
       flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+      .hide-xs { display: none; }
+      .icon-btn { padding: 0 10px; }
     }
 
     .badge-dot {
@@ -326,26 +352,12 @@
       border: 1.5px solid var(--bg-card);
     }
 
-    @media (max-width: 460px) {
-      .hide-xs { display: none; }
-      .icon-btn { padding: 0 8px; min-width: calc(40px * var(--ui-scale)); }
-      .icon-btn.accent { padding: 0 11px; }
-      .lang-seg { padding: 4px 7px; }
-      .telemetry-bar {
-        justify-content: center;
-        gap: 6px;
-        padding: 6px 8px;
-      }
-      .difficulty-pill, .timer-switch-pill, .text-size-switch {
-        min-height: calc(38px * var(--ui-scale));
-      }
-    }
-
-    /* Telemetry Strip: Full-Width Balanced Controls + Center Text Size Switcher */
+    /* Telemetry / Status Bar with Center Text-Size Selector */
     .telemetry-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 8px;
       padding: 7px 10px;
       margin-top: 6px;
@@ -353,40 +365,81 @@
       background: var(--bg-elevated);
       border: 1px solid var(--border-thin);
       flex-shrink: 0;
-      flex-wrap: wrap;
-    }
-
-    .telemetry-left, .telemetry-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .difficulty-pill {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-height: calc(42px * var(--ui-scale));
-      padding: 6px calc(15px * var(--ui-scale));
+      gap: 5px;
+      height: calc(40px * var(--ui-scale));
+      padding: 0 calc(14px * var(--ui-scale));
       border-radius: 11px;
       background: var(--bg-card);
       border: 1.5px solid var(--border-thin);
       color: var(--accent-moss-dark);
       font-weight: 800;
-      font-size: calc(14.5px * var(--ui-scale));
+      font-size: calc(14px * var(--ui-scale));
+      letter-spacing: 0.02em;
       cursor: pointer;
-      white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
-    .stat-pill {
+    .difficulty-pill:active {
+      transform: scale(0.96);
+    }
+
+    /* Quick Text Size Switcher (A- | A | A+) in Center */
+    .text-size-switch {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      padding: 3px;
+      height: calc(40px * var(--ui-scale));
+      border-radius: 11px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-thin);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+
+    .size-opt {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: calc(36px * var(--ui-scale));
+      height: 100%;
+      padding: 0 8px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
       color: var(--ink-secondary);
-      font-weight: 700;
-      font-size: calc(14px * var(--ui-scale));
-      white-space: nowrap;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .size-opt[data-size="normal"] { font-size: 13px; }
+    .size-opt[data-size="large"]  { font-size: 15px; }
+    .size-opt[data-size="xlarge"] { font-size: 18px; }
+
+    .size-opt.active {
+      background: var(--accent-moss);
+      color: #FAF7F0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.14);
+    }
+
+    .telemetry-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--ink-secondary);
+      font-size: calc(13px * var(--ui-scale));
+      font-weight: 600;
     }
 
     .stat-pill strong {
@@ -395,67 +448,34 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* Center Segmented Text Size Switcher (A- / A / A+) */
-    .text-size-switch {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px;
-      min-height: calc(42px * var(--ui-scale));
-      border-radius: 11px;
-      background: var(--bg-card);
-      border: 1.5px solid var(--border-thin);
-      gap: 3px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-      flex-shrink: 0;
-    }
-
-    .size-opt {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: calc(36px * var(--ui-scale));
-      height: calc(34px * var(--ui-scale));
-      padding: 0 8px;
-      border: none;
-      border-radius: 8px;
-      background: transparent;
-      color: var(--ink-secondary);
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.16s ease;
-    }
-
-    .size-opt[data-size="normal"] { font-size: 13px; }
-    .size-opt[data-size="large"] { font-size: 16px; }
-    .size-opt[data-size="xlarge"] { font-size: 19px; }
-
-    .size-opt.active {
-      background: var(--accent-moss);
-      color: #FAF7F0;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.14);
-    }
-
-    /* Unmistakable Timer Toggle Pill with Clock Icon & Switch Indicator */
-    .timer-switch-pill {
+    /* Unmistakable Timer Toggle Switch Pill */
+    .timer-switch-btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      min-height: calc(42px * var(--ui-scale));
-      padding: 6px calc(13px * var(--ui-scale));
+      height: calc(40px * var(--ui-scale));
+      padding: 0 calc(13px * var(--ui-scale));
       border-radius: 11px;
       background: var(--bg-card);
       border: 1.5px solid var(--border-thin);
-      color: var(--ink-primary);
+      color: var(--ink-secondary);
       font-size: calc(14px * var(--ui-scale));
       font-weight: 700;
       cursor: pointer;
-      font-variant-numeric: tabular-nums;
-      white-space: nowrap;
-      transition: all 0.2s ease;
+      transition: all 0.18s ease;
       box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
-    .timer-switch-pill svg {
+    .timer-switch-btn:active {
+      transform: scale(0.96);
+    }
+
+    .timer-switch-btn.timer-on {
+      border-color: var(--accent-moss);
+      color: var(--ink-primary);
+    }
+
+    .timer-switch-btn svg {
       width: calc(17px * var(--ui-scale));
       height: calc(17px * var(--ui-scale));
       stroke: currentColor;
@@ -474,6 +494,10 @@
       flex-shrink: 0;
     }
 
+    .timer-switch-btn.timer-on .mini-track {
+      background: var(--accent-moss);
+    }
+
     .mini-thumb {
       position: absolute;
       top: 2px;
@@ -481,26 +505,17 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      background: #FFFDF9;
+      background: #FAF7F0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
       transition: transform 0.2s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.28);
     }
 
-    .timer-switch-pill.active {
-      color: var(--ink-primary);
-      border-color: var(--accent-moss);
-    }
-
-    .timer-switch-pill.active .mini-track {
-      background: var(--accent-moss);
-    }
-
-    .timer-switch-pill.active .mini-thumb {
+    .timer-switch-btn.timer-on .mini-thumb {
       transform: translateX(14px);
     }
 
     /* ==========================================================================
-       5. MAIN PLAYGROUND (Board + Controls Responsive Split)
+       5. MAIN WORKSPACE (Board + Controls)
        ========================================================================== */
     .workspace {
       flex: 1;
@@ -508,17 +523,22 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       min-height: 0;
       width: 100%;
-      padding: 2px 0;
+      padding: 4px 0;
     }
 
     @media (min-width: 820px) and (orientation: landscape) {
       .workspace {
         flex-direction: row;
+        align-items: center;
         justify-content: center;
-        gap: 28px;
+        gap: clamp(24px, 3.5vw, 44px);
+      }
+      .controls-deck {
+        max-width: 440px;
+        justify-content: space-between;
       }
     }
 
@@ -597,7 +617,7 @@
 
     .cell.hint-target {
       box-shadow: inset 0 0 0 2.5px var(--accent-gold) !important;
-      background: rgba(182, 141, 64, 0.2) !important;
+      background: rgba(176, 132, 53, 0.2) !important;
     }
 
     .cell.error {
@@ -615,8 +635,8 @@
     }
 
     @keyframes digitBloom {
-      0% { transform: scale(0.45); opacity: 0.3; }
-      70% { transform: scale(1.12); opacity: 1; }
+      0% { transform: scale(0.5); opacity: 0.35; }
+      75% { transform: scale(1.1); opacity: 1; }
       100% { transform: scale(1); opacity: 1; }
     }
 
@@ -627,11 +647,11 @@
     }
 
     @keyframes kintsugiFlash {
-      0% { background-color: rgba(182, 141, 64, 0.42); }
+      0% { background-color: rgba(176, 132, 53, 0.42); }
       100% { background-color: var(--bg-cell); }
     }
 
-    /* Pencil Notes 3x3 Mini-Grid inside Board Cells */
+    /* Pencil Notes 3x3 Mini-Grid inside Cell */
     .notes-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -646,7 +666,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(10px, calc(2.1vw * var(--ui-scale)), calc(13px * var(--ui-scale)));
+      font-size: clamp(9px, calc(10px * var(--ui-scale)), 13px);
       line-height: 1;
       font-weight: 700;
       color: var(--ink-note);
@@ -655,17 +675,17 @@
     .note-num.highlight-note {
       color: var(--accent-moss-dark);
       font-weight: 800;
-      background: rgba(182, 141, 64, 0.28);
+      background: rgba(176, 132, 53, 0.28);
       border-radius: 3px;
     }
 
     /* ==========================================================================
-       6. CONTROLS DECK (Intuition Banner + Action Tools + Clean 1-9 Numpad)
+       6. CONTROLS DECK (Intuition Banner + Tool Row + Clean 1-9 Keys)
        ========================================================================== */
     .controls-deck {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 9px;
       width: 100%;
       max-width: 480px;
       flex-shrink: 0;
@@ -677,19 +697,24 @@
       justify-content: space-between;
       gap: 8px;
       min-height: calc(40px * var(--ui-scale));
-      padding: 7px 12px;
-      border-radius: 11px;
+      padding: 7px 13px;
+      border-radius: 12px;
       background: var(--bg-card);
-      border: 1px solid var(--border-thin);
+      border: 1.5px solid var(--border-thin);
       font-size: calc(13.5px * var(--ui-scale));
-      font-weight: 500;
       color: var(--ink-secondary);
       line-height: 1.35;
     }
 
     .intuition-bar.active-hint {
       border-color: var(--accent-gold);
-      background: linear-gradient(to right, var(--bg-card), rgba(182, 141, 64, 0.14));
+      background: linear-gradient(to right, var(--bg-card), rgba(176, 132, 53, 0.14));
+      color: var(--ink-primary);
+    }
+
+    .intuition-bar.notes-active-banner {
+      border-color: var(--accent-moss);
+      background: rgba(63, 99, 68, 0.08);
       color: var(--ink-primary);
     }
 
@@ -698,8 +723,8 @@
     }
 
     .intuition-apply {
-      padding: 6px 12px;
-      border-radius: 8px;
+      padding: 6px 13px;
+      border-radius: 9px;
       border: none;
       background: var(--accent-gold);
       color: #FFFDF9;
@@ -712,7 +737,7 @@
     .tool-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 6px;
+      gap: 7px;
     }
 
     .tool-btn {
@@ -722,12 +747,12 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      height: calc(58px * var(--ui-scale));
-      border-radius: 12px;
+      height: calc(56px * var(--ui-scale));
+      border-radius: 13px;
       border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
-      font-size: calc(12.5px * var(--ui-scale));
+      font-size: calc(12px * var(--ui-scale));
       font-weight: 700;
       cursor: pointer;
       transition: all 0.14s ease;
@@ -753,42 +778,42 @@
       height: calc(20px * var(--ui-scale));
       stroke: currentColor;
       fill: none;
-      stroke-width: 2;
+      stroke-width: 2.1;
       stroke-linecap: round;
       stroke-linejoin: round;
     }
 
     .tool-pill-badge {
       position: absolute;
-      top: 3px;
+      top: 4px;
       right: 4px;
       font-size: calc(10px * var(--ui-scale));
       font-weight: 800;
-      padding: 1px 5px;
+      padding: 1px 6px;
       border-radius: 6px;
       background: var(--accent-gold-soft);
       color: var(--ink-primary);
     }
 
     .tool-btn.active .tool-pill-badge {
-      background: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.24);
       color: #FFF;
     }
 
-    /* Clean, Uncluttered 1-9 Numpad (Comfortable Finger Targets) */
+    /* Clean 1-9 Numpad */
     .numpad {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      gap: 5px;
+      gap: 6px;
     }
 
     @media (min-width: 820px) and (orientation: landscape) {
       .numpad {
         grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
+        gap: 10px;
       }
       .num-btn {
-        height: calc(64px * var(--ui-scale)) !important;
+        height: calc(74px * var(--ui-scale)) !important;
       }
     }
 
@@ -798,13 +823,13 @@
       align-items: center;
       justify-content: center;
       height: calc(60px * var(--ui-scale));
-      border-radius: 12px;
+      border-radius: 13px;
       border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-      transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: transform 0.1s ease, background-color 0.15s ease, opacity 0.2s ease, border-color 0.15s ease;
     }
 
     .num-btn:active {
@@ -813,40 +838,40 @@
     }
 
     .num-btn.completed {
-      opacity: 0.3;
+      opacity: 0.34;
       background: var(--bg-elevated);
     }
 
     .num-btn.active-digit {
       border-color: var(--accent-moss);
-      box-shadow: inset 0 0 0 1px var(--accent-moss);
+      box-shadow: inset 0 0 0 2px var(--accent-moss);
     }
 
-    /* Visual distinction when Notes Mode is active */
-    .numpad.notes-mode .num-btn {
+    .num-btn.notes-key-style {
       border-style: dashed;
+      border-width: 1.5px;
       border-color: var(--accent-moss);
-      background: var(--bg-elevated);
       color: var(--accent-moss-dark);
+      background: var(--bg-elevated);
     }
 
-    .numpad.notes-mode .num-btn::after {
+    .num-btn.notes-key-style::after {
       content: "✎";
       position: absolute;
-      top: 3px;
-      right: 4px;
-      font-size: 11px;
-      opacity: 0.75;
+      top: 4px;
+      right: 5px;
+      font-size: calc(11px * var(--ui-scale));
+      opacity: 0.7;
     }
 
     .num-digit {
-      font-size: calc(26px * var(--ui-scale));
-      font-weight: 700;
+      font-size: calc(25px * var(--ui-scale));
+      font-weight: 800;
       line-height: 1;
     }
 
     /* ==========================================================================
-       7. MODALS (New Game, Save Scrolls, Statistics & Sanctuary, Settings, Win)
+       7. MODALS (New Game, Save Slots, Records & Sanctuary, Settings, Victory)
        ========================================================================== */
     .modal-backdrop {
       position: fixed;
@@ -855,11 +880,11 @@
       display: none;
       align-items: center;
       justify-content: center;
-      padding: calc(14px + var(--safe-top)) calc(14px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(14px + var(--safe-left));
-      background: rgba(28, 31, 26, 0.52);
+      padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      background: rgba(24, 27, 22, 0.54);
       backdrop-filter: blur(5px);
       -webkit-backdrop-filter: blur(5px);
-      animation: fadeIn 0.2s ease;
+      animation: fadeIn 0.18s ease;
     }
 
     .modal-backdrop.open {
@@ -873,13 +898,13 @@
 
     .modal-card {
       width: 100%;
-      max-width: 460px;
+      max-width: 480px;
       max-height: 86dvh;
       overflow-y: auto;
       background: var(--bg-card);
       border: 1px solid var(--border-thin);
       border-radius: 18px;
-      padding: 18px;
+      padding: 20px;
       box-shadow: var(--shadow-card);
       color: var(--ink-primary);
     }
@@ -888,23 +913,23 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       padding-bottom: 10px;
       border-bottom: 1px solid var(--border-thin);
     }
 
     .modal-title {
       font-family: var(--font-serif);
-      font-size: 19px;
+      font-size: calc(20px * var(--ui-scale));
       font-weight: 700;
       margin: 0;
     }
 
     .close-btn {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 11px;
-      border: 1px solid var(--border-thin);
+      border: 1.5px solid var(--border-thin);
       background: var(--bg-elevated);
       color: var(--ink-primary);
       font-size: 22px;
@@ -917,10 +942,10 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 14px 15px;
-      margin-bottom: 9px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
       border-radius: 13px;
-      border: 1px solid var(--border-thin);
+      border: 1.5px solid var(--border-thin);
       background: var(--bg-elevated);
       color: var(--ink-primary);
       text-align: left;
@@ -928,115 +953,38 @@
       transition: border-color 0.15s ease, transform 0.1s ease;
     }
 
-    .diff-option:hover, .diff-option:active {
+    .diff-option.current-diff {
       border-color: var(--accent-moss);
-      transform: translateY(-1px);
+      background: var(--bg-cell-same);
+    }
+
+    .diff-option:active {
+      transform: scale(0.98);
     }
 
     .diff-name {
-      font-weight: 700;
-      font-size: 15px;
+      font-weight: 800;
+      font-size: calc(16px * var(--ui-scale));
       display: block;
     }
 
     .diff-desc {
-      font-size: 12px;
+      font-size: calc(13px * var(--ui-scale));
       color: var(--ink-secondary);
       margin-top: 2px;
       display: block;
     }
 
-    .diff-reward {
-      font-size: 12px;
+    .diff-badge {
+      font-size: calc(12px * var(--ui-scale));
       font-weight: 700;
-      color: var(--accent-gold);
-      background: var(--accent-gold-soft);
-      padding: 4px 8px;
+      color: var(--accent-moss-dark);
+      background: var(--bg-card);
+      border: 1px solid var(--border-thin);
+      padding: 5px 10px;
       border-radius: 8px;
       white-space: nowrap;
       margin-left: 8px;
-    }
-
-    .tab-bar {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 6px;
-      background: var(--bg-elevated);
-      padding: 4px;
-      border-radius: 11px;
-      border: 1px solid var(--border-thin);
-      margin-bottom: 12px;
-    }
-
-    .tab-btn {
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      background: transparent;
-      color: var(--ink-secondary);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .tab-btn.active {
-      background: var(--bg-card);
-      color: var(--ink-primary);
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    }
-
-    .stats-summary-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .summary-box {
-      padding: 10px 8px;
-      border-radius: 12px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-thin);
-      text-align: center;
-    }
-
-    .summary-val {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--accent-moss);
-      display: block;
-    }
-
-    .summary-lbl {
-      font-size: 11px;
-      color: var(--ink-secondary);
-      margin-top: 2px;
-      display: block;
-    }
-
-    .stat-table-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 9px 11px;
-      margin-bottom: 6px;
-      border-radius: 10px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-thin);
-      font-size: 13px;
-    }
-
-    .history-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border-thin);
-      font-size: 12px;
-    }
-
-    .history-item:last-child {
-      border-bottom: none;
     }
 
     .slot-item {
@@ -1044,8 +992,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      padding: 11px 12px;
-      margin-bottom: 8px;
+      padding: 12px 14px;
+      margin-bottom: 9px;
       border-radius: 12px;
       background: var(--bg-elevated);
       border: 1px solid var(--border-thin);
@@ -1058,14 +1006,14 @@
 
     .slot-title {
       font-weight: 700;
-      font-size: 14px;
+      font-size: calc(14px * var(--ui-scale));
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .slot-sub {
-      font-size: 11.5px;
+      font-size: calc(12px * var(--ui-scale));
       color: var(--ink-secondary);
       margin-top: 2px;
     }
@@ -1076,12 +1024,12 @@
     }
 
     .btn-sm {
-      padding: 9px 13px;
+      padding: 9px 14px;
       border-radius: 10px;
-      border: 1px solid var(--border-thin);
+      border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
-      font-size: 13px;
+      font-size: calc(13px * var(--ui-scale));
       font-weight: 700;
       cursor: pointer;
     }
@@ -1096,14 +1044,76 @@
       color: var(--ink-error);
     }
 
-    .sanctuary-preview {
-      width: 100%;
-      height: 145px;
-      border-radius: 14px;
-      border: 1px solid var(--border-thin);
-      margin-bottom: 12px;
-      overflow: hidden;
+    /* Statistics Summary Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .stat-box {
+      padding: 11px 8px;
+      border-radius: 12px;
       background: var(--bg-elevated);
+      border: 1px solid var(--border-thin);
+      text-align: center;
+    }
+
+    .stat-box-val {
+      font-size: calc(20px * var(--ui-scale));
+      font-weight: 800;
+      color: var(--accent-moss-dark);
+    }
+
+    .stat-box-lbl {
+      font-size: calc(11.5px * var(--ui-scale));
+      color: var(--ink-secondary);
+      margin-top: 2px;
+    }
+
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: calc(13px * var(--ui-scale));
+      margin-bottom: 14px;
+    }
+
+    .records-table th {
+      text-align: left;
+      font-size: calc(11.5px * var(--ui-scale));
+      color: var(--ink-secondary);
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .records-table td {
+      padding: 8px;
+      border-bottom: 1px solid var(--border-thin);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .history-list {
+      max-height: 150px;
+      overflow-y: auto;
+      border: 1px solid var(--border-thin);
+      border-radius: 10px;
+      background: var(--bg-elevated);
+      padding: 6px 10px;
+      margin-bottom: 14px;
+    }
+
+    .history-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border-thin);
+      font-size: calc(12.5px * var(--ui-scale));
+    }
+
+    .history-row:last-child {
+      border-bottom: none;
     }
 
     .theme-grid {
@@ -1114,7 +1124,7 @@
     }
 
     .theme-card {
-      padding: 10px;
+      padding: 11px;
       border-radius: 12px;
       border: 1.5px solid var(--border-thin);
       background: var(--bg-elevated);
@@ -1127,10 +1137,7 @@
       background: var(--bg-cell-same);
     }
 
-    .theme-card.locked {
-      opacity: 0.65;
-    }
-
+    /* Accessible Large Pill Toggle Switch for Settings */
     .setting-row {
       display: flex;
       align-items: center;
@@ -1138,7 +1145,7 @@
       gap: 14px;
       padding: 13px 0;
       border-bottom: 1px solid var(--border-thin);
-      font-size: 14.5px;
+      font-size: calc(15px * var(--ui-scale));
       cursor: pointer;
     }
 
@@ -1146,8 +1153,7 @@
       border-bottom: none;
     }
 
-    /* Accessible, Senior-Friendly Pill Toggle Switch for Settings */
-    .zen-switch {
+    .pill-switch {
       position: relative;
       display: inline-block;
       width: 52px;
@@ -1155,61 +1161,59 @@
       flex-shrink: 0;
     }
 
-    .zen-switch input {
+    .pill-switch input {
       opacity: 0;
       width: 0;
       height: 0;
       position: absolute;
     }
 
-    .zen-slider {
+    .pill-slider {
       position: absolute;
       inset: 0;
       border-radius: 99px;
       background: var(--border-thin);
       transition: background-color 0.2s ease;
-      cursor: pointer;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.14);
     }
 
-    .zen-slider::before {
+    .pill-slider::before {
       content: "";
       position: absolute;
-      height: 24px;
-      width: 24px;
-      left: 3px;
       top: 3px;
+      left: 3px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
-      background: #FFFDF9;
-      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.24);
+      background: #FAF7F0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.22);
+      transition: transform 0.2s ease;
     }
 
-    .zen-switch input:checked + .zen-slider {
+    .pill-switch input:checked + .pill-slider {
       background: var(--accent-moss);
     }
 
-    .zen-switch input:checked + .zen-slider::before {
+    .pill-switch input:checked + .pill-slider::before {
       transform: translateX(22px);
     }
 
     .toast {
       position: fixed;
-      bottom: calc(18px + var(--safe-bottom));
+      bottom: calc(20px + var(--safe-bottom));
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       z-index: 90;
-      padding: 10px 16px;
+      padding: 11px 18px;
       border-radius: 99px;
       background: var(--ink-primary);
       color: #FAF7F0;
-      font-size: 13px;
+      font-size: calc(14px * var(--ui-scale));
       font-weight: 600;
       box-shadow: 0 8px 20px rgba(0,0,0,0.22);
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.22s ease, transform 0.22s ease;
-      max-width: 90vw;
+      max-width: 92vw;
       text-align: center;
     }
 
@@ -1227,68 +1231,61 @@
         <div class="brand-emblem" aria-hidden="true">禅</div>
         <div class="brand-titles">
           <div class="brand-title">SudoZen</div>
-          <div class="brand-sub" id="brand-sub-text">0 ván đã giải</div>
+          <div class="brand-sub" id="header-solved-summary">0 ván đã giải</div>
         </div>
       </div>
 
       <div class="top-actions">
-        <!-- Clear Segmented Language Toggle Switch (VN / EN) -->
-        <button class="lang-switch" id="btn-lang" role="switch" aria-label="Switch Language VN or EN">
-          <span class="lang-seg active" id="seg-vi">VN</span>
-          <span class="lang-seg" id="seg-en">EN</span>
+        <!-- Clear Segmented Language Switch -->
+        <button class="lang-switch" id="btn-lang" aria-label="Switch Language">
+          <span class="lang-opt active" id="lang-opt-vi">VN</span>
+          <span class="lang-opt" id="lang-opt-en">EN</span>
         </button>
 
-        <!-- Statistics & Sanctuary -->
-        <button class="icon-btn" id="btn-stats" aria-label="Statistics & Sanctuary">
-          <svg viewBox="0 0 24 24"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-          <span class="hide-xs" id="lbl-stats-btn">Thành tích</span>
+        <button class="icon-btn" id="btn-records" aria-label="Records">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span class="hide-xs" id="lbl-records">Thành tích</span>
         </button>
 
-        <!-- Save Scrolls -->
         <button class="icon-btn" id="btn-saves" aria-label="Save Slots">
           <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         </button>
 
-        <!-- Audio Mute / Unmute -->
         <button class="icon-btn" id="btn-audio" aria-label="Toggle Sound">
           <svg id="icon-sound-on" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
           <svg id="icon-sound-off" style="display:none" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
         </button>
 
-        <!-- Settings -->
         <button class="icon-btn" id="btn-settings" aria-label="Settings">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
           <span id="update-dot" class="badge-dot" style="display:none"></span>
         </button>
 
-        <!-- New Game -->
         <button class="icon-btn accent" id="btn-new-game">
-          <span id="lbl-new-btn">Ván mới</span>
+          <span id="lbl-new-game">Ván mới</span>
         </button>
       </div>
     </header>
 
-    <!-- TELEMETRY BAR -->
+    <!-- TELEMETRY BAR WITH CENTER UI TEXT SIZE SELECTOR -->
     <div class="telemetry-bar">
-      <div class="telemetry-left">
-        <button class="difficulty-pill" id="btn-diff-pill">Khó</button>
+      <button class="difficulty-pill" id="btn-diff-pill">Khó</button>
 
-        <div class="stat-pill" id="mistakes-stat" style="display:none;">
-          <span id="lbl-mistakes">Lỗi:</span>
-          <strong id="mistakes-count">0</strong>
-        </div>
-      </div>
-
-      <!-- Center Quick Text Size Switcher -->
-      <div class="text-size-switch" id="text-size-switch" role="group" aria-label="Text Size">
-        <button type="button" class="size-opt active" data-size="normal" title="Normal Text">A-</button>
-        <button type="button" class="size-opt" data-size="large" title="Large Text">A</button>
-        <button type="button" class="size-opt" data-size="xlarge" title="Extra Large Text">A+</button>
+      <!-- Quick UI Text Size Switcher (A- / A / A+) -->
+      <div class="text-size-switch" role="group" aria-label="Text Size">
+        <button class="size-opt" data-size="normal" type="button">A-</button>
+        <button class="size-opt active" data-size="large" type="button">A</button>
+        <button class="size-opt" data-size="xlarge" type="button">A+</button>
       </div>
 
       <div class="telemetry-right">
-        <!-- Clear Timer Switch Pill (Clock Icon + Label + Mini Toggle Track) -->
-        <button class="timer-switch-pill" id="btn-timer-pill" role="switch" aria-checked="false">
+        <div class="stat-pill" id="mistakes-stat" style="display:none">
+          <span id="lbl-mistakes">Lỗi</span>
+          <strong id="mistakes-count">0</strong>
+        </div>
+
+        <!-- Clear Timer Toggle Switch -->
+        <button class="timer-switch-btn" id="btn-timer-pill" role="switch" aria-checked="false">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/></svg>
           <span id="timer-display">Tính giờ: TẮT</span>
           <span class="mini-track" aria-hidden="true"><span class="mini-thumb"></span></span>
@@ -1299,18 +1296,16 @@
     <!-- MAIN WORKSPACE -->
     <main class="workspace" id="workspace">
       <div class="board-stage" id="board-stage">
-        <div class="sudoku-board" id="sudoku-board" role="grid" aria-label="Sudoku Grid"></div>
+        <div class="sudoku-board" id="sudoku-board" role="grid" aria-label="Sudoku 9x9"></div>
         <canvas id="fx-canvas"></canvas>
       </div>
 
-      <section class="controls-deck" aria-label="Puzzle Controls">
-        <!-- Smart Intuition Hint Banner -->
+      <section class="controls-deck" aria-label="Controls">
         <div class="intuition-bar" id="intuition-bar">
           <span class="intuition-text" id="intuition-text">Chạm vào một ô trống rồi chọn số từ 1 đến 9.</span>
           <button class="intuition-apply" id="btn-apply-hint" style="display:none">Điền số</button>
         </div>
 
-        <!-- Action Tools -->
         <div class="tool-row">
           <button class="tool-btn" id="tool-undo">
             <svg viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
@@ -1350,11 +1345,11 @@
   <div class="modal-backdrop" id="modal-new">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title" id="modal-new-title">Chọn độ khó ván mới</h2>
+        <h2 class="modal-title" id="modal-new-title">Chọn mức độ chơi</h2>
         <button class="close-btn" data-close="modal-new">&times;</button>
       </div>
-      <p id="modal-new-desc" style="font-size:13px; color:var(--ink-secondary); margin-top:0;">
-        Mỗi bàn cờ đều được kiểm tra toán học để bảo đảm chỉ có một lời giải duy nhất.
+      <p id="modal-new-sub" style="font-size:14px; color:var(--ink-secondary); margin-top:0;">
+        Mỗi ván đều được tạo mới và đảm bảo chỉ có một lời giải duy nhất.
       </p>
       <div id="difficulty-list"></div>
     </div>
@@ -1364,67 +1359,61 @@
   <div class="modal-backdrop" id="modal-saves">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title" id="modal-saves-title">Sổ lưu ván chơi</h2>
+        <h2 class="modal-title" id="modal-saves-title">Ván chơi đã lưu</h2>
         <button class="close-btn" data-close="modal-saves">&times;</button>
       </div>
       <div style="display:flex; gap:8px; margin-bottom:12px;">
-        <input id="save-slot-name" type="text" maxlength="28" placeholder="Tên ván lưu (tùy chọn)..."
-               style="flex:1; padding:9px 12px; border-radius:10px; border:1px solid var(--border-thin); background:var(--bg-elevated); color:var(--ink-primary); font-size:13px; user-select:text; -webkit-user-select:text;" />
+        <input id="save-slot-name" type="text" maxlength="30" placeholder="Tên gợi nhớ (ví dụ: Buổi sáng)"
+               style="flex:1; padding:10px 12px; border-radius:10px; border:1px solid var(--border-thin); background:var(--bg-elevated); color:var(--ink-primary); font-size:14px; user-select:text; -webkit-user-select:text;" />
         <button class="btn-sm primary" id="btn-create-save">Lưu ván này</button>
       </div>
       <div id="save-slots-container"></div>
     </div>
   </div>
 
-  <!-- MODAL: STATISTICS & ZEN SANCTUARY -->
-  <div class="modal-backdrop" id="modal-stats">
+  <!-- MODAL: RECORDS, SOLVED LOG & PALETTES -->
+  <div class="modal-backdrop" id="modal-records">
     <div class="modal-card">
       <div class="modal-header">
-        <h2 class="modal-title" id="modal-stats-title">Thành tích & Vườn Thiền</h2>
-        <button class="close-btn" data-close="modal-stats">&times;</button>
+        <h2 class="modal-title" id="modal-records-title">Thành tích & Lịch sử</h2>
+        <button class="close-btn" data-close="modal-records">&times;</button>
       </div>
 
-      <div class="tab-bar">
-        <button class="tab-btn active" id="tab-records" data-tab="records">Thành tích giải</button>
-        <button class="tab-btn" id="tab-garden" data-tab="garden">Vườn Thiền & Màu sắc</button>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-val" id="stat-total-wins">0</div>
+          <div class="stat-box-lbl" id="lbl-stat-wins">Tổng ván thắng</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="stat-timed-wins">0</div>
+          <div class="stat-box-lbl" id="lbl-stat-timed">Ván tính giờ</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-val" id="stat-fav-level">—</div>
+          <div class="stat-box-lbl" id="lbl-stat-fav">Mức cao nhất</div>
+        </div>
       </div>
 
-      <!-- Tab 1: Records & History -->
-      <div id="pane-records">
-        <div class="stats-summary-grid">
-          <div class="summary-box">
-            <span class="summary-val" id="stat-total-wins">0</span>
-            <span class="summary-lbl" id="lbl-stat-wins">Tổng ván thắng</span>
-          </div>
-          <div class="summary-box">
-            <span class="summary-val" id="stat-streak">0</span>
-            <span class="summary-lbl" id="lbl-stat-streak">Chuỗi thắng</span>
-          </div>
-          <div class="summary-box">
-            <span class="summary-val" id="stat-stones">0</span>
-            <span class="summary-lbl" id="lbl-stat-stones">Đá Hòa Hợp</span>
-          </div>
-        </div>
+      <table class="records-table">
+        <thead>
+          <tr>
+            <th id="th-level">Mức độ</th>
+            <th id="th-solved">Đã giải</th>
+            <th id="th-best">Kỷ lục thời gian</th>
+          </tr>
+        </thead>
+        <tbody id="records-tbody"></tbody>
+      </table>
 
-        <div style="font-size:12px; font-weight:700; color:var(--ink-secondary); margin-bottom:6px; text-transform:uppercase;" id="lbl-breakdown-header">
-          Chi tiết theo từng cấp độ
-        </div>
-        <div id="stats-breakdown-list"></div>
-
-        <div style="font-size:12px; font-weight:700; color:var(--ink-secondary); margin:12px 0 6px; text-transform:uppercase;" id="lbl-history-header">
-          Nhật ký các ván đã hoàn thành gần đây
-        </div>
-        <div id="stats-history-list" style="background:var(--bg-elevated); border:1px solid var(--border-thin); border-radius:12px; padding:4px 8px;"></div>
+      <div style="font-size:12px; font-weight:700; color:var(--ink-secondary); text-transform:uppercase; margin-bottom:6px;" id="lbl-recent-history">
+        Nhật ký hoàn thành gần đây
       </div>
+      <div class="history-list" id="history-list"></div>
 
-      <!-- Tab 2: Zen Sanctuary & Themes -->
-      <div id="pane-garden" style="display:none;">
-        <canvas class="sanctuary-preview" id="sanctuary-canvas"></canvas>
-        <div style="font-size:13px; color:var(--ink-secondary); margin-bottom:10px;" id="sanctuary-caption">
-          Mỗi ván Sudoku hoàn thành sẽ mang lại Đá Hòa Hợp để mở khóa các bảng màu dịu mắt.
-        </div>
-        <div class="theme-grid" id="theme-grid"></div>
+      <div style="font-size:12px; font-weight:700; color:var(--ink-secondary); text-transform:uppercase;" id="lbl-palettes">
+        Màu nền thư giãn
       </div>
+      <div class="theme-grid" id="theme-grid"></div>
     </div>
   </div>
 
@@ -1436,84 +1425,65 @@
         <button class="close-btn" data-close="modal-settings">&times;</button>
       </div>
 
-      <div class="setting-row">
+      <label class="setting-row" for="toggle-timed-mode">
         <div>
-          <strong id="set-lang-title">Ngôn ngữ / Language</strong>
-          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-lang-desc">Chuyển đổi giữa Tiếng Việt và English</div>
+          <strong id="set-timed-title">Chế độ tính giờ</strong>
+          <div style="font-size:13px; color:var(--ink-secondary);" id="set-timed-desc">Tắt mặc định để chơi thư giãn, bật nếu muốn ghi kỷ lục thời gian</div>
         </div>
-        <button class="btn-sm primary" id="btn-settings-lang">Tiếng Việt</button>
-      </div>
-
-      <label class="setting-row" for="toggle-instant-errors">
-        <div>
-          <strong id="set-error-check-title">Báo lỗi ngay khi điền sai</strong>
-          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-error-check-desc">Mặc định tắt để tự suy luận như chơi trên giấy</div>
-        </div>
-        <span class="zen-switch">
-          <input type="checkbox" id="toggle-instant-errors" />
-          <span class="zen-slider"></span>
+        <span class="pill-switch">
+          <input type="checkbox" id="toggle-timed-mode" />
+          <span class="pill-slider"></span>
         </span>
       </label>
 
-      <label class="setting-row" for="toggle-timer-mode">
+      <label class="setting-row" for="toggle-instant-check">
         <div>
-          <strong id="set-timer-title">Chế độ tính giờ</strong>
-          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-timer-desc">Mặc định tắt để chơi thư giãn không áp lực</div>
+          <strong id="set-check-title">Báo lỗi ngay khi điền sai</strong>
+          <div style="font-size:13px; color:var(--ink-secondary);" id="set-check-desc">Tắt mặc định để tự suy luận như trên giấy</div>
         </div>
-        <span class="zen-switch">
-          <input type="checkbox" id="toggle-timer-mode" />
-          <span class="zen-slider"></span>
-        </span>
-      </label>
-
-      <label class="setting-row" for="toggle-mistake-limit" id="row-mistake-limit">
-        <div>
-          <strong id="set-mistake-title">Giới hạn 3 lỗi</strong>
-          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-mistake-desc">Chỉ áp dụng khi bật báo lỗi ngay</div>
-        </div>
-        <span class="zen-switch">
-          <input type="checkbox" id="toggle-mistake-limit" />
-          <span class="zen-slider"></span>
+        <span class="pill-switch">
+          <input type="checkbox" id="toggle-instant-check" />
+          <span class="pill-slider"></span>
         </span>
       </label>
 
       <label class="setting-row" for="toggle-auto-notes">
         <div>
-          <strong id="set-autonote-title">Tự xóa ghi chú trùng</strong>
-          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-autonote-desc">Tự động xóa số nháp khi điền số vào hàng/cột/khối</div>
+          <strong id="set-notes-title">Tự xóa ghi chú trùng</strong>
+          <div style="font-size:13px; color:var(--ink-secondary);" id="set-notes-desc">Tự động xóa số ghi chú khi đã điền số chính</div>
         </div>
-        <span class="zen-switch">
+        <span class="pill-switch">
           <input type="checkbox" id="toggle-auto-notes" />
-          <span class="zen-slider"></span>
+          <span class="pill-slider"></span>
         </span>
       </label>
 
       <label class="setting-row" for="toggle-highlight-same">
         <div>
           <strong id="set-same-title">Làm nổi bật các số giống nhau</strong>
-          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-same-desc">Tô sáng tất cả ô có cùng chữ số đang chọn</div>
+          <div style="font-size:13px; color:var(--ink-secondary);" id="set-same-desc">Tô sáng tất cả ô có cùng con số đang chọn</div>
         </div>
-        <span class="zen-switch">
+        <span class="pill-switch">
           <input type="checkbox" id="toggle-highlight-same" />
-          <span class="zen-slider"></span>
+          <span class="pill-slider"></span>
         </span>
       </label>
 
       <label class="setting-row" for="toggle-sound">
         <div>
-          <strong id="set-sound-title">Âm thanh đàn tranh dịu nhẹ</strong>
-          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-sound-desc">Tiếng gảy nhẹ nhàng khi chạm ô và điền số</div>
+          <strong id="set-sound-title">Âm thanh đàn tre nhẹ nhàng</strong>
+          <div style="font-size:13px; color:var(--ink-secondary);" id="set-sound-desc">Âm thanh êm dịu, không gây căng thẳng</div>
         </div>
-        <span class="zen-switch">
+        <span class="pill-switch">
           <input type="checkbox" id="toggle-sound" />
-          <span class="zen-slider"></span>
+          <span class="pill-slider"></span>
         </span>
       </label>
 
-      <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border-thin); display:flex; align-items:center; justify-content:space-between; gap:10px;">
-        <div style="font-size:12px; color:var(--ink-secondary);">
-          SudoZen v<strong id="app-version-label">1.4.0</strong>
-          <div id="update-status-text">Phiên bản mới nhất</div>
+      <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border-thin); display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div style="font-size:13px; color:var(--ink-secondary);">
+          <span id="lbl-version">Phiên bản</span> <strong id="app-version-label">1.5.0</strong>
+          <div id="update-status-text">Đã cập nhật mới nhất</div>
         </div>
         <button class="btn-sm" id="btn-check-update">Kiểm tra cập nhật</button>
       </div>
@@ -1523,21 +1493,16 @@
   <!-- MODAL: VICTORY -->
   <div class="modal-backdrop" id="modal-victory">
     <div class="modal-card" style="text-align:center;">
-      <div style="font-family:var(--font-serif); font-size:26px; color:var(--accent-gold); margin-bottom:4px;" id="victory-kicker">
-        Hoàn thành xuất sắc!
-      </div>
-      <h2 class="modal-title" style="margin-bottom:8px;" id="victory-subtitle">Đã giải xong mức Khó</h2>
-      <p style="font-size:14px; color:var(--ink-secondary); margin:0 0 16px; line-height:1.45;" id="victory-stats">
-        Tổng số ván đã giải: 1 • +45 Đá Hòa Hợp
-      </p>
+      <div style="font-family:var(--font-serif); font-size:28px; color:var(--accent-gold); margin-bottom:4px;">禅 • Hoàn thành</div>
+      <h2 class="modal-title" style="margin-bottom:8px;" id="victory-subtitle">Tuyệt vời!</h2>
+      <p style="font-size:15px; color:var(--ink-secondary); margin:0 0 18px;" id="victory-stats"></p>
       <div style="display:flex; gap:10px; justify-content:center;">
-        <button class="btn-sm" data-close="modal-victory" id="btn-victory-admire">Xem lại bàn cờ</button>
+        <button class="btn-sm" data-close="modal-victory" id="btn-victory-view">Xem lại bàn cờ</button>
         <button class="btn-sm primary" id="btn-victory-next">Chơi ván mới</button>
       </div>
     </div>
   </div>
 
-  <!-- TOAST -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -1547,7 +1512,7 @@
       /* ========================================================================
          1. APP VERSION & BOOKMARK-SAFE AUTO-UPDATE
          ======================================================================== */
-      const APP_VERSION = "1.4.1";
+      const APP_VERSION = "1.5.0";
       const STORAGE_KEY = "SUDOZEN_STATE_V1";
 
       function compareSemver(a, b) {
@@ -1573,7 +1538,7 @@
 
       async function checkForAppUpdate(manual = false) {
         const statusEl = document.getElementById("update-status-text");
-        if (manual && statusEl) statusEl.textContent = t("checkingUpdate");
+        if (manual && statusEl) statusEl.textContent = t("checking");
         try {
           const checkUrl = new URL(window.location.href);
           checkUrl.searchParams.set("_ts", Date.now().toString());
@@ -1581,40 +1546,36 @@
           if (!res.ok) throw new Error("Fetch failed");
           const html = await res.text();
           const match = html.match(/const\s+APP_VERSION\s*=\s*["']([^"']+)["']/);
-          if (match && match[1]) {
-            const remoteVersion = match[1];
-            if (compareSemver(remoteVersion, APP_VERSION) > 0) {
-              document.getElementById("update-dot").style.display = "block";
-              if (statusEl) statusEl.textContent = `v${remoteVersion}`;
-              showToast(t("updatingTo", { v: remoteVersion }));
-              setTimeout(() => triggerCacheBustingReload(remoteVersion), 900);
-              return;
-            }
+          if (match && match[1] && compareSemver(match[1], APP_VERSION) > 0) {
+            const remoteVer = match[1];
+            document.getElementById("update-dot").style.display = "block";
+            if (statusEl) statusEl.textContent = `v${remoteVer}`;
+            showToast(`${t("updating")} v${remoteVer}...`);
+            setTimeout(() => triggerCacheBustingReload(remoteVer), 800);
+            return;
           }
-          if (statusEl) statusEl.textContent = t("upToDate", { v: APP_VERSION });
-          if (manual) showToast(t("upToDate", { v: APP_VERSION }));
+          if (statusEl) statusEl.textContent = `${t("upToDate")} (v${APP_VERSION})`;
+          if (manual) showToast(`${t("upToDate")} (v${APP_VERSION})`);
         } catch (_) {
-          if (statusEl) statusEl.textContent = t("upToDate", { v: APP_VERSION });
+          if (statusEl) statusEl.textContent = `${t("upToDate")} (v${APP_VERSION})`;
           if (manual) {
-            showToast(t("refreshingCache"));
-            setTimeout(() => triggerCacheBustingReload(Date.now().toString()), 600);
+            showToast(t("refreshing"));
+            setTimeout(() => triggerCacheBustingReload(Date.now().toString()), 500);
           }
         }
       }
 
       /* ========================================================================
-         2. BILINGUAL I18N DICTIONARY (South Vietnamese Natural Default + English)
+         2. BILINGUAL DICTIONARY (VIETNAMESE DEFAULT + ENGLISH)
          ======================================================================== */
       const I18N = {
         vi: {
-          solvedSummary: "{n} ván đã giải",
-          statsBtn: "Thành tích",
-          newBtn: "Ván mới",
-          mistakesLbl: "Lỗi:",
+          solvedSummary: (n) => `${n} ván đã giải`,
+          records: "Thành tích",
+          newGame: "Ván mới",
           timerOffLabel: "Tính giờ: TẮT",
-          defaultPrompt: "Chạm vào một ô trống rồi chọn số từ 1 đến 9.",
-          notesActivePrompt: "Đang bật Ghi chú (✎): Chạm số để ghi nháp vào ô.",
-          applyHintBtn: "Điền số",
+          timerOnLabel: "Tính giờ",
+          mistakes: "Lỗi",
           undo: "Hoàn tác",
           redo: "Làm lại",
           erase: "Xóa",
@@ -1622,98 +1583,69 @@
           hint: "Gợi ý",
           on: "BẬT",
           off: "TẮT",
-          modalNewTitle: "Chọn độ khó ván mới",
-          modalNewDesc: "Mỗi bàn cờ đều được kiểm tra kỹ để bảo đảm chỉ có một lời giải duy nhất.",
-          modalSavesTitle: "Sổ lưu ván chơi",
-          saveInputPlaceholder: "Tên ván lưu (tùy chọn)...",
-          saveCurrentBtn: "Lưu ván này",
-          noSavesMsg: "Chưa có ván nào được lưu. Bấm 'Lưu ván này' để cất lại.",
-          loadBtn: "Mở lại",
-          solvedPct: "Đã giải {pct}%",
-          modalStatsTitle: "Thành tích & Vườn Thiền",
-          tabRecords: "Thành tích giải",
-          tabGarden: "Vườn Thiền & Màu sắc",
-          statTotalWins: "Tổng ván thắng",
-          statStreak: "Chuỗi thắng",
-          statStones: "Đá Hòa Hợp",
-          breakdownHeader: "Chi tiết theo từng cấp độ",
-          historyHeader: "Nhật ký các ván đã hoàn thành gần đây",
-          noHistoryMsg: "Chưa có ván nào hoàn thành. Hãy giải xong một ván để ghi dấu nhé!",
-          bestTimeLbl: "Nhanh nhất: {t}",
-          solvedCountLbl: "{n} ván",
-          relaxedTag: "Không tính giờ",
-          sanctuaryCaption: "Mỗi ván hoàn thành sẽ tặng Đá Hòa Hợp để mở khóa các bảng màu dịu mắt.",
-          unlockedActive: "Đang dùng",
-          unlockedApply: "Đã mở • Chạm để dùng",
-          lockedNeed: "Cần {n} Đá Hòa Hợp",
+          applyHint: "Điền số",
+          promptDefault: "Chạm vào một ô trống rồi chọn số từ 1 đến 9.",
+          promptNotes: "Chế độ Ghi chú đang BẬT: chạm số 1–9 để đánh dấu nháp trong ô.",
+          modalNewTitle: "Chọn mức độ chơi",
+          modalNewSub: "Mỗi ván đều được tạo mới và đảm bảo chỉ có một lời giải duy nhất.",
+          modalSavesTitle: "Ván chơi đã lưu",
+          savePlaceholder: "Tên gợi nhớ (ví dụ: Buổi sáng)",
+          saveCurrent: "Lưu ván này",
+          noSaves: "Chưa có ván nào được lưu.",
+          load: "Mở",
+          modalRecordsTitle: "Thành tích & Lịch sử",
+          statWins: "Tổng ván thắng",
+          statTimed: "Ván tính giờ",
+          statFav: "Mức cao nhất",
+          thLevel: "Mức độ",
+          thSolved: "Đã giải",
+          thBest: "Kỷ lục thời gian",
+          recentHistory: "Nhật ký hoàn thành gần đây",
+          noHistory: "Chưa có ván nào hoàn thành. Hãy thử sức ngay!",
+          palettes: "Màu nền thư giãn",
           modalSettingsTitle: "Cài đặt",
-          setLangTitle: "Ngôn ngữ / Language",
-          setLangDesc: "Chuyển đổi giữa Tiếng Việt và English",
-          setLangBtnName: "Tiếng Việt (Đổi sang EN)",
-          setErrorCheckTitle: "Báo lỗi ngay khi điền sai",
-          setErrorCheckDesc: "Mặc định tắt để tự suy luận như chơi trên giấy",
-          setTimerTitle: "Chế độ tính giờ",
-          setTimerDesc: "Mặc định tắt để chơi thư giãn không áp lực",
-          setMistakeTitle: "Giới hạn 3 lỗi",
-          setMistakeDesc: "Tắt để chơi thoải mái không bao giờ bị thua",
-          setAutonoteTitle: "Tự xóa ghi chú trùng",
-          setAutonoteDesc: "Tự động xóa số nháp trùng trên cùng hàng, cột, khối",
-          setSameTitle: "Làm nổi bật số giống nhau",
-          setSameDesc: "Tô sáng tất cả ô có cùng chữ số đang chọn",
-          setSoundTitle: "Âm thanh đàn tranh dịu nhẹ",
-          setSoundDesc: "Tiếng gảy nhẹ nhàng khi chạm ô và điền số",
+          setTimedTitle: "Chế độ tính giờ",
+          setTimedDesc: "Tắt mặc định để chơi thư giãn, bật nếu muốn ghi kỷ lục thời gian",
+          setCheckTitle: "Báo lỗi ngay khi điền sai",
+          setCheckDesc: "Tắt mặc định để tự suy luận như trên giấy",
+          setNotesTitle: "Tự xóa ghi chú trùng",
+          setNotesDesc: "Tự động xóa số ghi chú khi đã điền số chính",
+          setSameTitle: "Làm nổi bật các số giống nhau",
+          setSameDesc: "Tô sáng tất cả ô có cùng con số đang chọn",
+          setSoundTitle: "Âm thanh đàn tre nhẹ nhàng",
+          setSoundDesc: "Âm thanh êm dịu, không gây căng thẳng",
+          version: "Phiên bản",
+          upToDate: "Đã cập nhật mới nhất",
+          checking: "Đang kiểm tra...",
+          updating: "Đang cập nhật lên",
+          refreshing: "Đang làm mới ứng dụng...",
           checkUpdateBtn: "Kiểm tra cập nhật",
-          checkingUpdate: "Đang kiểm tra...",
-          upToDate: "Bản mới nhất (v{v})",
-          updatingTo: "Đang cập nhật lên v{v}...",
-          refreshingCache: "Đang làm mới ứng dụng...",
-          victoryKicker: "Hoàn thành xuất sắc!",
-          victorySub: "Đã giải xong mức {diff}",
-          victoryStatsRelaxed: "Tổng số ván đã giải: {wins} • +{stones} Đá Hòa Hợp",
-          victoryStatsTimed: "Thời gian: {time} • Tổng ván giải: {wins} • +{stones} Đá",
-          victoryAdmire: "Xem lại bàn cờ",
+          victoryTitle: "Chúc mừng hoàn thành!",
+          victoryView: "Xem lại bàn cờ",
           victoryNext: "Chơi ván mới",
-          toastNewGame: "Đã tạo ván mới mức {diff}",
-          toastCannotErase: "Số gốc của đề bài không thể xóa",
-          toastNoHints: "Bạn đã dùng hết 3 lượt gợi ý cho ván này",
-          toastSaved: "Đã lưu ván chơi vào sổ!",
-          toastLoaded: "Đã mở lại ván '{name}'",
-          toastNeedStones: "Cần thêm {n} Đá Hòa Hợp để mở màu này",
-          toastTimerOn: "Đã BẬT đồng hồ tính giờ",
-          toastTimerOff: "Đã TẮT đồng hồ tính giờ",
-          toastSizeChanged: "Đã đổi cỡ chữ: {s}",
-          sizeLabels: { normal: "Vừa", large: "Lớn", xlarge: "Rất lớn" },
-          toast3Mistakes: "Đã chạm 3 lỗi — Bộ đếm lỗi được đặt lại để bạn tiếp tục!",
-          toastFullNotSolved: "Bàn cờ đã điền đủ 81 ô nhưng vẫn còn số chưa khớp. Hãy kiểm tra lại nhé!",
-          hintNaked: "Ô duy nhất: Hàng {r}, Cột {c} chỉ có thể điền số {d}.",
-          hintHiddenBox: "Vị trí duy nhất trong khối: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
-          hintHiddenRow: "Vị trí duy nhất trên hàng: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
-          hintHiddenCol: "Vị trí duy nhất trên cột: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
-          hintChain: "Suy luận loại trừ: Hàng {r}, Cột {c} chắc chắn là số {d}.",
-          diffs: {
-            easy: { label: "Dễ", desc: "Nhẹ nhàng khởi động • 39 số gợi ý sẵn" },
-            medium: { label: "Trung bình", desc: "Cân bằng vừa sức • 33 số gợi ý sẵn" },
-            hard: { label: "Khó", desc: "Suy luận sâu sắc • 28 số gợi ý sẵn" },
-            veryhard: { label: "Rất khó", desc: "Thử thách cao thủ • 24 số gợi ý sẵn" },
-            master: { label: "Bậc thầy", desc: "Đỉnh cao trí tuệ • 21 số gợi ý sẵn" },
-            daily: { label: "Thử thách hôm nay", desc: "Bàn cờ đặc biệt của ngày hôm nay" }
-          },
-          themes: {
-            moss: { name: "Vườn Rêu", desc: "Giấy Washi & xanh rêu dịu mắt" },
-            hinoki: { name: "Gỗ Hinoki", desc: "Tông gỗ bách ấm áp dễ đọc" },
-            mist: { name: "Sương Kyoto", desc: "Xanh xám sương sớm thanh tịnh" },
-            maple: { name: "Lá Thu", desc: "Sắc lá phong trầm ấm" }
-          }
+          toastNew: (lvl) => `Đã tạo ván mới — Mức ${lvl}`,
+          toastLocked: "Ô số gốc không thể xóa",
+          toastNoHints: "Bạn đã dùng hết 3 gợi ý cho ván này",
+          toastSaved: "Đã lưu ván chơi",
+          toastLoaded: (name) => `Đã mở "${name}"`,
+          toastTimerOn: "Đã BẬT tính giờ",
+          toastTimerOff: "Đã TẮT tính giờ (chơi thư giãn)",
+          toastBoardNotQuite: "Bàn cờ đã điền kín nhưng vẫn còn chỗ chưa khớp, hãy kiểm tra lại nhé!",
+          currentBadge: "Đang chơi",
+          solvedCountBadge: (n) => `Đã giải: ${n}`,
+          activeTheme: "Đang dùng",
+          tapTheme: "Chạm để chọn",
+          nakedSingle: (r, c, d) => `Suy luận duy nhất: Hàng ${r}, Cột ${c} chỉ có thể là số ${d}.`,
+          hiddenSingle: (b, r, c, d) => `Vị trí duy nhất: Số ${d} chỉ có thể nằm ở ô Hàng ${r}, Cột ${c} trong khối ${b}.`,
+          zenInsight: (r, c, d) => `Gợi ý logic: Ô Hàng ${r}, Cột ${c} có giá trị đúng là ${d}.`
         },
         en: {
-          solvedSummary: "{n} puzzles solved",
-          statsBtn: "Records",
-          newBtn: "New",
-          mistakesLbl: "Mistakes:",
+          solvedSummary: (n) => `${n} solved`,
+          records: "Records",
+          newGame: "New",
           timerOffLabel: "Timer: OFF",
-          defaultPrompt: "Tap an empty cell and choose a digit from 1 to 9.",
-          notesActivePrompt: "Notes Mode ON (✎): Tap numbers to write small pencil notes.",
-          applyHintBtn: "Place",
+          timerOnLabel: "Timer",
+          mistakes: "Mistakes",
           undo: "Undo",
           redo: "Redo",
           erase: "Erase",
@@ -1721,103 +1653,94 @@
           hint: "Hint",
           on: "ON",
           off: "OFF",
+          applyHint: "Place",
+          promptDefault: "Tap any empty cell and choose a number from 1 to 9.",
+          promptNotes: "Notes Mode is ON: tap 1–9 to toggle candidate notes inside the cell.",
           modalNewTitle: "Choose Difficulty",
-          modalNewDesc: "Every puzzle is mathematically verified to have one unique logical solution.",
-          modalSavesTitle: "Saved Scrolls",
-          saveInputPlaceholder: "Optional scroll name...",
-          saveCurrentBtn: "Save Current",
-          noSavesMsg: "No saved games yet. Tap 'Save Current' to store your progress.",
-          loadBtn: "Load",
-          solvedPct: "{pct}% solved",
-          modalStatsTitle: "Records & Zen Garden",
-          tabRecords: "Solved Records",
-          tabGarden: "Zen Garden & Themes",
-          statTotalWins: "Total Solved",
-          statStreak: "Win Streak",
-          statStones: "Harmony Stones",
-          breakdownHeader: "Solved by Difficulty",
-          historyHeader: "Recent Completed Puzzles",
-          noHistoryMsg: "No completed puzzles yet. Finish a board to record your achievement!",
-          bestTimeLbl: "Best: {t}",
-          solvedCountLbl: "{n} solved",
-          relaxedTag: "Untimed",
-          sanctuaryCaption: "Complete puzzles to earn Harmony Stones and unlock calming color palettes.",
-          unlockedActive: "Active",
-          unlockedApply: "Unlocked • Tap to apply",
-          lockedNeed: "Requires {n} Stones",
+          modalNewSub: "Every board is freshly generated with a single unique logical solution.",
+          modalSavesTitle: "Saved Games",
+          savePlaceholder: "Optional label (e.g. Morning Tea)",
+          saveCurrent: "Save Current",
+          noSaves: "No saved games yet.",
+          load: "Load",
+          modalRecordsTitle: "Records & History",
+          statWins: "Total Solved",
+          statTimed: "Timed Wins",
+          statFav: "Highest Tier",
+          thLevel: "Difficulty",
+          thSolved: "Solved",
+          thBest: "Best Time",
+          recentHistory: "Recent Completions",
+          noHistory: "No completed puzzles yet.",
+          palettes: "Zen Color Palettes",
           modalSettingsTitle: "Settings",
-          setLangTitle: "Language / Ngôn ngữ",
-          setLangDesc: "Switch between Vietnamese and English",
-          setLangBtnName: "English (Switch to VN)",
-          setErrorCheckTitle: "Instant Error Check",
-          setErrorCheckDesc: "Off by default so wrong digits aren't spoiled immediately",
-          setTimerTitle: "Timed Mode",
-          setTimerDesc: "Off by default for calm, stress-free play",
-          setMistakeTitle: "3-Mistake Limit",
-          setMistakeDesc: "Turn off for endless Zen play without game overs",
-          setAutonoteTitle: "Auto-Clear Notes",
-          setAutonoteDesc: "Remove matching pencil marks when placing a digit",
-          setSameTitle: "Highlight Matching Digits",
+          setTimedTitle: "Timed Mode",
+          setTimedDesc: "Off by default for relaxed play; turn on to record solve times",
+          setCheckTitle: "Instant Error Check",
+          setCheckDesc: "Off by default so wrong entries aren't spoiled immediately",
+          setNotesTitle: "Auto-Clear Notes",
+          setNotesDesc: "Remove matching pencil notes when placing a digit",
+          setSameTitle: "Highlight Matching Numbers",
           setSameDesc: "Illuminate all cells sharing the selected number",
-          setSoundTitle: "Gentle Koto Soundscape",
-          setSoundDesc: "Soft pentatonic chimes when tapping and solving",
-          checkUpdateBtn: "Check for Update",
-          checkingUpdate: "Checking...",
-          upToDate: "Up to date (v{v})",
-          updatingTo: "Updating to v{v}...",
-          refreshingCache: "Refreshing application...",
-          victoryKicker: "Harmony Achieved!",
-          victorySub: "Completed {diff}",
-          victoryStatsRelaxed: "Total Solved: {wins} • +{stones} Harmony Stones",
-          victoryStatsTimed: "Time: {time} • Total Solved: {wins} • +{stones} Stones",
-          victoryAdmire: "Admire Board",
+          setSoundTitle: "Gentle Bamboo Audio",
+          setSoundDesc: "Soft pentatonic chimes with no jarring sounds",
+          version: "Version",
+          upToDate: "Up to date",
+          checking: "Checking...",
+          updating: "Updating to",
+          refreshing: "Refreshing app...",
+          checkUpdateBtn: "Check Update",
+          victoryTitle: "Puzzle Complete!",
+          victoryView: "View Board",
           victoryNext: "New Puzzle",
-          toastNewGame: "Started new {diff} puzzle",
-          toastCannotErase: "Original puzzle clues cannot be erased",
-          toastNoHints: "No hints remaining for this puzzle",
-          toastSaved: "Game saved to your scrolls!",
-          toastLoaded: "Loaded '{name}'",
-          toastNeedStones: "Earn {n} more Harmony Stones to unlock",
-          toastTimerOn: "Timer switched ON",
-          toastTimerOff: "Timer switched OFF",
-          toastSizeChanged: "Text size: {s}",
-          sizeLabels: { normal: "Normal", large: "Large", xlarge: "Extra Large" },
-          toast3Mistakes: "3 mistakes reached — Counter reset so you can keep playing!",
-          toastFullNotSolved: "All 81 cells are filled, but at least one digit doesn't match yet. Double-check your rows and boxes!",
-          hintNaked: "Naked Single: Row {r}, Col {c} can only hold {d}.",
-          hintHiddenBox: "Hidden Single in Box: {d} only fits at Row {r}, Col {c}.",
-          hintHiddenRow: "Hidden Single in Row: {d} only fits at Row {r}, Col {c}.",
-          hintHiddenCol: "Hidden Single in Col: {d} only fits at Row {r}, Col {c}.",
-          hintChain: "Logical Deduction: Row {r}, Col {c} resolves to {d}.",
-          diffs: {
-            easy: { label: "Easy", desc: "Gentle warm-up • 39 given clues" },
-            medium: { label: "Medium", desc: "Balanced deduction • 33 given clues" },
-            hard: { label: "Hard", desc: "Deep logic • 28 given clues" },
-            veryhard: { label: "Very Hard", desc: "Expert challenge • 24 given clues" },
-            master: { label: "Master", desc: "Grandmaster test • 21 given clues" },
-            daily: { label: "Daily Zen", desc: "Today's special shared puzzle" }
-          },
-          themes: {
-            moss: { name: "Moss Garden", desc: "Washi paper & serene moss green" },
-            hinoki: { name: "Hinoki Wood", desc: "Warm cypress & cedar tones" },
-            mist: { name: "Kyoto Mist", desc: "Cool morning mountain slate" },
-            maple: { name: "Autumn Momiji", desc: "Warm terracotta & maple tones" }
-          }
+          toastNew: (lvl) => `New ${lvl} puzzle ready`,
+          toastLocked: "Starting numbers cannot be erased",
+          toastNoHints: "No hints remaining for this board",
+          toastSaved: "Game saved",
+          toastLoaded: (name) => `Loaded "${name}"`,
+          toastTimerOn: "Timer ON",
+          toastTimerOff: "Timer OFF (Relaxed mode)",
+          toastBoardNotQuite: "All cells are filled, though at least one number doesn't match yet.",
+          currentBadge: "Current",
+          solvedCountBadge: (n) => `Solved: ${n}`,
+          activeTheme: "Active",
+          tapTheme: "Tap to apply",
+          nakedSingle: (r, c, d) => `Naked Single: Row ${r}, Col ${c} can only hold ${d}.`,
+          hiddenSingle: (b, r, c, d) => `Hidden Single: ${d} fits only at Row ${r}, Col ${c} in Box ${b}.`,
+          zenInsight: (r, c, d) => `Logic Hint: Row ${r}, Col ${c} resolves to ${d}.`
         }
       };
 
-      function t(key, vars = {}) {
+      function t(key, ...args) {
         const lang = state.settings.lang || "vi";
         const dict = I18N[lang] || I18N.vi;
-        let str = dict[key] !== undefined ? dict[key] : (I18N.en[key] || key);
-        for (const [k, v] of Object.entries(vars)) {
-          str = str.replace(new RegExp(`\\{${k}\\}`, "g"), v);
-        }
-        return str;
+        const val = dict[key];
+        return typeof val === "function" ? val(...args) : val;
       }
 
       /* ========================================================================
-         3. DYNAMIC PWA HOME SCREEN ICON GENERATOR (Canvas -> PNG Data URL)
+         3. DIFFICULTY LEVELS (ALL TIERS INCLUDED)
+         ======================================================================== */
+      const DIFFICULTIES = [
+        { key: "easy", rank: 1, givens: 45, vi: "Dễ", en: "Easy", descVi: "Nhẹ nhàng khởi động • 45 số cho sẵn", descEn: "Gentle warm-up • 45 given digits" },
+        { key: "medium", rank: 2, givens: 38, vi: "Trung bình", en: "Medium", descVi: "Cân bằng thư thái • 38 số cho sẵn", descEn: "Balanced focus • 38 given digits" },
+        { key: "hard", rank: 3, givens: 32, vi: "Khó", en: "Hard", descVi: "Suy luận sâu sắc • 32 số cho sẵn", descEn: "Deep deduction • 32 given digits" },
+        { key: "very_hard", rank: 4, givens: 27, vi: "Rất khó", en: "Very Hard", descVi: "Thử thách cao thủ • 27 số cho sẵn", descEn: "Expert challenge • 27 given digits" },
+        { key: "master", rank: 5, givens: 23, vi: "Bậc thầy", en: "Master", descVi: "Đỉnh cao trí tuệ • 23 số cho sẵn", descEn: "Grandmaster logic • 23 given digits" },
+        { key: "daily", rank: 3, givens: 31, vi: "Thử thách hôm nay", en: "Daily Zen", descVi: "Đề bài đặc biệt của ngày hôm nay", descEn: "Today's shared daily puzzle" }
+      ];
+
+      function getDiffCfg(key) {
+        return DIFFICULTIES.find(d => d.key === key) || DIFFICULTIES[2];
+      }
+
+      function getDiffLabel(key) {
+        const cfg = getDiffCfg(key);
+        return (state.settings.lang || "vi") === "vi" ? cfg.vi : cfg.en;
+      }
+
+      /* ========================================================================
+         4. DYNAMIC PWA HOME SCREEN ICON GENERATOR (Canvas -> PNG Data URL)
          ======================================================================== */
       function generateDynamicAppIcon() {
         try {
@@ -1827,62 +1750,77 @@
           canvas.height = size;
           const ctx = canvas.getContext("2d");
 
+          // Rich Kyoto moss & deep pine gradient (fills full square so iOS masks cleanly)
           const grad = ctx.createLinearGradient(0, 0, size, size);
-          grad.addColorStop(0, "#436647");
-          grad.addColorStop(1, "#273F2A");
+          grad.addColorStop(0, "#476E4C");
+          grad.addColorStop(0.55, "#355439");
+          grad.addColorStop(1, "#213724");
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, size, size);
 
-          ctx.strokeStyle = "rgba(250, 247, 240, 0.13)";
-          ctx.lineWidth = 6;
-          for (let r = 90; r <= 340; r += 44) {
-            ctx.beginPath();
-            ctx.arc(size * 0.85, size * 0.85, r, Math.PI, Math.PI * 1.55);
-            ctx.stroke();
-          }
+          // Soft ambient top-left glow
+          const glow = ctx.createRadialGradient(size * 0.3, size * 0.25, 20, size * 0.3, size * 0.25, size * 0.75);
+          glow.addColorStop(0, "rgba(255, 250, 240, 0.12)");
+          glow.addColorStop(1, "rgba(255, 250, 240, 0)");
+          ctx.fillStyle = glow;
+          ctx.fillRect(0, 0, size, size);
 
-          const pad = 74;
-          const box = size - pad * 2;
-          ctx.fillStyle = "#FAF7F0";
-          ctx.beginPath();
-          ctx.roundRect(pad, pad, box, box, 56);
-          ctx.fill();
-
-          ctx.strokeStyle = "#B68D40";
-          ctx.lineWidth = 8;
-          ctx.stroke();
-
-          const innerPad = pad + 44;
-          const innerSize = size - innerPad * 2;
-          const cell = innerSize / 3;
-          ctx.strokeStyle = "#82887C";
-          ctx.lineWidth = 4;
+          // Subtle architectural 3x3 Sudoku grid lines in background
+          ctx.strokeStyle = "rgba(250, 247, 240, 0.11)";
+          ctx.lineWidth = 3;
+          const step = size / 3;
           for (let i = 1; i <= 2; i++) {
             ctx.beginPath();
-            ctx.moveTo(innerPad + cell * i, innerPad);
-            ctx.lineTo(innerPad + cell * i, innerPad + innerSize);
+            ctx.moveTo(step * i, 44);
+            ctx.lineTo(step * i, size - 44);
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.moveTo(innerPad, innerPad + cell * i);
-            ctx.lineTo(innerPad + innerSize, innerPad + cell * i);
+            ctx.moveTo(44, step * i);
+            ctx.lineTo(size - 44, step * i);
             ctx.stroke();
           }
 
-          ctx.fillStyle = "rgba(182, 141, 64, 0.24)";
+          // Fine inner Kintsugi gold frame
+          const framePad = 36;
+          ctx.strokeStyle = "rgba(212, 171, 94, 0.65)";
+          ctx.lineWidth = 5;
           ctx.beginPath();
-          ctx.arc(innerPad + cell * 1.5, innerPad + cell * 1.5, cell * 0.4, 0, Math.PI * 2);
-          ctx.fill();
+          if (ctx.roundRect) ctx.roundRect(framePad, framePad, size - framePad * 2, size - framePad * 2, 76);
+          else ctx.rect(framePad, framePad, size - framePad * 2, size - framePad * 2);
+          ctx.stroke();
 
-          ctx.fillStyle = "#222620";
-          ctx.font = "bold 62px Georgia, serif";
+          // Luminous Zen Enso ring around the central kanji
+          const cx = size / 2;
+          const cy = size / 2;
+          const radius = 152;
+
+          ctx.save();
+          ctx.strokeStyle = "#D8B168";
+          ctx.lineWidth = 11;
+          ctx.lineCap = "round";
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius, -Math.PI * 0.42, Math.PI * 1.48);
+          ctx.stroke();
+
+          ctx.strokeStyle = "rgba(216, 177, 104, 0.28)";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(cx, cy, radius + 16, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          // Crisp central "禅" (Zen) kanji in warm Washi ivory
+          ctx.save();
+          ctx.shadowColor = "rgba(18, 28, 19, 0.45)";
+          ctx.shadowBlur = 18;
+          ctx.shadowOffsetY = 6;
+          ctx.fillStyle = "#FAF7F0";
+          ctx.font = '700 206px "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif';
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.fillText("9", innerPad + cell * 0.5, innerPad + cell * 0.52);
-          ctx.fillStyle = "#436647";
-          ctx.fillText("禅", innerPad + cell * 1.5, innerPad + cell * 1.52);
-          ctx.fillStyle = "#B68D40";
-          ctx.fillText("1", innerPad + cell * 2.5, innerPad + cell * 2.52);
+          ctx.fillText("禅", cx, cy + 8);
+          ctx.restore();
 
           const dataUrl = canvas.toDataURL("image/png");
           document.getElementById("dynamic-apple-icon").href = dataUrl;
@@ -1891,7 +1829,7 @@
       }
 
       /* ========================================================================
-         4. GENTLE WEB AUDIO SOUNDSCAPE (iOS Unlock + Pentatonic Chimes)
+         5. GENTLE WEB AUDIO SOUNDSCAPE (iOS Unlock + Pentatonic Kalimba)
          ======================================================================== */
       class ZenAudioEngine {
         constructor() {
@@ -1922,11 +1860,11 @@
 
           osc.type = "sine";
           osc.frequency.setValueAtTime(freq, now);
-          osc.frequency.exponentialRampToValueAtTime(freq * 0.996, now + 0.35);
+          osc.frequency.exponentialRampToValueAtTime(freq * 0.996, now + 0.32);
 
           gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.linearRampToValueAtTime(isNote ? 0.032 : 0.07, now + 0.012);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + (isNote ? 0.18 : 0.4));
+          gain.gain.linearRampToValueAtTime(isNote ? 0.03 : 0.065, now + 0.012);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + (isNote ? 0.16 : 0.38));
 
           osc.connect(gain);
           gain.connect(this.ctx.destination);
@@ -1945,11 +1883,11 @@
           osc.frequency.setValueAtTime(220, now);
           gain.gain.setValueAtTime(0.0001, now);
           gain.gain.linearRampToValueAtTime(0.018, now + 0.006);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
           osc.start(now);
-          osc.stop(now + 0.07);
+          osc.stop(now + 0.065);
         }
 
         playSoftError() {
@@ -1961,10 +1899,10 @@
           const gain = this.ctx.createGain();
           osc.type = "sine";
           osc.frequency.setValueAtTime(165, now);
-          osc.frequency.linearRampToValueAtTime(138, now + 0.24);
+          osc.frequency.linearRampToValueAtTime(140, now + 0.22);
           gain.gain.setValueAtTime(0.0001, now);
-          gain.gain.linearRampToValueAtTime(0.05, now + 0.02);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26);
+          gain.gain.linearRampToValueAtTime(0.045, now + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
           osc.connect(gain);
           gain.connect(this.ctx.destination);
           osc.start(now);
@@ -1984,11 +1922,11 @@
             osc.frequency.setValueAtTime(freq, now);
             gain.gain.setValueAtTime(0.0001, now);
             gain.gain.linearRampToValueAtTime(0.048, now + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + (isVictory ? 1.35 : 0.72));
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + (isVictory ? 1.3 : 0.7));
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start(now);
-            osc.stop(now + (isVictory ? 1.4 : 0.76));
+            osc.stop(now + (isVictory ? 1.35 : 0.75));
           });
         }
       }
@@ -1996,19 +1934,8 @@
       const audio = new ZenAudioEngine();
 
       /* ========================================================================
-         5. SUDOKU GENERATOR (ALL 5 DIFFICULTIES + UNIQUE SOLUTION VERIFIER)
+         6. SUDOKU GENERATOR, UNIQUE SOLVER & LOGICAL HINT ENGINE
          ======================================================================== */
-      const DIFFICULTY_CONFIG = {
-        easy: { key: "easy", givens: 39, reward: 20 },
-        medium: { key: "medium", givens: 33, reward: 30 },
-        hard: { key: "hard", givens: 28, reward: 45 },
-        veryhard: { key: "veryhard", givens: 24, reward: 65 },
-        master: { key: "master", givens: 21, reward: 95 },
-        daily: { key: "daily", givens: 29, reward: 50 }
-      };
-
-      const DIFF_ORDER = ["easy", "medium", "hard", "veryhard", "master", "daily"];
-
       function createSeededRng(seedStr) {
         let h = 2166136261 >>> 0;
         for (let i = 0; i < seedStr.length; i++) {
@@ -2118,7 +2045,7 @@
       }
 
       function generatePuzzle(diffKey) {
-        const cfg = DIFFICULTY_CONFIG[diffKey] || DIFFICULTY_CONFIG.hard;
+        const cfg = getDiffCfg(diffKey);
         const todayStr = new Date().toISOString().slice(0, 10);
         const rng = diffKey === "daily" ? createSeededRng("sudozen-" + todayStr) : Math.random;
 
@@ -2138,23 +2065,22 @@
             removed++;
           }
         }
-        return { puzzle, solution, diffKey, dateStr: diffKey === "daily" ? todayStr : null };
+        return { puzzle, solution, diffKey: cfg.key, dateStr: diffKey === "daily" ? todayStr : null };
       }
 
-      /* ========================================================================
-         6. SMART LOGICAL INTUITION HINT ENGINE (Bilingual Reasoning)
-         ======================================================================== */
       function findLogicalHint(currentBoard, solution) {
+        const cleanBoard = currentBoard.map((v, i) => (v === solution[i] ? v : 0));
+
         for (let i = 0; i < 81; i++) {
-          if (currentBoard[i] !== 0) continue;
+          if (cleanBoard[i] !== 0) continue;
           const r = Math.floor(i / 9);
           const c = i % 9;
           const candidates = [];
           for (let n = 1; n <= 9; n++) {
-            if (isValidPlacement(currentBoard, r, c, n)) candidates.push(n);
+            if (isValidPlacement(cleanBoard, r, c, n)) candidates.push(n);
           }
           if (candidates.length === 1) {
-            return { idx: i, digit: candidates[0], type: "hintNaked", r: r + 1, c: c + 1 };
+            return { idx: i, digit: candidates[0], type: "naked", r: r + 1, c: c + 1 };
           }
         }
 
@@ -2166,7 +2092,7 @@
             for (let r = br; r < br + 3; r++) {
               for (let c = bc; c < bc + 3; c++) {
                 const idx = r * 9 + c;
-                if (currentBoard[idx] === 0 && isValidPlacement(currentBoard, r, c, n)) {
+                if (cleanBoard[idx] === 0 && isValidPlacement(cleanBoard, r, c, n)) {
                   spots.push(idx);
                 }
               }
@@ -2174,62 +2100,25 @@
             if (spots.length === 1) {
               const r = Math.floor(spots[0] / 9);
               const c = spots[0] % 9;
-              return { idx: spots[0], digit: n, type: "hintHiddenBox", r: r + 1, c: c + 1 };
+              return { idx: spots[0], digit: n, type: "hidden", box: box + 1, r: r + 1, c: c + 1 };
             }
           }
         }
 
-        for (let r = 0; r < 9; r++) {
-          for (let n = 1; n <= 9; n++) {
-            const spots = [];
-            for (let c = 0; c < 9; c++) {
-              const idx = r * 9 + c;
-              if (currentBoard[idx] === 0 && isValidPlacement(currentBoard, r, c, n)) {
-                spots.push(idx);
-              }
-            }
-            if (spots.length === 1) {
-              const c = spots[0] % 9;
-              return { idx: spots[0], digit: n, type: "hintHiddenRow", r: r + 1, c: c + 1 };
-            }
-          }
-        }
-
-        for (let c = 0; c < 9; c++) {
-          for (let n = 1; n <= 9; n++) {
-            const spots = [];
-            for (let r = 0; r < 9; r++) {
-              const idx = r * 9 + c;
-              if (currentBoard[idx] === 0 && isValidPlacement(currentBoard, r, c, n)) {
-                spots.push(idx);
-              }
-            }
-            if (spots.length === 1) {
-              const r = Math.floor(spots[0] / 9);
-              return { idx: spots[0], digit: n, type: "hintHiddenCol", r: r + 1, c: c + 1 };
-            }
-          }
-        }
-
-        const targetIdx = (selectedIdx >= 0 && currentBoard[selectedIdx] === 0)
+        const targetIdx = (selectedIdx >= 0 && currentBoard[selectedIdx] !== solution[selectedIdx])
           ? selectedIdx
-          : currentBoard.findIndex(v => v === 0);
+          : currentBoard.findIndex((v, i) => v !== solution[i]);
 
         if (targetIdx >= 0) {
           const r = Math.floor(targetIdx / 9);
           const c = targetIdx % 9;
-          return { idx: targetIdx, digit: solution[targetIdx], type: "hintChain", r: r + 1, c: c + 1 };
+          return { idx: targetIdx, digit: solution[targetIdx], type: "insight", r: r + 1, c: c + 1 };
         }
         return null;
       }
 
-      function formatHintReason(hint) {
-        if (!hint) return "";
-        return t(hint.type, { r: hint.r, c: hint.c, d: hint.digit });
-      }
-
       /* ========================================================================
-         7. PARTICLE & SANCTUARY CANVAS RENDERERS
+         7. PARTICLE SYSTEM
          ======================================================================== */
       const fxCanvas = document.getElementById("fx-canvas");
       const fxCtx = fxCanvas.getContext("2d");
@@ -2247,10 +2136,10 @@
             x: cx,
             y: cy,
             vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed - 0.4,
+            vy: Math.sin(angle) * speed - 0.3,
             life: 1,
             decay: 0.018 + Math.random() * 0.014,
-            size: 2.2 + Math.random() * 2.5,
+            size: 2.2 + Math.random() * 2.6,
             gold: Math.random() > 0.35
           });
         }
@@ -2270,7 +2159,7 @@
             continue;
           }
           fxCtx.globalAlpha = Math.max(0, p.life);
-          fxCtx.fillStyle = p.gold ? "#B68D40" : "#436647";
+          fxCtx.fillStyle = p.gold ? "#B08435" : "#3F6344";
           fxCtx.beginPath();
           fxCtx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
           fxCtx.fill();
@@ -2279,64 +2168,14 @@
         requestAnimationFrame(animateParticles);
       }
 
-      function renderSanctuaryIllustration() {
-        const canvas = document.getElementById("sanctuary-canvas");
-        if (!canvas) return;
-        const dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const rect = canvas.getBoundingClientRect();
-        const w = rect.width || 380;
-        const h = rect.height || 145;
-        canvas.width = w * dpr;
-        canvas.height = h * dpr;
-        const ctx = canvas.getContext("2d");
-        ctx.scale(dpr, dpr);
-
-        ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue("--bg-elevated").trim();
-        ctx.fillRect(0, 0, w, h);
-
-        ctx.strokeStyle = "rgba(130, 125, 110, 0.25)";
-        ctx.lineWidth = 1.5;
-        for (let y = 16; y < h; y += 12) {
-          ctx.beginPath();
-          for (let x = 0; x <= w; x += 16) {
-            const wave = Math.sin(x * 0.03 + y * 0.1) * 2.5;
-            if (x === 0) ctx.moveTo(x, y + wave);
-            else ctx.lineTo(x, y + wave);
-          }
-          ctx.stroke();
-        }
-
-        const stonesUnlocked = Math.min(5, 1 + Math.floor(state.profile.harmonyStones / 40));
-        const stonePositions = [
-          { x: w * 0.24, y: h * 0.62, rx: 26, ry: 16, col: "#4F564D" },
-          { x: w * 0.31, y: h * 0.52, rx: 16, ry: 11, col: "#6C7469" },
-          { x: w * 0.72, y: h * 0.65, rx: 32, ry: 18, col: "#3E453C" },
-          { x: w * 0.65, y: h * 0.72, rx: 14, ry: 9, col: "#7A8276" },
-          { x: w * 0.50, y: h * 0.44, rx: 20, ry: 12, col: "#B68D40" }
-        ];
-
-        for (let i = 0; i < stonesUnlocked; i++) {
-          const s = stonePositions[i];
-          ctx.strokeStyle = "rgba(182, 141, 64, 0.35)";
-          ctx.beginPath();
-          ctx.ellipse(s.x, s.y + 3, s.rx + 12, s.ry + 6, 0, 0, Math.PI * 2);
-          ctx.stroke();
-
-          ctx.fillStyle = s.col;
-          ctx.beginPath();
-          ctx.ellipse(s.x, s.y, s.rx, s.ry, 0, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
       /* ========================================================================
-         8. APPLICATION STATE & VERSIONED LOCALSTORAGE PERSISTENCE
+         8. APPLICATION STATE & VERSIONED LOCALSTORAGE
          ======================================================================== */
-      const THEME_LIST = [
-        { id: "moss", cost: 0 },
-        { id: "hinoki", cost: 40 },
-        { id: "mist", cost: 90 },
-        { id: "maple", cost: 160 }
+      const THEMES = [
+        { id: "moss", vi: "Giấy Washi & Rêu", en: "Washi & Moss" },
+        { id: "hinoki", vi: "Gỗ Hinoki ấm", en: "Hinoki Wood" },
+        { id: "mist", vi: "Sương sớm Kyoto", en: "Kyoto Mist" },
+        { id: "maple", vi: "Lá phong mùa thu", en: "Autumn Maple" }
       ];
 
       const defaultState = () => ({
@@ -2344,19 +2183,17 @@
         settings: {
           lang: "vi",
           textSize: "large",
+          timedMode: false,
           instantErrorCheck: false,
-          timerEnabled: false,
-          mistakeLimit: false,
           autoClearNotes: true,
           highlightSame: true,
           soundEnabled: true,
           theme: "moss"
         },
         profile: {
-          harmonyStones: 0,
           wins: 0,
-          streak: 0,
-          solvedByDiff: { easy: 0, medium: 0, hard: 0, veryhard: 0, master: 0, daily: 0 },
+          timedWins: 0,
+          solvedByDiff: { easy: 0, medium: 0, hard: 0, very_hard: 0, master: 0, daily: 0 },
           bestTimes: {},
           history: []
         },
@@ -2368,7 +2205,6 @@
       let selectedIdx = 40;
       let notesMode = false;
       let activeHint = null;
-      let timerInterval = null;
 
       function loadState() {
         try {
@@ -2383,7 +2219,6 @@
                 ...defaultState().profile,
                 ...(parsed.profile || {}),
                 solvedByDiff: { ...defaultState().profile.solvedByDiff, ...((parsed.profile && parsed.profile.solvedByDiff) || {}) },
-                bestTimes: { ...((parsed.profile && parsed.profile.bestTimes) || {}) },
                 history: Array.isArray(parsed.profile && parsed.profile.history) ? parsed.profile.history : []
               },
               saveSlots: Array.isArray(parsed.saveSlots) ? parsed.saveSlots : []
@@ -2394,6 +2229,8 @@
         document.documentElement.lang = state.settings.lang || "vi";
         document.documentElement.setAttribute("data-theme", state.settings.theme || "moss");
         document.documentElement.setAttribute("data-text-size", state.settings.textSize || "large");
+        const metaTheme = document.querySelector('meta[name="theme-color"]');
+        if (metaTheme) metaTheme.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--bg-base").trim());
       }
 
       function saveState() {
@@ -2404,7 +2241,7 @@
       }
 
       /* ========================================================================
-         9. GAME LIFECYCLE & CORE MOVES
+         9. GAME LIFECYCLE & MOVES
          ======================================================================== */
       function startNewGame(diffKey = "hard") {
         const generated = generatePuzzle(diffKey);
@@ -2418,7 +2255,7 @@
           mistakes: 0,
           hintsLeft: 3,
           elapsedSeconds: 0,
-          wasTimed: Boolean(state.settings.timerEnabled),
+          wasTimed: state.settings.timedMode,
           completed: false,
           undoStack: [],
           redoStack: []
@@ -2429,8 +2266,7 @@
         selectedIdx = firstEmpty >= 0 ? firstEmpty : 40;
         saveState();
         renderAll();
-        const diffLabel = I18N[state.settings.lang].diffs[diffKey].label;
-        showToast(t("toastNewGame", { diff: diffLabel }));
+        showToast(t("toastNew", getDiffLabel(diffKey)));
       }
 
       function snapshotForUndo() {
@@ -2440,7 +2276,7 @@
           board: g.board.slice(),
           notes: g.notes.map(n => n.slice())
         });
-        if (g.undoStack.length > 80) g.undoStack.shift();
+        if (g.undoStack.length > 60) g.undoStack.shift();
         g.redoStack = [];
       }
 
@@ -2482,7 +2318,7 @@
         const g = state.game;
         if (!g || g.completed || selectedIdx < 0) return;
         if (g.initial[selectedIdx] !== 0) {
-          showToast(t("toastCannotErase"));
+          showToast(t("toastLocked"));
           return;
         }
         if (g.board[selectedIdx] === 0 && g.notes[selectedIdx].length === 0) return;
@@ -2584,9 +2420,7 @@
           return;
         }
 
-        if (g.board[selectedIdx] === digit) {
-          if (!state.settings.instantErrorCheck || g.solution[selectedIdx] === digit) return;
-        }
+        if (g.board[selectedIdx] === digit) return;
 
         snapshotForUndo();
         g.board[selectedIdx] = digit;
@@ -2594,37 +2428,30 @@
         activeHint = null;
 
         const isCorrect = g.solution[selectedIdx] === digit;
-        const instantCheck = Boolean(state.settings.instantErrorCheck);
+        const instantCheck = state.settings.instantErrorCheck;
 
-        if (instantCheck) {
-          if (isCorrect) {
-            if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
-            audio.playPluck(digit, false);
-            const r = Math.floor(selectedIdx / 9);
-            const c = selectedIdx % 9;
-            spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 10);
-            checkCompletedUnits(selectedIdx);
-          } else {
-            g.mistakes++;
-            audio.playSoftError();
-            if (state.settings.mistakeLimit && g.mistakes >= 3) {
-              showToast(t("toast3Mistakes"));
-              g.mistakes = 0;
-            }
-          }
-        } else {
-          // Paper-like authentic Sudoku: no red spoilers or error buzzers while thinking
+        if (isCorrect) {
           if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
           audio.playPluck(digit, false);
-          if (isCorrect) {
-            checkCompletedUnits(selectedIdx);
-          }
-        }
+          const r = Math.floor(selectedIdx / 9);
+          const c = selectedIdx % 9;
+          spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 8);
+          checkCompletedUnits(selectedIdx);
 
-        if (g.board.every((val, i) => val === g.solution[i])) {
-          handlePuzzleVictory();
-        } else if (!instantCheck && g.board.every(val => val !== 0)) {
-          showToast(t("toastFullNotSolved"));
+          if (g.board.every((val, i) => val === g.solution[i])) {
+            handlePuzzleVictory();
+          }
+        } else {
+          if (instantCheck) {
+            g.mistakes++;
+            audio.playSoftError();
+          } else {
+            if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
+            audio.playPluck(digit, false);
+            if (g.board.every(val => val !== 0)) {
+              showToast(t("toastBoardNotQuite"));
+            }
+          }
         }
 
         saveState();
@@ -2637,18 +2464,14 @@
         const g = state.game;
         g.completed = true;
         audio.playChimeChord(true);
-        spawnGoldBurst(0.5, 0.5, 55);
+        spawnGoldBurst(0.5, 0.5, 52);
 
-        const diffCfg = DIFFICULTY_CONFIG[g.diffKey] || DIFFICULTY_CONFIG.hard;
-        const earned = diffCfg.reward;
-        const isTimedRun = Boolean(state.settings.timerEnabled || g.wasTimed);
-
-        state.profile.harmonyStones += earned;
+        const isTimed = Boolean(state.settings.timedMode || g.wasTimed);
         state.profile.wins += 1;
-        state.profile.streak = (state.profile.streak || 0) + 1;
         state.profile.solvedByDiff[g.diffKey] = (state.profile.solvedByDiff[g.diffKey] || 0) + 1;
 
-        if (isTimedRun && g.elapsedSeconds > 0) {
+        if (isTimed) {
+          state.profile.timedWins += 1;
           const prevBest = state.profile.bestTimes[g.diffKey];
           if (!prevBest || g.elapsedSeconds < prevBest) {
             state.profile.bestTimes[g.diffKey] = g.elapsedSeconds;
@@ -2657,23 +2480,20 @@
 
         state.profile.history.unshift({
           diffKey: g.diffKey,
-          timed: isTimedRun,
+          timed: isTimed,
           seconds: g.elapsedSeconds,
           date: Date.now()
         });
-        if (state.profile.history.length > 30) state.profile.history.pop();
+        if (state.profile.history.length > 40) state.profile.history.pop();
 
         saveState();
-        renderAll();
+        renderHeaderStats();
 
-        const diffLabel = I18N[state.settings.lang].diffs[g.diffKey].label;
-        document.getElementById("victory-kicker").textContent = t("victoryKicker");
-        document.getElementById("victory-subtitle").textContent = t("victorySub", { diff: diffLabel });
-        document.getElementById("victory-stats").textContent = isTimedRun
-          ? t("victoryStatsTimed", { time: formatTime(g.elapsedSeconds), wins: state.profile.wins, stones: earned })
-          : t("victoryStatsRelaxed", { wins: state.profile.wins, stones: earned });
-        document.getElementById("btn-victory-admire").textContent = t("victoryAdmire");
-        document.getElementById("btn-victory-next").textContent = t("victoryNext");
+        const lvlName = getDiffLabel(g.diffKey);
+        document.getElementById("victory-subtitle").textContent = `${t("victoryTitle")} (${lvlName})`;
+        document.getElementById("victory-stats").textContent = isTimed
+          ? `${t("timerOnLabel")}: ${formatTime(g.elapsedSeconds)} • ${t("solvedSummary", state.profile.wins)}`
+          : `${t("timerOffLabel")} • ${t("solvedSummary", state.profile.wins)}`;
         openModal("modal-victory");
       }
 
@@ -2703,14 +2523,14 @@
         if (!g) return;
         const input = document.getElementById("save-slot-name");
         const customName = input.value.trim();
-        const diffLabel = I18N[state.settings.lang].diffs[g.diffKey].label;
-        const solvedCount = g.board.filter((v, i) => v !== 0 && v === g.solution[i]).length;
+        const diffLabel = getDiffLabel(g.diffKey);
+        const filledCount = g.board.filter(v => v !== 0).length;
 
         const slot = {
           id: "slot_" + Date.now(),
-          name: customName || diffLabel,
+          name: customName || `${diffLabel}`,
           timestamp: Date.now(),
-          progressPct: Math.round((solvedCount / 81) * 100),
+          progressPct: Math.round((filledCount / 81) * 100),
           gameState: JSON.parse(JSON.stringify(g))
         };
 
@@ -2731,7 +2551,7 @@
         saveState();
         renderAll();
         closeModal("modal-saves");
-        showToast(t("toastLoaded", { name: slot.name }));
+        showToast(t("toastLoaded", slot.name));
       }
 
       function deleteSaveSlot(slotId) {
@@ -2761,14 +2581,21 @@
         const padH = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
 
         const isLandscapeWide = window.innerWidth >= 820 && window.innerWidth > window.innerHeight;
-        const availH = app.clientHeight - padV - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 16 : controls.offsetHeight + 24);
-        const availW = isLandscapeWide ? app.clientWidth - padH - controls.offsetWidth - 36 : app.clientWidth - padH - 4;
+        const availH = app.clientHeight - padV - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 24 : controls.offsetHeight + 24);
+        const availW = isLandscapeWide ? app.clientWidth - padH - controls.offsetWidth - 44 : app.clientWidth - padH - 4;
 
-        const size = Math.max(220, Math.min(availH, availW, 530));
+        const maxCap = isLandscapeWide ? 680 : 620;
+        const size = Math.max(220, Math.min(availH, availW, maxCap));
         const digitBoost = state.settings.textSize === "xlarge" ? 1.14 : state.settings.textSize === "large" ? 1.07 : 1;
         boardEl.style.width = `${size}px`;
         boardEl.style.height = `${size}px`;
         boardEl.style.fontSize = `${Math.round((size / 15.5) * digitBoost)}px`;
+
+        if (isLandscapeWide) {
+          controls.style.minHeight = `${Math.min(size, 520)}px`;
+        } else {
+          controls.style.minHeight = "";
+        }
 
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         fxCanvas.width = (size + 32) * dpr;
@@ -2789,6 +2616,7 @@
             e.preventDefault();
             audio.unlock();
             selectedIdx = i;
+            if (activeHint && activeHint.idx !== i) activeHint = null;
             audio.playSelect();
             renderBoard();
             renderControls();
@@ -2806,7 +2634,7 @@
         const selBoxR = Math.floor(selR / 3);
         const selBoxC = Math.floor(selC / 3);
         const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
-        const instantCheck = Boolean(state.settings.instantErrorCheck);
+        const instantCheck = state.settings.instantErrorCheck;
 
         for (let i = 0; i < 81; i++) {
           const cell = cells[i];
@@ -2844,53 +2672,93 @@
         }
       }
 
-      function renderStaticTranslations() {
+      function renderLanguageStrings() {
         const lang = state.settings.lang || "vi";
-        document.getElementById("seg-vi").classList.toggle("active", lang === "vi");
-        document.getElementById("seg-en").classList.toggle("active", lang === "en");
-        document.getElementById("btn-lang").setAttribute("aria-checked", lang === "en" ? "true" : "false");
+        document.documentElement.lang = lang;
+        document.getElementById("lang-opt-vi").classList.toggle("active", lang === "vi");
+        document.getElementById("lang-opt-en").classList.toggle("active", lang === "en");
 
-        document.getElementById("brand-sub-text").textContent = t("solvedSummary", { n: state.profile.wins });
-        document.getElementById("lbl-stats-btn").textContent = t("statsBtn");
-        document.getElementById("lbl-new-btn").textContent = t("newBtn");
-        document.getElementById("lbl-mistakes").textContent = t("mistakesLbl");
-
+        document.getElementById("lbl-records").textContent = t("records");
+        document.getElementById("lbl-new-game").textContent = t("newGame");
+        document.getElementById("lbl-mistakes").textContent = t("mistakes");
         document.getElementById("lbl-undo").textContent = t("undo");
         document.getElementById("lbl-redo").textContent = t("redo");
         document.getElementById("lbl-erase").textContent = t("erase");
         document.getElementById("lbl-notes").textContent = t("notes");
         document.getElementById("lbl-hint").textContent = t("hint");
-        document.getElementById("btn-apply-hint").textContent = t("applyHintBtn");
+        document.getElementById("btn-apply-hint").textContent = t("applyHint");
 
+        document.getElementById("modal-new-title").textContent = t("modalNewTitle");
+        document.getElementById("modal-new-sub").textContent = t("modalNewSub");
+        document.getElementById("modal-saves-title").textContent = t("modalSavesTitle");
+        document.getElementById("save-slot-name").placeholder = t("savePlaceholder");
+        document.getElementById("btn-create-save").textContent = t("saveCurrent");
+
+        document.getElementById("modal-records-title").textContent = t("modalRecordsTitle");
+        document.getElementById("lbl-stat-wins").textContent = t("statWins");
+        document.getElementById("lbl-stat-timed").textContent = t("statTimed");
+        document.getElementById("lbl-stat-fav").textContent = t("statFav");
+        document.getElementById("th-level").textContent = t("thLevel");
+        document.getElementById("th-solved").textContent = t("thSolved");
+        document.getElementById("th-best").textContent = t("thBest");
+        document.getElementById("lbl-recent-history").textContent = t("recentHistory");
+        document.getElementById("lbl-palettes").textContent = t("palettes");
+
+        document.getElementById("modal-settings-title").textContent = t("modalSettingsTitle");
+        document.getElementById("set-timed-title").textContent = t("setTimedTitle");
+        document.getElementById("set-timed-desc").textContent = t("setTimedDesc");
+        document.getElementById("set-check-title").textContent = t("setCheckTitle");
+        document.getElementById("set-check-desc").textContent = t("setCheckDesc");
+        document.getElementById("set-notes-title").textContent = t("setNotesTitle");
+        document.getElementById("set-notes-desc").textContent = t("setNotesDesc");
+        document.getElementById("set-same-title").textContent = t("setSameTitle");
+        document.getElementById("set-same-desc").textContent = t("setSameDesc");
+        document.getElementById("set-sound-title").textContent = t("setSoundTitle");
+        document.getElementById("set-sound-desc").textContent = t("setSoundDesc");
+        document.getElementById("lbl-version").textContent = t("version");
+        document.getElementById("btn-check-update").textContent = t("checkUpdateBtn");
+        document.getElementById("btn-victory-view").textContent = t("victoryView");
+        document.getElementById("btn-victory-next").textContent = t("victoryNext");
+      }
+
+      function renderHeaderStats() {
+        document.getElementById("header-solved-summary").textContent = t("solvedSummary", state.profile.wins);
         document.getElementById("icon-sound-on").style.display = state.settings.soundEnabled ? "block" : "none";
         document.getElementById("icon-sound-off").style.display = state.settings.soundEnabled ? "none" : "block";
+      }
+
+      function renderTextSizeSwitch() {
+        const cur = state.settings.textSize || "large";
+        document.documentElement.setAttribute("data-text-size", cur);
+        document.querySelectorAll(".size-opt").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.size === cur);
+        });
       }
 
       function renderTelemetry() {
         const g = state.game;
         if (!g) return;
-        const diffLabel = I18N[state.settings.lang].diffs[g.diffKey].label;
-        document.getElementById("btn-diff-pill").textContent = diffLabel;
+        document.getElementById("btn-diff-pill").textContent = getDiffLabel(g.diffKey);
 
-        const mistakesEl = document.getElementById("mistakes-stat");
+        const mistakesStat = document.getElementById("mistakes-stat");
         if (state.settings.instantErrorCheck) {
-          mistakesEl.style.display = "inline-flex";
-          document.getElementById("mistakes-count").textContent = state.settings.mistakeLimit ? `${g.mistakes}/3` : `${g.mistakes}`;
+          mistakesStat.style.display = "flex";
+          document.getElementById("mistakes-count").textContent = g.mistakes;
         } else {
-          mistakesEl.style.display = "none";
+          mistakesStat.style.display = "none";
         }
 
-        const timerPill = document.getElementById("btn-timer-pill");
-        const timerDisplay = document.getElementById("timer-display");
-        const isTimed = Boolean(state.settings.timerEnabled);
-        timerPill.classList.toggle("active", isTimed);
-        timerPill.setAttribute("aria-checked", isTimed ? "true" : "false");
-        timerDisplay.textContent = isTimed ? formatTime(g.elapsedSeconds) : t("timerOffLabel");
-
-        const activeSize = state.settings.textSize || "large";
-        document.querySelectorAll("#text-size-switch .size-opt").forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.size === activeSize);
-        });
+        const timerBtn = document.getElementById("btn-timer-pill");
+        const timerTxt = document.getElementById("timer-display");
+        if (state.settings.timedMode) {
+          timerBtn.classList.add("timer-on");
+          timerBtn.setAttribute("aria-checked", "true");
+          timerTxt.textContent = formatTime(g.elapsedSeconds);
+        } else {
+          timerBtn.classList.remove("timer-on");
+          timerBtn.setAttribute("aria-checked", "false");
+          timerTxt.textContent = t("timerOffLabel");
+        }
       }
 
       function renderControls() {
@@ -2900,29 +2768,34 @@
         document.getElementById("tool-undo").disabled = g.undoStack.length === 0 || g.completed;
         document.getElementById("tool-redo").disabled = g.redoStack.length === 0 || g.completed;
         document.getElementById("tool-erase").disabled = g.completed || selectedIdx < 0 || g.initial[selectedIdx] !== 0;
-        document.getElementById("tool-hint").disabled = g.completed || g.hintsLeft <= 0;
-
         const notesBtn = document.getElementById("tool-notes");
         notesBtn.classList.toggle("active", notesMode);
         document.getElementById("notes-state-badge").textContent = notesMode ? t("on") : t("off");
         document.getElementById("hints-left-badge").textContent = g.hintsLeft;
+        document.getElementById("tool-hint").disabled = g.completed || g.hintsLeft <= 0;
 
         const bar = document.getElementById("intuition-bar");
         const txt = document.getElementById("intuition-text");
         const applyBtn = document.getElementById("btn-apply-hint");
+        bar.classList.remove("active-hint", "notes-active-banner");
+
         if (activeHint) {
           bar.classList.add("active-hint");
-          txt.textContent = formatHintReason(activeHint);
+          if (activeHint.type === "naked") txt.textContent = t("nakedSingle", activeHint.r, activeHint.c, activeHint.digit);
+          else if (activeHint.type === "hidden") txt.textContent = t("hiddenSingle", activeHint.box, activeHint.r, activeHint.c, activeHint.digit);
+          else txt.textContent = t("zenInsight", activeHint.r, activeHint.c, activeHint.digit);
           applyBtn.style.display = "inline-block";
+        } else if (notesMode) {
+          bar.classList.add("notes-active-banner");
+          txt.textContent = t("promptNotes");
+          applyBtn.style.display = "none";
         } else {
-          bar.classList.remove("active-hint");
-          txt.textContent = notesMode ? t("notesActivePrompt") : t("defaultPrompt");
+          txt.textContent = t("promptDefault");
           applyBtn.style.display = "none";
         }
 
-        // Count placed instances of each digit (respecting whether Instant Error Check is enabled)
         const counts = new Array(10).fill(0);
-        const instantCheck = Boolean(state.settings.instantErrorCheck);
+        const instantCheck = state.settings.instantErrorCheck;
         for (let i = 0; i < 81; i++) {
           const val = g.board[i];
           if (val !== 0 && (!instantCheck || val === g.solution[i])) {
@@ -2932,14 +2805,14 @@
         const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
 
         const numpad = document.getElementById("numpad");
-        numpad.classList.toggle("notes-mode", notesMode);
         numpad.innerHTML = "";
         for (let d = 1; d <= 9; d++) {
-          const isComplete = counts[d] >= 9;
+          const isDone = counts[d] >= 9;
           const btn = document.createElement("button");
           btn.className = "num-btn";
-          if (isComplete) btn.classList.add("completed");
+          if (isDone && !notesMode) btn.classList.add("completed");
           if (selectedVal === d) btn.classList.add("active-digit");
+          if (notesMode) btn.classList.add("notes-key-style");
           btn.innerHTML = `<span class="num-digit">${d}</span>`;
           btn.addEventListener("pointerdown", (e) => {
             e.preventDefault();
@@ -2951,58 +2824,50 @@
       }
 
       function renderDifficultyList() {
-        document.getElementById("modal-new-title").textContent = t("modalNewTitle");
-        document.getElementById("modal-new-desc").textContent = t("modalNewDesc");
         const container = document.getElementById("difficulty-list");
         container.innerHTML = "";
-        const lang = state.settings.lang || "vi";
+        const isVi = (state.settings.lang || "vi") === "vi";
+        const currentKey = state.game ? state.game.diffKey : "hard";
 
-        DIFF_ORDER.forEach(key => {
-          const textCfg = I18N[lang].diffs[key];
-          const solved = state.profile.solvedByDiff[key] || 0;
-          const best = state.profile.bestTimes[key];
-          const bestPart = best ? ` • ${t("bestTimeLbl", { t: formatTime(best) })}` : "";
-
+        DIFFICULTIES.forEach(d => {
+          const solved = state.profile.solvedByDiff[d.key] || 0;
+          const isCur = d.key === currentKey;
           const btn = document.createElement("button");
-          btn.className = "diff-option";
+          btn.className = `diff-option${isCur ? " current-diff" : ""}`;
           btn.innerHTML = `
             <div>
-              <span class="diff-name">${textCfg.label}</span>
-              <span class="diff-desc">${textCfg.desc}</span>
+              <span class="diff-name">${isVi ? d.vi : d.en}</span>
+              <span class="diff-desc">${isVi ? d.descVi : d.descEn}</span>
             </div>
-            <span class="diff-reward">${t("solvedCountLbl", { n: solved })}${bestPart}</span>
+            <span class="diff-badge">${isCur ? t("currentBadge") : t("solvedCountBadge", solved)}</span>
           `;
           btn.addEventListener("click", () => {
             closeModal("modal-new");
-            startNewGame(key);
+            startNewGame(d.key);
           });
           container.appendChild(btn);
         });
       }
 
       function renderSaveSlots() {
-        document.getElementById("modal-saves-title").textContent = t("modalSavesTitle");
-        document.getElementById("save-slot-name").placeholder = t("saveInputPlaceholder");
-        document.getElementById("btn-create-save").textContent = t("saveCurrentBtn");
-
         const container = document.getElementById("save-slots-container");
         if (state.saveSlots.length === 0) {
-          container.innerHTML = `<p style="font-size:13px; color:var(--ink-secondary); text-align:center; padding:16px 0;">${t("noSavesMsg")}</p>`;
+          container.innerHTML = `<p style="font-size:14px; color:var(--ink-secondary); text-align:center; padding:16px 0;">${t("noSaves")}</p>`;
           return;
         }
         container.innerHTML = "";
         state.saveSlots.forEach(slot => {
           const date = new Date(slot.timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-          const timeInfo = slot.gameState.wasTimed ? ` • ${formatTime(slot.gameState.elapsedSeconds)}` : "";
+          const timePart = slot.gameState.wasTimed ? ` • ${formatTime(slot.gameState.elapsedSeconds)}` : "";
           const div = document.createElement("div");
           div.className = "slot-item";
           div.innerHTML = `
             <div class="slot-meta">
               <div class="slot-title">${escapeHtml(slot.name)}</div>
-              <div class="slot-sub">${t("solvedPct", { pct: slot.progressPct })}${timeInfo} • ${date}</div>
+              <div class="slot-sub">${slot.progressPct}%${timePart} • ${date}</div>
             </div>
             <div class="slot-actions">
-              <button class="btn-sm primary" data-load="${slot.id}">${t("loadBtn")}</button>
+              <button class="btn-sm primary" data-load="${slot.id}">${t("load")}</button>
               <button class="btn-sm danger" data-del="${slot.id}">&times;</button>
             </div>
           `;
@@ -3013,117 +2878,79 @@
       }
 
       function renderStatsAndSanctuaryModal() {
-        const lang = state.settings.lang || "vi";
-        document.getElementById("modal-stats-title").textContent = t("modalStatsTitle");
-        document.getElementById("tab-records").textContent = t("tabRecords");
-        document.getElementById("tab-garden").textContent = t("tabGarden");
-
         document.getElementById("stat-total-wins").textContent = state.profile.wins;
-        document.getElementById("lbl-stat-wins").textContent = t("statTotalWins");
-        document.getElementById("stat-streak").textContent = state.profile.streak || 0;
-        document.getElementById("lbl-stat-streak").textContent = t("statStreak");
-        document.getElementById("stat-stones").textContent = state.profile.harmonyStones;
-        document.getElementById("lbl-stat-stones").textContent = t("statStones");
+        document.getElementById("stat-timed-wins").textContent = state.profile.timedWins;
 
-        document.getElementById("lbl-breakdown-header").textContent = t("breakdownHeader");
-        const breakdownEl = document.getElementById("stats-breakdown-list");
-        breakdownEl.innerHTML = "";
-        DIFF_ORDER.forEach(key => {
-          const label = I18N[lang].diffs[key].label;
-          const count = state.profile.solvedByDiff[key] || 0;
-          const best = state.profile.bestTimes[key];
-          const rightText = best
-            ? `${t("solvedCountLbl", { n: count })} • ${t("bestTimeLbl", { t: formatTime(best) })}`
-            : `${t("solvedCountLbl", { n: count })}`;
-          const row = document.createElement("div");
-          row.className = "stat-table-row";
-          row.innerHTML = `<strong>${label}</strong><span style="color:var(--ink-secondary); font-weight:600;">${rightText}</span>`;
-          breakdownEl.appendChild(row);
+        let highestRank = 0;
+        let highestLabel = "—";
+        DIFFICULTIES.forEach(d => {
+          if ((state.profile.solvedByDiff[d.key] || 0) > 0 && d.rank >= highestRank) {
+            highestRank = d.rank;
+            highestLabel = getDiffLabel(d.key);
+          }
+        });
+        document.getElementById("stat-fav-level").textContent = highestLabel;
+
+        const tbody = document.getElementById("records-tbody");
+        tbody.innerHTML = "";
+        DIFFICULTIES.forEach(d => {
+          const count = state.profile.solvedByDiff[d.key] || 0;
+          const best = state.profile.bestTimes[d.key];
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>${getDiffLabel(d.key)}</strong></td>
+            <td>${count}</td>
+            <td>${best ? formatTime(best) : "—"}</td>
+          `;
+          tbody.appendChild(tr);
         });
 
-        document.getElementById("lbl-history-header").textContent = t("historyHeader");
-        const histEl = document.getElementById("stats-history-list");
-        if (!state.profile.history || state.profile.history.length === 0) {
-          histEl.innerHTML = `<div style="padding:12px 6px; font-size:12.5px; color:var(--ink-secondary); text-align:center;">${t("noHistoryMsg")}</div>`;
+        const histEl = document.getElementById("history-list");
+        if (state.profile.history.length === 0) {
+          histEl.innerHTML = `<div style="font-size:13px; color:var(--ink-secondary); padding:10px 2px;">${t("noHistory")}</div>`;
         } else {
           histEl.innerHTML = "";
-          state.profile.history.slice(0, 12).forEach(entry => {
-            const label = (I18N[lang].diffs[entry.diffKey] || I18N[lang].diffs.hard).label;
-            const dateStr = new Date(entry.date).toLocaleDateString(undefined, { month: "short", day: "numeric" });
-            const modeStr = entry.timed ? formatTime(entry.seconds) : t("relaxedTag");
-            const item = document.createElement("div");
-            item.className = "history-item";
-            item.innerHTML = `<span><strong>${label}</strong> • ${dateStr}</span><span style="color:var(--accent-moss); font-weight:700;">${modeStr}</span>`;
-            histEl.appendChild(item);
+          state.profile.history.slice(0, 15).forEach(entry => {
+            const dt = new Date(entry.date).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+            const row = document.createElement("div");
+            row.className = "history-row";
+            row.innerHTML = `
+              <span><strong>${getDiffLabel(entry.diffKey)}</strong> • ${dt}</span>
+              <span>${entry.timed ? formatTime(entry.seconds) : "Zen"}</span>
+            `;
+            histEl.appendChild(row);
           });
         }
 
-        document.getElementById("sanctuary-caption").textContent = t("sanctuaryCaption");
+        const isVi = (state.settings.lang || "vi") === "vi";
         const grid = document.getElementById("theme-grid");
         grid.innerHTML = "";
-        THEME_LIST.forEach(th => {
-          const unlocked = state.profile.harmonyStones >= th.cost;
+        THEMES.forEach(th => {
           const active = state.settings.theme === th.id;
-          const info = I18N[lang].themes[th.id];
           const card = document.createElement("button");
-          card.className = `theme-card${active ? " active" : ""}${!unlocked ? " locked" : ""}`;
+          card.className = `theme-card${active ? " active" : ""}`;
           card.innerHTML = `
-            <div style="font-weight:700; font-size:13.5px;">${info.name}</div>
-            <div style="font-size:11.5px; color:var(--ink-secondary); margin:2px 0 4px;">${info.desc}</div>
-            <div style="font-size:11px; font-weight:700; color:var(--accent-gold);">
-              ${active ? t("unlockedActive") : unlocked ? t("unlockedApply") : t("lockedNeed", { n: th.cost })}
+            <div style="font-weight:700; font-size:14px;">${isVi ? th.vi : th.en}</div>
+            <div style="font-size:12px; font-weight:600; color:var(--accent-gold); margin-top:3px;">
+              ${active ? t("activeTheme") : t("tapTheme")}
             </div>
           `;
           card.addEventListener("click", () => {
-            if (!unlocked) {
-              showToast(t("toastNeedStones", { n: th.cost - state.profile.harmonyStones }));
-              return;
-            }
             state.settings.theme = th.id;
             document.documentElement.setAttribute("data-theme", th.id);
+            const metaTheme = document.querySelector('meta[name="theme-color"]');
+            if (metaTheme) metaTheme.setAttribute("content", getComputedStyle(document.documentElement).getPropertyValue("--bg-base").trim());
             saveState();
             renderStatsAndSanctuaryModal();
           });
           grid.appendChild(card);
         });
-
-        renderSanctuaryIllustration();
-      }
-
-      function renderSettingsModal() {
-        document.getElementById("modal-settings-title").textContent = t("modalSettingsTitle");
-        document.getElementById("set-lang-title").textContent = t("setLangTitle");
-        document.getElementById("set-lang-desc").textContent = t("setLangDesc");
-        document.getElementById("btn-settings-lang").textContent = t("setLangBtnName");
-
-        document.getElementById("set-error-check-title").textContent = t("setErrorCheckTitle");
-        document.getElementById("set-error-check-desc").textContent = t("setErrorCheckDesc");
-        document.getElementById("set-timer-title").textContent = t("setTimerTitle");
-        document.getElementById("set-timer-desc").textContent = t("setTimerDesc");
-        document.getElementById("set-mistake-title").textContent = t("setMistakeTitle");
-        document.getElementById("set-mistake-desc").textContent = t("setMistakeDesc");
-        document.getElementById("set-autonote-title").textContent = t("setAutonoteTitle");
-        document.getElementById("set-autonote-desc").textContent = t("setAutonoteDesc");
-        document.getElementById("set-same-title").textContent = t("setSameTitle");
-        document.getElementById("set-same-desc").textContent = t("setSameDesc");
-        document.getElementById("set-sound-title").textContent = t("setSoundTitle");
-        document.getElementById("set-sound-desc").textContent = t("setSoundDesc");
-        document.getElementById("btn-check-update").textContent = t("checkUpdateBtn");
-
-        const instantErr = Boolean(state.settings.instantErrorCheck);
-        document.getElementById("toggle-instant-errors").checked = instantErr;
-        document.getElementById("toggle-timer-mode").checked = Boolean(state.settings.timerEnabled);
-        document.getElementById("toggle-mistake-limit").checked = Boolean(state.settings.mistakeLimit);
-        document.getElementById("row-mistake-limit").style.opacity = instantErr ? "1" : "0.45";
-        document.getElementById("toggle-auto-notes").checked = Boolean(state.settings.autoClearNotes);
-        document.getElementById("toggle-highlight-same").checked = Boolean(state.settings.highlightSame);
-        document.getElementById("toggle-sound").checked = Boolean(state.settings.soundEnabled);
-        document.getElementById("app-version-label").textContent = APP_VERSION;
-        document.getElementById("update-status-text").textContent = t("upToDate", { v: APP_VERSION });
       }
 
       function renderAll() {
-        renderStaticTranslations();
+        renderTextSizeSwitch();
+        renderLanguageStrings();
+        renderHeaderStats();
         renderTelemetry();
         renderBoard();
         renderControls();
@@ -3131,42 +2958,8 @@
         requestAnimationFrame(resizeBoardSquare);
       }
 
-      function toggleLanguage() {
-        state.settings.lang = state.settings.lang === "vi" ? "en" : "vi";
-        document.documentElement.lang = state.settings.lang;
-        saveState();
-        renderAll();
-        if (document.getElementById("modal-settings").classList.contains("open")) renderSettingsModal();
-        if (document.getElementById("modal-new").classList.contains("open")) renderDifficultyList();
-        if (document.getElementById("modal-saves").classList.contains("open")) renderSaveSlots();
-        if (document.getElementById("modal-stats").classList.contains("open")) renderStatsAndSanctuaryModal();
-      }
-
-      function toggleTimerMode() {
-        state.settings.timerEnabled = !state.settings.timerEnabled;
-        if (state.settings.timerEnabled && state.game && !state.game.completed) {
-          state.game.wasTimed = true;
-        }
-        saveState();
-        renderTelemetry();
-        showToast(state.settings.timerEnabled ? t("toastTimerOn") : t("toastTimerOff"));
-      }
-
-      function setTextSize(sizeKey) {
-        if (!["normal", "large", "xlarge"].includes(sizeKey)) return;
-        state.settings.textSize = sizeKey;
-        document.documentElement.setAttribute("data-text-size", sizeKey);
-        saveState();
-        renderTelemetry();
-        resizeBoardSquare();
-        requestAnimationFrame(resizeBoardSquare);
-        const lang = state.settings.lang || "vi";
-        const sizeLabel = I18N[lang].sizeLabels[sizeKey];
-        showToast(t("toastSizeChanged", { s: sizeLabel }));
-      }
-
       /* ========================================================================
-         12. HELPERS, MODALS & KEYBOARD NAVIGATION
+         12. HELPERS, MODALS & KEYBOARD SHORTCUTS
          ======================================================================== */
       let toastTimeout = null;
       function showToast(msg) {
@@ -3174,7 +2967,7 @@
         el.textContent = msg;
         el.classList.add("show");
         clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => el.classList.remove("show"), 2600);
+        toastTimeout = setTimeout(() => el.classList.remove("show"), 2500);
       }
 
       function escapeHtml(str) {
@@ -3184,14 +2977,30 @@
       function openModal(id) {
         if (id === "modal-new") renderDifficultyList();
         if (id === "modal-saves") renderSaveSlots();
-        if (id === "modal-stats") renderStatsAndSanctuaryModal();
-        if (id === "modal-settings") renderSettingsModal();
+        if (id === "modal-records") renderStatsAndSanctuaryModal();
+        if (id === "modal-settings") {
+          document.getElementById("toggle-timed-mode").checked = state.settings.timedMode;
+          document.getElementById("toggle-instant-check").checked = state.settings.instantErrorCheck;
+          document.getElementById("toggle-auto-notes").checked = state.settings.autoClearNotes;
+          document.getElementById("toggle-highlight-same").checked = state.settings.highlightSame;
+          document.getElementById("toggle-sound").checked = state.settings.soundEnabled;
+          document.getElementById("app-version-label").textContent = APP_VERSION;
+        }
         document.getElementById(id).classList.add("open");
-        if (id === "modal-stats") requestAnimationFrame(renderSanctuaryIllustration);
       }
 
       function closeModal(id) {
         document.getElementById(id).classList.remove("open");
+      }
+
+      function toggleTimedMode() {
+        state.settings.timedMode = !state.settings.timedMode;
+        if (state.settings.timedMode && state.game) {
+          state.game.wasTimed = true;
+        }
+        saveState();
+        renderTelemetry();
+        showToast(state.settings.timedMode ? t("toastTimerOn") : t("toastTimerOff"));
       }
 
       function setupEventListeners() {
@@ -3205,33 +3014,30 @@
           });
         });
 
-        document.getElementById("btn-lang").addEventListener("click", toggleLanguage);
-        document.getElementById("btn-settings-lang").addEventListener("click", toggleLanguage);
-        document.getElementById("btn-timer-pill").addEventListener("click", toggleTimerMode);
-        document.querySelectorAll("#text-size-switch .size-opt").forEach(btn => {
+        document.getElementById("btn-lang").addEventListener("click", () => {
+          state.settings.lang = state.settings.lang === "vi" ? "en" : "vi";
+          saveState();
+          renderAll();
+        });
+
+        // Quick UI Text Size Switcher (A- / A / A+)
+        document.querySelectorAll(".size-opt").forEach(btn => {
           btn.addEventListener("click", () => {
-            audio.playSelect();
-            setTextSize(btn.dataset.size);
+            state.settings.textSize = btn.dataset.size;
+            saveState();
+            renderTextSizeSwitch();
+            resizeBoardSquare();
+            requestAnimationFrame(resizeBoardSquare);
           });
         });
 
+        document.getElementById("btn-timer-pill").addEventListener("click", toggleTimedMode);
         document.getElementById("btn-new-game").addEventListener("click", () => openModal("modal-new"));
         document.getElementById("btn-diff-pill").addEventListener("click", () => openModal("modal-new"));
         document.getElementById("btn-saves").addEventListener("click", () => openModal("modal-saves"));
-        document.getElementById("btn-stats").addEventListener("click", () => openModal("modal-stats"));
+        document.getElementById("btn-records").addEventListener("click", () => openModal("modal-records"));
         document.getElementById("btn-settings").addEventListener("click", () => openModal("modal-settings"));
         document.getElementById("btn-create-save").addEventListener("click", createSaveSlot);
-
-        document.querySelectorAll(".tab-btn").forEach(tab => {
-          tab.addEventListener("click", () => {
-            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-            tab.classList.add("active");
-            const isGarden = tab.dataset.tab === "garden";
-            document.getElementById("pane-records").style.display = isGarden ? "none" : "block";
-            document.getElementById("pane-garden").style.display = isGarden ? "block" : "none";
-            if (isGarden) requestAnimationFrame(renderSanctuaryIllustration);
-          });
-        });
 
         document.getElementById("btn-victory-next").addEventListener("click", () => {
           closeModal("modal-victory");
@@ -3243,7 +3049,7 @@
           audio.enabled = state.settings.soundEnabled;
           if (audio.enabled) audio.playPluck(5, true);
           saveState();
-          renderStaticTranslations();
+          renderHeaderStats();
         });
 
         document.getElementById("tool-undo").addEventListener("click", handleUndo);
@@ -3253,7 +3059,6 @@
           notesMode = !notesMode;
           audio.playSelect();
           renderControls();
-          requestAnimationFrame(resizeBoardSquare);
         });
         document.getElementById("tool-hint").addEventListener("click", requestIntuitionHint);
         document.getElementById("btn-apply-hint").addEventListener("click", () => {
@@ -3263,26 +3068,19 @@
             handleDigitInput(activeHint.digit);
           }
         });
-        document.getElementById("toggle-instant-errors").addEventListener("change", (e) => {
+
+        document.getElementById("toggle-timed-mode").addEventListener("change", (e) => {
+          state.settings.timedMode = e.target.checked;
+          if (state.settings.timedMode && state.game) state.game.wasTimed = true;
+          saveState();
+          renderTelemetry();
+        });
+        document.getElementById("toggle-instant-check").addEventListener("change", (e) => {
           state.settings.instantErrorCheck = e.target.checked;
-          document.getElementById("row-mistake-limit").style.opacity = e.target.checked ? "1" : "0.45";
           saveState();
           renderBoard();
           renderTelemetry();
           renderControls();
-        });
-        document.getElementById("toggle-timer-mode").addEventListener("change", (e) => {
-          state.settings.timerEnabled = e.target.checked;
-          if (state.settings.timerEnabled && state.game && !state.game.completed) {
-            state.game.wasTimed = true;
-          }
-          saveState();
-          renderTelemetry();
-        });
-        document.getElementById("toggle-mistake-limit").addEventListener("change", (e) => {
-          state.settings.mistakeLimit = e.target.checked;
-          saveState();
-          renderTelemetry();
         });
         document.getElementById("toggle-auto-notes").addEventListener("change", (e) => {
           state.settings.autoClearNotes = e.target.checked;
@@ -3297,7 +3095,7 @@
           state.settings.soundEnabled = e.target.checked;
           audio.enabled = state.settings.soundEnabled;
           saveState();
-          renderStaticTranslations();
+          renderHeaderStats();
         });
         document.getElementById("btn-check-update").addEventListener("click", () => checkForAppUpdate(true));
 
@@ -3349,7 +3147,10 @@
           }
         });
 
-        window.addEventListener("resize", resizeBoardSquare);
+        window.addEventListener("resize", () => {
+          resizeBoardSquare();
+          requestAnimationFrame(resizeBoardSquare);
+        });
         document.addEventListener("visibilitychange", () => {
           if (document.hidden) saveState();
         });
@@ -3370,9 +3171,9 @@
           renderAll();
         }
 
-        timerInterval = setInterval(() => {
+        setInterval(() => {
           if (!state.game || state.game.completed || document.hidden) return;
-          if (!state.settings.timerEnabled) return;
+          if (!state.settings.timedMode) return;
           if (document.querySelector(".modal-backdrop.open")) return;
           state.game.elapsedSeconds++;
           document.getElementById("timer-display").textContent = formatTime(state.game.elapsedSeconds);
