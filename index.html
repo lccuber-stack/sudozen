@@ -48,8 +48,17 @@
       --safe-left: env(safe-area-inset-left, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
 
+      --ui-scale: 1;
       --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --font-serif: "New York", "Iowan Old Style", Georgia, "Times New Roman", serif;
+    }
+
+    html[data-text-size="large"] {
+      --ui-scale: 1.13;
+    }
+
+    html[data-text-size="xlarge"] {
+      --ui-scale: 1.26;
     }
 
     [data-theme="hinoki"] {
@@ -175,20 +184,20 @@
       justify-content: space-between;
       gap: 6px;
       flex-shrink: 0;
-      min-height: 44px;
+      min-height: calc(50px * var(--ui-scale));
     }
 
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 9px;
       min-width: 0;
     }
 
     .brand-emblem {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width: calc(38px * var(--ui-scale));
+      height: calc(38px * var(--ui-scale));
+      border-radius: 11px;
       background: linear-gradient(135deg, var(--accent-moss), var(--accent-moss-dark));
       border: 1.5px solid var(--accent-gold);
       display: flex;
@@ -197,7 +206,7 @@
       color: #FAF7F0;
       font-family: var(--font-serif);
       font-weight: 700;
-      font-size: 16px;
+      font-size: calc(18px * var(--ui-scale));
       flex-shrink: 0;
       box-shadow: 0 2px 8px rgba(0,0,0,0.12);
     }
@@ -210,7 +219,7 @@
 
     .brand-title {
       font-family: var(--font-serif);
-      font-size: 17px;
+      font-size: calc(18px * var(--ui-scale));
       font-weight: 700;
       letter-spacing: 0.02em;
       color: var(--ink-primary);
@@ -218,7 +227,8 @@
     }
 
     .brand-sub {
-      font-size: 11px;
+      font-size: calc(12px * var(--ui-scale));
+      font-weight: 600;
       color: var(--ink-secondary);
       white-space: nowrap;
       overflow: hidden;
@@ -228,7 +238,7 @@
     .top-actions {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       flex-shrink: 0;
     }
 
@@ -237,8 +247,8 @@
       display: inline-flex;
       align-items: center;
       padding: 3px;
-      height: 38px;
-      border-radius: 11px;
+      height: calc(44px * var(--ui-scale));
+      border-radius: 12px;
       background: var(--bg-elevated);
       border: 1px solid var(--border-thin);
       cursor: pointer;
@@ -247,9 +257,9 @@
     }
 
     .lang-seg {
-      padding: 4px 7px;
-      border-radius: 8px;
-      font-size: 11px;
+      padding: calc(5px * var(--ui-scale)) calc(9px * var(--ui-scale));
+      border-radius: 9px;
+      font-size: calc(13px * var(--ui-scale));
       font-weight: 800;
       letter-spacing: 0.03em;
       color: var(--ink-muted);
@@ -268,15 +278,15 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      height: 38px;
-      min-width: 38px;
-      padding: 0 9px;
-      border-radius: 10px;
+      gap: 6px;
+      height: calc(44px * var(--ui-scale));
+      min-width: calc(44px * var(--ui-scale));
+      padding: 0 calc(11px * var(--ui-scale));
+      border-radius: 12px;
       border: 1px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
-      font-size: 12px;
+      font-size: calc(14px * var(--ui-scale));
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.12s ease, background-color 0.2s ease, border-color 0.2s ease;
@@ -291,12 +301,12 @@
       background: var(--accent-moss);
       color: #FAF7F0;
       border-color: var(--accent-moss-dark);
-      padding: 0 11px;
+      padding: 0 calc(14px * var(--ui-scale));
     }
 
     .icon-btn svg {
-      width: 17px;
-      height: 17px;
+      width: calc(20px * var(--ui-scale));
+      height: calc(20px * var(--ui-scale));
       stroke: currentColor;
       fill: none;
       stroke-width: 2;
@@ -309,46 +319,64 @@
       position: absolute;
       top: -3px;
       right: -3px;
-      width: 9px;
-      height: 9px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       background: var(--accent-gold);
       border: 1.5px solid var(--bg-card);
     }
 
-    @media (max-width: 430px) {
+    @media (max-width: 460px) {
       .hide-xs { display: none; }
-      .icon-btn { padding: 0 7px; min-width: 35px; height: 36px; }
-      .icon-btn.accent { padding: 0 9px; }
-      .lang-switch { height: 36px; }
-      .lang-seg { padding: 3px 6px; font-size: 10.5px; }
+      .icon-btn { padding: 0 8px; min-width: calc(40px * var(--ui-scale)); }
+      .icon-btn.accent { padding: 0 11px; }
+      .lang-seg { padding: 4px 7px; }
+      .telemetry-bar {
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 8px;
+      }
+      .difficulty-pill, .timer-switch-pill, .text-size-switch {
+        min-height: calc(38px * var(--ui-scale));
+      }
     }
 
-    /* Telemetry Strip */
+    /* Telemetry Strip: Full-Width Balanced Controls + Center Text Size Switcher */
     .telemetry-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 6px;
-      padding: 6px 10px;
-      margin-top: 5px;
-      border-radius: 12px;
+      gap: 8px;
+      padding: 7px 10px;
+      margin-top: 6px;
+      border-radius: 14px;
       background: var(--bg-elevated);
       border: 1px solid var(--border-thin);
       flex-shrink: 0;
-      font-size: 12px;
+      flex-wrap: wrap;
+    }
+
+    .telemetry-left, .telemetry-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .difficulty-pill {
-      padding: 5px 10px;
-      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(42px * var(--ui-scale));
+      padding: 6px calc(15px * var(--ui-scale));
+      border-radius: 11px;
       background: var(--bg-card);
-      border: 1px solid var(--border-thin);
-      color: var(--accent-moss);
-      font-weight: 700;
-      font-size: 12px;
+      border: 1.5px solid var(--border-thin);
+      color: var(--accent-moss-dark);
+      font-weight: 800;
+      font-size: calc(14.5px * var(--ui-scale));
       cursor: pointer;
       white-space: nowrap;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .stat-pill {
@@ -356,38 +384,80 @@
       align-items: center;
       gap: 4px;
       color: var(--ink-secondary);
-      font-weight: 600;
-      font-size: 12px;
+      font-weight: 700;
+      font-size: calc(14px * var(--ui-scale));
       white-space: nowrap;
     }
 
     .stat-pill strong {
       color: var(--ink-primary);
-      font-weight: 700;
+      font-weight: 800;
       font-variant-numeric: tabular-nums;
+    }
+
+    /* Center Segmented Text Size Switcher (A- / A / A+) */
+    .text-size-switch {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px;
+      min-height: calc(42px * var(--ui-scale));
+      border-radius: 11px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-thin);
+      gap: 3px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      flex-shrink: 0;
+    }
+
+    .size-opt {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: calc(36px * var(--ui-scale));
+      height: calc(34px * var(--ui-scale));
+      padding: 0 8px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--ink-secondary);
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .size-opt[data-size="normal"] { font-size: 13px; }
+    .size-opt[data-size="large"] { font-size: 16px; }
+    .size-opt[data-size="xlarge"] { font-size: 19px; }
+
+    .size-opt.active {
+      background: var(--accent-moss);
+      color: #FAF7F0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.14);
     }
 
     /* Unmistakable Timer Toggle Pill with Clock Icon & Switch Indicator */
     .timer-switch-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 4px 9px;
-      border-radius: 9px;
+      gap: 8px;
+      min-height: calc(42px * var(--ui-scale));
+      padding: 6px calc(13px * var(--ui-scale));
+      border-radius: 11px;
       background: var(--bg-card);
-      border: 1px solid var(--border-thin);
-      color: var(--ink-secondary);
-      font-size: 12px;
+      border: 1.5px solid var(--border-thin);
+      color: var(--ink-primary);
+      font-size: calc(14px * var(--ui-scale));
       font-weight: 700;
       cursor: pointer;
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
       transition: all 0.2s ease;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
     }
 
     .timer-switch-pill svg {
-      width: 14px;
-      height: 14px;
+      width: calc(17px * var(--ui-scale));
+      height: calc(17px * var(--ui-scale));
       stroke: currentColor;
       fill: none;
       stroke-width: 2.2;
@@ -396,8 +466,8 @@
 
     .mini-track {
       position: relative;
-      width: 24px;
-      height: 14px;
+      width: 34px;
+      height: 20px;
       border-radius: 99px;
       background: var(--border-thin);
       transition: background-color 0.2s ease;
@@ -408,12 +478,12 @@
       position: absolute;
       top: 2px;
       left: 2px;
-      width: 10px;
-      height: 10px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: #FFFDF9;
       transition: transform 0.2s ease;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.28);
     }
 
     .timer-switch-pill.active {
@@ -426,7 +496,7 @@
     }
 
     .timer-switch-pill.active .mini-thumb {
-      transform: translateX(10px);
+      transform: translateX(14px);
     }
 
     /* ==========================================================================
@@ -576,7 +646,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(9px, 2vw, 12px);
+      font-size: clamp(10px, calc(2.1vw * var(--ui-scale)), calc(13px * var(--ui-scale)));
       line-height: 1;
       font-weight: 700;
       color: var(--ink-note);
@@ -595,9 +665,9 @@
     .controls-deck {
       display: flex;
       flex-direction: column;
-      gap: 7px;
+      gap: 8px;
       width: 100%;
-      max-width: 450px;
+      max-width: 480px;
       flex-shrink: 0;
     }
 
@@ -606,14 +676,15 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      min-height: 36px;
-      padding: 6px 11px;
-      border-radius: 10px;
+      min-height: calc(40px * var(--ui-scale));
+      padding: 7px 12px;
+      border-radius: 11px;
       background: var(--bg-card);
       border: 1px solid var(--border-thin);
-      font-size: 12.5px;
+      font-size: calc(13.5px * var(--ui-scale));
+      font-weight: 500;
       color: var(--ink-secondary);
-      line-height: 1.3;
+      line-height: 1.35;
     }
 
     .intuition-bar.active-hint {
@@ -627,13 +698,13 @@
     }
 
     .intuition-apply {
-      padding: 5px 11px;
+      padding: 6px 12px;
       border-radius: 8px;
       border: none;
       background: var(--accent-gold);
       color: #FFFDF9;
       font-weight: 700;
-      font-size: 12px;
+      font-size: calc(13px * var(--ui-scale));
       cursor: pointer;
       white-space: nowrap;
     }
@@ -650,14 +721,14 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
-      height: 48px;
-      border-radius: 11px;
-      border: 1px solid var(--border-thin);
+      gap: 4px;
+      height: calc(58px * var(--ui-scale));
+      border-radius: 12px;
+      border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
-      font-size: 11px;
-      font-weight: 600;
+      font-size: calc(12.5px * var(--ui-scale));
+      font-weight: 700;
       cursor: pointer;
       transition: all 0.14s ease;
     }
@@ -678,8 +749,8 @@
     }
 
     .tool-btn svg {
-      width: 17px;
-      height: 17px;
+      width: calc(20px * var(--ui-scale));
+      height: calc(20px * var(--ui-scale));
       stroke: currentColor;
       fill: none;
       stroke-width: 2;
@@ -691,9 +762,9 @@
       position: absolute;
       top: 3px;
       right: 4px;
-      font-size: 9px;
+      font-size: calc(10px * var(--ui-scale));
       font-weight: 800;
-      padding: 1px 4px;
+      padding: 1px 5px;
       border-radius: 6px;
       background: var(--accent-gold-soft);
       color: var(--ink-primary);
@@ -704,7 +775,7 @@
       color: #FFF;
     }
 
-    /* Clean, Uncluttered 1-9 Numpad (Zero confusing sub-numbers) */
+    /* Clean, Uncluttered 1-9 Numpad (Comfortable Finger Targets) */
     .numpad {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
@@ -717,7 +788,7 @@
         gap: 8px;
       }
       .num-btn {
-        height: 58px !important;
+        height: calc(64px * var(--ui-scale)) !important;
       }
     }
 
@@ -726,8 +797,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 52px;
-      border-radius: 11px;
+      height: calc(60px * var(--ui-scale));
+      border-radius: 12px;
       border: 1.5px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
@@ -764,12 +835,12 @@
       position: absolute;
       top: 3px;
       right: 4px;
-      font-size: 9px;
-      opacity: 0.7;
+      font-size: 11px;
+      opacity: 0.75;
     }
 
     .num-digit {
-      font-size: 23px;
+      font-size: calc(26px * var(--ui-scale));
       font-weight: 700;
       line-height: 1;
     }
@@ -830,13 +901,13 @@
     }
 
     .close-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 9px;
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
       border: 1px solid var(--border-thin);
       background: var(--bg-elevated);
       color: var(--ink-primary);
-      font-size: 20px;
+      font-size: 22px;
       line-height: 1;
       cursor: pointer;
     }
@@ -846,9 +917,9 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      border-radius: 12px;
+      padding: 14px 15px;
+      margin-bottom: 9px;
+      border-radius: 13px;
       border: 1px solid var(--border-thin);
       background: var(--bg-elevated);
       color: var(--ink-primary);
@@ -1005,13 +1076,13 @@
     }
 
     .btn-sm {
-      padding: 7px 11px;
-      border-radius: 8px;
+      padding: 9px 13px;
+      border-radius: 10px;
       border: 1px solid var(--border-thin);
       background: var(--bg-card);
       color: var(--ink-primary);
-      font-size: 12.5px;
-      font-weight: 600;
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
     }
 
@@ -1064,14 +1135,62 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 11px 0;
+      gap: 14px;
+      padding: 13px 0;
       border-bottom: 1px solid var(--border-thin);
-      font-size: 14px;
+      font-size: 14.5px;
+      cursor: pointer;
     }
 
     .setting-row:last-child {
       border-bottom: none;
+    }
+
+    /* Accessible, Senior-Friendly Pill Toggle Switch for Settings */
+    .zen-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .zen-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .zen-slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 99px;
+      background: var(--border-thin);
+      transition: background-color 0.2s ease;
+      cursor: pointer;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.14);
+    }
+
+    .zen-slider::before {
+      content: "";
+      position: absolute;
+      height: 24px;
+      width: 24px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #FFFDF9;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.24);
+    }
+
+    .zen-switch input:checked + .zen-slider {
+      background: var(--accent-moss);
+    }
+
+    .zen-switch input:checked + .zen-slider::before {
+      transform: translateX(22px);
     }
 
     .toast {
@@ -1151,19 +1270,30 @@
 
     <!-- TELEMETRY BAR -->
     <div class="telemetry-bar">
-      <button class="difficulty-pill" id="btn-diff-pill">Khó</button>
+      <div class="telemetry-left">
+        <button class="difficulty-pill" id="btn-diff-pill">Khó</button>
 
-      <div class="stat-pill" id="mistakes-stat">
-        <span id="lbl-mistakes">Lỗi:</span>
-        <strong id="mistakes-count">0</strong>
+        <div class="stat-pill" id="mistakes-stat" style="display:none;">
+          <span id="lbl-mistakes">Lỗi:</span>
+          <strong id="mistakes-count">0</strong>
+        </div>
       </div>
 
-      <!-- Clear Timer Switch Pill (Clock Icon + Label + Mini Toggle Track) -->
-      <button class="timer-switch-pill" id="btn-timer-pill" role="switch" aria-checked="false">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/></svg>
-        <span id="timer-display">Tính giờ: TẮT</span>
-        <span class="mini-track" aria-hidden="true"><span class="mini-thumb"></span></span>
-      </button>
+      <!-- Center Quick Text Size Switcher -->
+      <div class="text-size-switch" id="text-size-switch" role="group" aria-label="Text Size">
+        <button type="button" class="size-opt active" data-size="normal" title="Normal Text">A-</button>
+        <button type="button" class="size-opt" data-size="large" title="Large Text">A</button>
+        <button type="button" class="size-opt" data-size="xlarge" title="Extra Large Text">A+</button>
+      </div>
+
+      <div class="telemetry-right">
+        <!-- Clear Timer Switch Pill (Clock Icon + Label + Mini Toggle Track) -->
+        <button class="timer-switch-pill" id="btn-timer-pill" role="switch" aria-checked="false">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 2h6"/></svg>
+          <span id="timer-display">Tính giờ: TẮT</span>
+          <span class="mini-track" aria-hidden="true"><span class="mini-thumb"></span></span>
+        </button>
+      </div>
     </div>
 
     <!-- MAIN WORKSPACE -->
@@ -1309,54 +1439,80 @@
       <div class="setting-row">
         <div>
           <strong id="set-lang-title">Ngôn ngữ / Language</strong>
-          <div style="font-size:12px; color:var(--ink-secondary);" id="set-lang-desc">Chuyển đổi giữa Tiếng Việt và English</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-lang-desc">Chuyển đổi giữa Tiếng Việt và English</div>
         </div>
         <button class="btn-sm primary" id="btn-settings-lang">Tiếng Việt</button>
       </div>
 
-      <div class="setting-row">
+      <label class="setting-row" for="toggle-instant-errors">
+        <div>
+          <strong id="set-error-check-title">Báo lỗi ngay khi điền sai</strong>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-error-check-desc">Mặc định tắt để tự suy luận như chơi trên giấy</div>
+        </div>
+        <span class="zen-switch">
+          <input type="checkbox" id="toggle-instant-errors" />
+          <span class="zen-slider"></span>
+        </span>
+      </label>
+
+      <label class="setting-row" for="toggle-timer-mode">
         <div>
           <strong id="set-timer-title">Chế độ tính giờ</strong>
-          <div style="font-size:12px; color:var(--ink-secondary);" id="set-timer-desc">Mặc định tắt để chơi thư giãn không áp lực</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-timer-desc">Mặc định tắt để chơi thư giãn không áp lực</div>
         </div>
-        <input type="checkbox" id="toggle-timer-mode" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
-      </div>
+        <span class="zen-switch">
+          <input type="checkbox" id="toggle-timer-mode" />
+          <span class="zen-slider"></span>
+        </span>
+      </label>
 
-      <div class="setting-row">
+      <label class="setting-row" for="toggle-mistake-limit" id="row-mistake-limit">
         <div>
           <strong id="set-mistake-title">Giới hạn 3 lỗi</strong>
-          <div style="font-size:12px; color:var(--ink-secondary);" id="set-mistake-desc">Tắt để chơi thoải mái không sợ thua ván</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-mistake-desc">Chỉ áp dụng khi bật báo lỗi ngay</div>
         </div>
-        <input type="checkbox" id="toggle-mistake-limit" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
-      </div>
+        <span class="zen-switch">
+          <input type="checkbox" id="toggle-mistake-limit" />
+          <span class="zen-slider"></span>
+        </span>
+      </label>
 
-      <div class="setting-row">
+      <label class="setting-row" for="toggle-auto-notes">
         <div>
           <strong id="set-autonote-title">Tự xóa ghi chú trùng</strong>
-          <div style="font-size:12px; color:var(--ink-secondary);" id="set-autonote-desc">Tự động xóa số ghi chú khi đã điền số chính xác</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-autonote-desc">Tự động xóa số nháp khi điền số vào hàng/cột/khối</div>
         </div>
-        <input type="checkbox" id="toggle-auto-notes" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
-      </div>
+        <span class="zen-switch">
+          <input type="checkbox" id="toggle-auto-notes" />
+          <span class="zen-slider"></span>
+        </span>
+      </label>
 
-      <div class="setting-row">
+      <label class="setting-row" for="toggle-highlight-same">
         <div>
           <strong id="set-same-title">Làm nổi bật các số giống nhau</strong>
-          <div style="font-size:12px; color:var(--ink-secondary);" id="set-same-desc">Tô sáng tất cả ô có cùng chữ số đang chọn</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-same-desc">Tô sáng tất cả ô có cùng chữ số đang chọn</div>
         </div>
-        <input type="checkbox" id="toggle-highlight-same" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
-      </div>
+        <span class="zen-switch">
+          <input type="checkbox" id="toggle-highlight-same" />
+          <span class="zen-slider"></span>
+        </span>
+      </label>
 
-      <div class="setting-row">
+      <label class="setting-row" for="toggle-sound">
         <div>
           <strong id="set-sound-title">Âm thanh đàn tranh dịu nhẹ</strong>
-          <div style="font-size:12px; color:var(--ink-secondary);" id="set-sound-desc">Tiếng gảy nhẹ nhàng khi chạm ô và điền số</div>
+          <div style="font-size:12.5px; color:var(--ink-secondary);" id="set-sound-desc">Tiếng gảy nhẹ nhàng khi chạm ô và điền số</div>
         </div>
-        <input type="checkbox" id="toggle-sound" style="width:22px; height:22px; accent-color:var(--accent-moss);" />
-      </div>
+        <span class="zen-switch">
+          <input type="checkbox" id="toggle-sound" />
+          <span class="zen-slider"></span>
+        </span>
+      </label>
 
       <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border-thin); display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="font-size:12px; color:var(--ink-secondary);">
-          SudoZen v<strong id="app-version-label">1.2.0</strong>
+          SudoZen v<strong id="app-version-label">1.4.0</strong>
           <div id="update-status-text">Phiên bản mới nhất</div>
         </div>
         <button class="btn-sm" id="btn-check-update">Kiểm tra cập nhật</button>
@@ -1391,7 +1547,7 @@
       /* ========================================================================
          1. APP VERSION & BOOKMARK-SAFE AUTO-UPDATE
          ======================================================================== */
-      const APP_VERSION = "1.2.0";
+      const APP_VERSION = "1.4.1";
       const STORAGE_KEY = "SUDOZEN_STATE_V1";
 
       function compareSemver(a, b) {
@@ -1494,12 +1650,14 @@
           setLangTitle: "Ngôn ngữ / Language",
           setLangDesc: "Chuyển đổi giữa Tiếng Việt và English",
           setLangBtnName: "Tiếng Việt (Đổi sang EN)",
+          setErrorCheckTitle: "Báo lỗi ngay khi điền sai",
+          setErrorCheckDesc: "Mặc định tắt để tự suy luận như chơi trên giấy",
           setTimerTitle: "Chế độ tính giờ",
           setTimerDesc: "Mặc định tắt để chơi thư giãn không áp lực",
           setMistakeTitle: "Giới hạn 3 lỗi",
           setMistakeDesc: "Tắt để chơi thoải mái không bao giờ bị thua",
           setAutonoteTitle: "Tự xóa ghi chú trùng",
-          setAutonoteDesc: "Tự động xóa số nháp khi đã điền số chính xác",
+          setAutonoteDesc: "Tự động xóa số nháp trùng trên cùng hàng, cột, khối",
           setSameTitle: "Làm nổi bật số giống nhau",
           setSameDesc: "Tô sáng tất cả ô có cùng chữ số đang chọn",
           setSoundTitle: "Âm thanh đàn tranh dịu nhẹ",
@@ -1523,7 +1681,10 @@
           toastNeedStones: "Cần thêm {n} Đá Hòa Hợp để mở màu này",
           toastTimerOn: "Đã BẬT đồng hồ tính giờ",
           toastTimerOff: "Đã TẮT đồng hồ tính giờ",
+          toastSizeChanged: "Đã đổi cỡ chữ: {s}",
+          sizeLabels: { normal: "Vừa", large: "Lớn", xlarge: "Rất lớn" },
           toast3Mistakes: "Đã chạm 3 lỗi — Bộ đếm lỗi được đặt lại để bạn tiếp tục!",
+          toastFullNotSolved: "Bàn cờ đã điền đủ 81 ô nhưng vẫn còn số chưa khớp. Hãy kiểm tra lại nhé!",
           hintNaked: "Ô duy nhất: Hàng {r}, Cột {c} chỉ có thể điền số {d}.",
           hintHiddenBox: "Vị trí duy nhất trong khối: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
           hintHiddenRow: "Vị trí duy nhất trên hàng: Số {d} chỉ đặt được tại Hàng {r}, Cột {c}.",
@@ -1588,6 +1749,8 @@
           setLangTitle: "Language / Ngôn ngữ",
           setLangDesc: "Switch between Vietnamese and English",
           setLangBtnName: "English (Switch to VN)",
+          setErrorCheckTitle: "Instant Error Check",
+          setErrorCheckDesc: "Off by default so wrong digits aren't spoiled immediately",
           setTimerTitle: "Timed Mode",
           setTimerDesc: "Off by default for calm, stress-free play",
           setMistakeTitle: "3-Mistake Limit",
@@ -1617,7 +1780,10 @@
           toastNeedStones: "Earn {n} more Harmony Stones to unlock",
           toastTimerOn: "Timer switched ON",
           toastTimerOff: "Timer switched OFF",
+          toastSizeChanged: "Text size: {s}",
+          sizeLabels: { normal: "Normal", large: "Large", xlarge: "Extra Large" },
           toast3Mistakes: "3 mistakes reached — Counter reset so you can keep playing!",
+          toastFullNotSolved: "All 81 cells are filled, but at least one digit doesn't match yet. Double-check your rows and boxes!",
           hintNaked: "Naked Single: Row {r}, Col {c} can only hold {d}.",
           hintHiddenBox: "Hidden Single in Box: {d} only fits at Row {r}, Col {c}.",
           hintHiddenRow: "Hidden Single in Row: {d} only fits at Row {r}, Col {c}.",
@@ -2177,6 +2343,8 @@
         version: APP_VERSION,
         settings: {
           lang: "vi",
+          textSize: "large",
+          instantErrorCheck: false,
           timerEnabled: false,
           mistakeLimit: false,
           autoClearNotes: true,
@@ -2225,6 +2393,7 @@
         audio.enabled = state.settings.soundEnabled;
         document.documentElement.lang = state.settings.lang || "vi";
         document.documentElement.setAttribute("data-theme", state.settings.theme || "moss");
+        document.documentElement.setAttribute("data-text-size", state.settings.textSize || "large");
       }
 
       function saveState() {
@@ -2415,7 +2584,9 @@
           return;
         }
 
-        if (g.board[selectedIdx] === digit && g.solution[selectedIdx] === digit) return;
+        if (g.board[selectedIdx] === digit) {
+          if (!state.settings.instantErrorCheck || g.solution[selectedIdx] === digit) return;
+        }
 
         snapshotForUndo();
         g.board[selectedIdx] = digit;
@@ -2423,26 +2594,37 @@
         activeHint = null;
 
         const isCorrect = g.solution[selectedIdx] === digit;
-        if (isCorrect) {
-          if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
-          audio.playPluck(digit, false);
-          const r = Math.floor(selectedIdx / 9);
-          const c = selectedIdx % 9;
-          spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 10);
+        const instantCheck = Boolean(state.settings.instantErrorCheck);
 
-          checkCompletedUnits(selectedIdx);
-
-          if (g.board.every((val, i) => val === g.solution[i])) {
-            handlePuzzleVictory();
+        if (instantCheck) {
+          if (isCorrect) {
+            if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
+            audio.playPluck(digit, false);
+            const r = Math.floor(selectedIdx / 9);
+            const c = selectedIdx % 9;
+            spawnGoldBurst((c + 0.5) / 9, (r + 0.5) / 9, 10);
+            checkCompletedUnits(selectedIdx);
+          } else {
+            g.mistakes++;
+            audio.playSoftError();
+            if (state.settings.mistakeLimit && g.mistakes >= 3) {
+              showToast(t("toast3Mistakes"));
+              g.mistakes = 0;
+            }
           }
         } else {
-          g.mistakes++;
-          audio.playSoftError();
-
-          if (state.settings.mistakeLimit && g.mistakes >= 3) {
-            showToast(t("toast3Mistakes"));
-            g.mistakes = 0;
+          // Paper-like authentic Sudoku: no red spoilers or error buzzers while thinking
+          if (state.settings.autoClearNotes) clearPeerNotes(selectedIdx, digit);
+          audio.playPluck(digit, false);
+          if (isCorrect) {
+            checkCompletedUnits(selectedIdx);
           }
+        }
+
+        if (g.board.every((val, i) => val === g.solution[i])) {
+          handlePuzzleVictory();
+        } else if (!instantCheck && g.board.every(val => val !== 0)) {
+          showToast(t("toastFullNotSolved"));
         }
 
         saveState();
@@ -2574,14 +2756,19 @@
         const controls = document.querySelector(".controls-deck");
         const boardEl = document.getElementById("sudoku-board");
 
-        const isLandscapeWide = window.innerWidth >= 820 && window.innerWidth > window.innerHeight;
-        const availH = app.clientHeight - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 24 : controls.offsetHeight + 28);
-        const availW = isLandscapeWide ? app.clientWidth - controls.offsetWidth - 52 : app.clientWidth - 20;
+        const styles = getComputedStyle(app);
+        const padV = parseFloat(styles.paddingTop) + parseFloat(styles.paddingBottom);
+        const padH = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
 
-        const size = Math.max(248, Math.min(availH, availW, 530));
+        const isLandscapeWide = window.innerWidth >= 820 && window.innerWidth > window.innerHeight;
+        const availH = app.clientHeight - padV - topBar.offsetHeight - teleBar.offsetHeight - (isLandscapeWide ? 16 : controls.offsetHeight + 24);
+        const availW = isLandscapeWide ? app.clientWidth - padH - controls.offsetWidth - 36 : app.clientWidth - padH - 4;
+
+        const size = Math.max(220, Math.min(availH, availW, 530));
+        const digitBoost = state.settings.textSize === "xlarge" ? 1.14 : state.settings.textSize === "large" ? 1.07 : 1;
         boardEl.style.width = `${size}px`;
         boardEl.style.height = `${size}px`;
-        boardEl.style.fontSize = `${Math.round(size / 16.5)}px`;
+        boardEl.style.fontSize = `${Math.round((size / 15.5) * digitBoost)}px`;
 
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
         fxCanvas.width = (size + 32) * dpr;
@@ -2619,6 +2806,7 @@
         const selBoxR = Math.floor(selR / 3);
         const selBoxC = Math.floor(selC / 3);
         const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
+        const instantCheck = Boolean(state.settings.instantErrorCheck);
 
         for (let i = 0; i < 81; i++) {
           const cell = cells[i];
@@ -2628,7 +2816,7 @@
           const c = i % 9;
           const isPeer = (r === selR || c === selC || (Math.floor(r / 3) === selBoxR && Math.floor(c / 3) === selBoxC));
           const isSameNum = state.settings.highlightSame && selectedVal !== 0 && val === selectedVal;
-          const isError = val !== 0 && val !== g.solution[i];
+          const isError = instantCheck && val !== 0 && val !== g.solution[i];
 
           cell.className = "cell";
           if (isGiven) cell.classList.add("given");
@@ -2683,7 +2871,14 @@
         if (!g) return;
         const diffLabel = I18N[state.settings.lang].diffs[g.diffKey].label;
         document.getElementById("btn-diff-pill").textContent = diffLabel;
-        document.getElementById("mistakes-count").textContent = state.settings.mistakeLimit ? `${g.mistakes}/3` : `${g.mistakes}`;
+
+        const mistakesEl = document.getElementById("mistakes-stat");
+        if (state.settings.instantErrorCheck) {
+          mistakesEl.style.display = "inline-flex";
+          document.getElementById("mistakes-count").textContent = state.settings.mistakeLimit ? `${g.mistakes}/3` : `${g.mistakes}`;
+        } else {
+          mistakesEl.style.display = "none";
+        }
 
         const timerPill = document.getElementById("btn-timer-pill");
         const timerDisplay = document.getElementById("timer-display");
@@ -2691,6 +2886,11 @@
         timerPill.classList.toggle("active", isTimed);
         timerPill.setAttribute("aria-checked", isTimed ? "true" : "false");
         timerDisplay.textContent = isTimed ? formatTime(g.elapsedSeconds) : t("timerOffLabel");
+
+        const activeSize = state.settings.textSize || "large";
+        document.querySelectorAll("#text-size-switch .size-opt").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.size === activeSize);
+        });
       }
 
       function renderControls() {
@@ -2699,6 +2899,9 @@
 
         document.getElementById("tool-undo").disabled = g.undoStack.length === 0 || g.completed;
         document.getElementById("tool-redo").disabled = g.redoStack.length === 0 || g.completed;
+        document.getElementById("tool-erase").disabled = g.completed || selectedIdx < 0 || g.initial[selectedIdx] !== 0;
+        document.getElementById("tool-hint").disabled = g.completed || g.hintsLeft <= 0;
+
         const notesBtn = document.getElementById("tool-notes");
         notesBtn.classList.toggle("active", notesMode);
         document.getElementById("notes-state-badge").textContent = notesMode ? t("on") : t("off");
@@ -2717,10 +2920,13 @@
           applyBtn.style.display = "none";
         }
 
+        // Count placed instances of each digit (respecting whether Instant Error Check is enabled)
         const counts = new Array(10).fill(0);
+        const instantCheck = Boolean(state.settings.instantErrorCheck);
         for (let i = 0; i < 81; i++) {
-          if (g.board[i] !== 0 && g.board[i] === g.solution[i]) {
-            counts[g.board[i]]++;
+          const val = g.board[i];
+          if (val !== 0 && (!instantCheck || val === g.solution[i])) {
+            counts[val]++;
           }
         }
         const selectedVal = selectedIdx >= 0 ? g.board[selectedIdx] : 0;
@@ -2890,6 +3096,8 @@
         document.getElementById("set-lang-desc").textContent = t("setLangDesc");
         document.getElementById("btn-settings-lang").textContent = t("setLangBtnName");
 
+        document.getElementById("set-error-check-title").textContent = t("setErrorCheckTitle");
+        document.getElementById("set-error-check-desc").textContent = t("setErrorCheckDesc");
         document.getElementById("set-timer-title").textContent = t("setTimerTitle");
         document.getElementById("set-timer-desc").textContent = t("setTimerDesc");
         document.getElementById("set-mistake-title").textContent = t("setMistakeTitle");
@@ -2902,8 +3110,11 @@
         document.getElementById("set-sound-desc").textContent = t("setSoundDesc");
         document.getElementById("btn-check-update").textContent = t("checkUpdateBtn");
 
+        const instantErr = Boolean(state.settings.instantErrorCheck);
+        document.getElementById("toggle-instant-errors").checked = instantErr;
         document.getElementById("toggle-timer-mode").checked = Boolean(state.settings.timerEnabled);
         document.getElementById("toggle-mistake-limit").checked = Boolean(state.settings.mistakeLimit);
+        document.getElementById("row-mistake-limit").style.opacity = instantErr ? "1" : "0.45";
         document.getElementById("toggle-auto-notes").checked = Boolean(state.settings.autoClearNotes);
         document.getElementById("toggle-highlight-same").checked = Boolean(state.settings.highlightSame);
         document.getElementById("toggle-sound").checked = Boolean(state.settings.soundEnabled);
@@ -2917,6 +3128,7 @@
         renderBoard();
         renderControls();
         resizeBoardSquare();
+        requestAnimationFrame(resizeBoardSquare);
       }
 
       function toggleLanguage() {
@@ -2938,6 +3150,19 @@
         saveState();
         renderTelemetry();
         showToast(state.settings.timerEnabled ? t("toastTimerOn") : t("toastTimerOff"));
+      }
+
+      function setTextSize(sizeKey) {
+        if (!["normal", "large", "xlarge"].includes(sizeKey)) return;
+        state.settings.textSize = sizeKey;
+        document.documentElement.setAttribute("data-text-size", sizeKey);
+        saveState();
+        renderTelemetry();
+        resizeBoardSquare();
+        requestAnimationFrame(resizeBoardSquare);
+        const lang = state.settings.lang || "vi";
+        const sizeLabel = I18N[lang].sizeLabels[sizeKey];
+        showToast(t("toastSizeChanged", { s: sizeLabel }));
       }
 
       /* ========================================================================
@@ -2983,6 +3208,12 @@
         document.getElementById("btn-lang").addEventListener("click", toggleLanguage);
         document.getElementById("btn-settings-lang").addEventListener("click", toggleLanguage);
         document.getElementById("btn-timer-pill").addEventListener("click", toggleTimerMode);
+        document.querySelectorAll("#text-size-switch .size-opt").forEach(btn => {
+          btn.addEventListener("click", () => {
+            audio.playSelect();
+            setTextSize(btn.dataset.size);
+          });
+        });
 
         document.getElementById("btn-new-game").addEventListener("click", () => openModal("modal-new"));
         document.getElementById("btn-diff-pill").addEventListener("click", () => openModal("modal-new"));
@@ -3022,6 +3253,7 @@
           notesMode = !notesMode;
           audio.playSelect();
           renderControls();
+          requestAnimationFrame(resizeBoardSquare);
         });
         document.getElementById("tool-hint").addEventListener("click", requestIntuitionHint);
         document.getElementById("btn-apply-hint").addEventListener("click", () => {
@@ -3031,7 +3263,14 @@
             handleDigitInput(activeHint.digit);
           }
         });
-
+        document.getElementById("toggle-instant-errors").addEventListener("change", (e) => {
+          state.settings.instantErrorCheck = e.target.checked;
+          document.getElementById("row-mistake-limit").style.opacity = e.target.checked ? "1" : "0.45";
+          saveState();
+          renderBoard();
+          renderTelemetry();
+          renderControls();
+        });
         document.getElementById("toggle-timer-mode").addEventListener("change", (e) => {
           state.settings.timerEnabled = e.target.checked;
           if (state.settings.timerEnabled && state.game && !state.game.completed) {
